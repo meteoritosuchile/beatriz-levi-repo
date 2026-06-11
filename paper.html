@@ -10,7 +10,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#fafafa;color:#222;l
 .paper{max-width:820px;margin:0 auto;padding:40px 30px;background:#fff;min-height:100vh}
 h1{font-size:22px;font-weight:700;text-align:center;margin-bottom:6px;line-height:1.3}
 .authors{font-size:14px;text-align:center;color:#444;margin-bottom:4px}
-.affil{font-size:12px;text-align:center;color:#888;margin-bottom:30px;font-style:italic}
+.affil{font-size:12px;text-align:center;color:#888;margin-bottom:24px;font-style:italic;line-height:1.35}
 .abstract-box{background:#f8f8f8;border-left:3px solid #1a2a3a;padding:12px 16px;margin-bottom:24px;font-size:13px;border-radius:0 4px 4px 0}
 .abstract-box strong{font-size:14px}
 h2{font-size:18px;font-weight:700;margin:28px 0 12px;padding-bottom:4px;border-bottom:1px solid #ddd}
@@ -35,7 +35,11 @@ tr:nth-child(even){background:#f8f8f8}
 .refs p{margin-bottom:6px;padding-left:20px;text-indent:-20px;text-align:left}
 .chart-container{position:relative;display:inline-block}
 #chart-tooltip{display:none;position:absolute;background:rgba(30,30,30,0.92);color:#fff;font-size:11px;padding:4px 8px;border-radius:3px;pointer-events:none;white-space:nowrap;z-index:10;font-family:Arial,sans-serif}
+#chart-tooltip4{display:none;position:absolute;background:rgba(30,30,30,0.92);color:#fff;font-size:11px;padding:4px 8px;border-radius:3px;pointer-events:none;white-space:nowrap;z-index:10;font-family:Arial,sans-serif}
 .kw{font-size:13px;color:#666;text-align:center;margin-bottom:24px}
+.logos{display:flex;justify-content:center;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:24px;padding:12px 0}
+.logos img{height:55px;width:auto;opacity:0.8;transition:opacity .2s}
+.logos img:hover{opacity:1}
 @media print{body{background:#fff}.paper{padding:20px 0}}
 @media(max-width:600px){.paper{padding:20px 12px}h1{font-size:18px}.table-wrap{font-size:10px}td,th{padding:3px 4px;font-size:9px}}
 </style>
@@ -45,14 +49,27 @@ tr:nth-child(even){background:#f8f8f8}
 
 <h1>Classification and Fragmentation Analysis of Ordinary Chondrites from the Atacama Desert: A Multi-Technique Approach Combining Magnetic Susceptibility, Infrared Spectroscopy, and Petrography</h1>
 
-<div class="authors">Samanta Aravena<sup>1</sup>, Daniel Moncada<sup>1</sup>, Alfonso Mohor<sup>1</sup>, Diego Castañeda<sup>1</sup>, Roberto Valles<sup>1</sup>, Víctor Cárcamo<sup>1</sup>, Lorena Olivares<sup>1</sup>, Sebastián Gatica<sup>1</sup>, Matías Peña<sup>2</sup>, María José Figueroa Zambrano<sup>2</sup>, Grace Batalla<sup>3,4</sup>, Axel Escobar<sup>3,4</sup>, Lucas Cieza<sup>3,4</sup></div>
-<div class="affil"><sup>1</sup>Departamento de Geología, Universidad de Chile, Plaza Ercilla 803, Santiago, Chile &nbsp;·&nbsp; <sup>2</sup>Escuela de Geología, Universidad Mayor, Santiago, Chile &nbsp;·&nbsp; <sup>3</sup>Instituto de Estudios Astrofísicos, Facultad de Ingeniería y Ciencias, Universidad Diego Portales, Santiago, Chile &nbsp;·&nbsp; <sup>4</sup>Cosmic Dust Laboratory, Universidad Diego Portales, Santiago, Chile</div>
+<div class="authors">Samanta Aravena<sup>1</sup>, Grace Batalla<sup>3,4</sup>, María José Figueroa Zambrano<sup>2</sup>, María Eugenia Parra<sup>1</sup>, Daniel Moncada<sup>1</sup>, Lucas Cieza<sup>3,4</sup>, Roberto Lavín<sup>3</sup>, Matías Peña<sup>2</sup>, Axel Escobar<sup>3,4</sup>, Bárbara De la Fuente<sup>1</sup>, Víctor Cárcamo<sup>1</sup>, Diego Castañeda<sup>1</sup>, Sebastián Gatica<sup>1</sup>, Alfonso Mohor<sup>1</sup>, Lorena Olivares<sup>1</sup>, Roberto Valles<sup>1</sup></div>
+<div class="affil">
+  <sup>1</sup>Departamento de Geología, Universidad de Chile, Plaza Ercilla 803, Santiago, Chile<br>
+  <sup>2</sup>Escuela de Geología, Universidad Mayor, Santiago, Chile<br>
+  <sup>3</sup>Instituto de Estudios Astrofísicos, Facultad de Ingeniería y Ciencias, Universidad Diego Portales, Santiago, Chile<br>
+  <sup>4</sup>Cosmic Dust Laboratory, Universidad Diego Portales, Santiago, Chile<br>
+
+</div>
+
+<div class="logos">
+  <img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px">
+  <img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px">
+  <img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px">
+  <img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px">
+</div>
 
 <div class="kw">Keywords: Atacama Desert · ordinary chondrites · magnetic susceptibility · KLY5 · infrared spectroscopy · meteorite classification · Beatriz Levi Repository</div>
 
 <div class="abstract-box">
   <strong>Abstract</strong><br>
-  We present a comprehensive classification and fragmentation analysis of 59 meteorite specimens recovered from the Atacama Desert (Catalina, El Médano, Los Vientos, and San Juan areas), forming the Beatriz Levi Repository at the Department of Geology, Universidad de Chile. The specimens were classified using magnetic susceptibility (KLY5-A Kappabridge, data acquired by S. Aravena), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography, following the methodologies of Rochette et al. (2003, 2012), Van Schmus and Wood (1967), and Pittarello et al. (2015). Of the 59 specimens, 44 yielded magnetic susceptibility data, revealing 28 H-type, 12 L-type, 13 LL-type, 2 carbonaceous chondrites, and 4 unclassified. Fragmentation analysis based on corrected magnetic susceptibility (Δχ ≤ 0.04) identified 6 distinct falls in Catalina (totaling 18 paired fragments) and 1 confirmed fall in Médano (4 paired fragments), along with multiple inter-locality pairings between Catalina and Médano. Our results demonstrate that magnetic susceptibility, when combined with IR spectroscopy and petrography, provides a robust, cost-effective classification pipeline for large meteorite collections, achieving 66.6% agreement between non-destructive and destructive methods in a subset of 7 samples studied in detail by Figueroa (2023) under the co-guidance of D. Moncada, S. Aravena, and M. Peña. The repository also contains two officialized carbonaceous chondrites (LV-357, LV-358) and four specimens pending KLY5 measurement.
+  We present a comprehensive classification and fragmentation analysis of 59 meteorite specimens recovered from the Atacama Desert (Catalina, El Médano, Los Vientos, and San Juan areas), forming the Beatriz Levi Repository at the Department of Geology, Universidad de Chile. The specimens were classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography, following the methodologies of Rochette et al. (2003, 2012), Van Schmus and Wood (1967), and Pittarello et al. (2015). Of the 59 specimens, 44 yielded magnetic susceptibility data, revealing 28 H-type, 12 L-type, 13 LL-type, 2 carbonaceous chondrites, and 4 unclassified. Fragmentation analysis based on corrected magnetic susceptibility (Δχ ≤ 0.04) verified by bulk density consistency identified 3 distinct falls in Catalina (totaling 10 paired fragments) and 2 confirmed falls in Médano (6 paired fragments). Our results demonstrate that magnetic susceptibility, when combined with IR spectroscopy and petrography, provides a robust, cost-effective classification pipeline for large meteorite collections, achieving 66.6% agreement between non-destructive and destructive methods in a subset of 7 samples. The repository also contains two officialized carbonaceous chondrites (LV-357, LV-358) and four specimens pending KLY5 measurement.
 </div>
 
 <!-- ===== 1. INTRODUCTION ===== -->
@@ -60,7 +77,7 @@ tr:nth-child(even){background:#f8f8f8}
 
 <p>The Atacama Desert in northern Chile is one of the most important meteorite accumulation zones on Earth, alongside Antarctica and the Sahara (Gattacceca et al., 2011). Its hyperarid conditions, which have persisted since the Late Miocene (~12 Ma), allow exceptional preservation of meteorites over millions of years (Reich et al., 2009; Hutzler et al., 2016). The combination of a stable geological surface, minimal weathering rates, and extensive, easily accessible terrain has made the Atacama a prime target for meteorite recovery expeditions.</p>
 
-<p>In April 2019, a field campaign led by D. Moncada and S. Aravena as part of the <em>Fluidos Planetarios</em> elective course of the Geology program at Universidad de Chile recovered dozens of meteorite specimens from the Catalina and El Médano areas, located inland from the coastal town of Taltal (Second Region of Chile). The expedition team included students Alfonso Mohor, Diego Castañeda, Roberto Valles (staff), Víctor Cárcamo, Lorena Olivares, and Sebastián Gatica. Additional specimens from Los Vientos and San Juan were subsequently incorporated into what became the Beatriz Levi Repository, funded by a Community Grant from the Meteoritical Society (August 2025). The repository currently houses 57 ordinary chondrites and 2 carbonaceous chondrites, making it a significant collection for scientific study.</p>
+<p>In April 2019, a field campaign as part of the <em>Fluidos Planetarios</em> elective course of the Geology program at Universidad de Chile recovered dozens of meteorite specimens from the Catalina and El Médano areas, located inland from the coastal town of Taltal (Second Region of Chile). The expedition team included students Alfonso Mohor, Diego Castañeda, Roberto Valles (staff), Víctor Cárcamo, Lorena Olivares, and Sebastián Gatica. Additional specimens from Los Vientos and San Juan were subsequently incorporated into what became the Beatriz Levi Repository, funded by a Community Grant from the Meteoritical Society (August 2025). The repository currently houses 57 ordinary chondrites and 2 carbonaceous chondrites, making it a significant collection for scientific study.</p>
 
 <p>Traditional meteorite classification relies on petrographic analysis of thin sections and geochemical methods that require partial or complete destruction of samples. This poses a challenge for preserving meteoritic material, which is considered geological heritage of scientific value. Consequently, there is growing interest in developing and validating non-destructive or minimally destructive classification techniques (Consolmagno et al., 2006; Rochette et al., 2003).</p>
 
@@ -79,22 +96,24 @@ tr:nth-child(even){background:#f8f8f8}
 <p>During the field campaign, a portable magnetic susceptibility meter (KT-10 or SM-30, 10 kHz) was used as a real-time screening tool to prioritize specimens with high metallic content. Volume magnetic susceptibility readings (10⁻³ SI) were taken directly on the exterior surface of each find before collection. This field-based approach, while semi-quantitative due to surface weathering and irregular sample geometry, provided an immediate preliminary classification: high readings (>50 × 10⁻³ SI) were considered indicative of H-type chondrites, intermediate values (20–50 × 10⁻³ SI) of L-type, and low values (<20 × 10⁻³ SI) of LL-type or carbonaceous chondrites. This screening guided the selection of representative samples for laboratory analysis and helped ensure that the repository captured the full compositional range of the strewn field.</p>
 
 <h3>2.2 Magnetic Susceptibility</h3>
-<p>Magnetic susceptibility (χ) was measured by S. Aravena using a KLY5-A Kappabridge (AGICO, Czech Republic) at the Laboratorio de Paleomagnetismo, Universidad de Chile. Measurements were conducted in 2020 and 2025 at a frequency of 1220 Hz and an inducing field of 400 A/m. Each sample was measured in three orthogonal positions (YZ, XZ, XY) with 3 measurements per position, yielding 9 readings per fragment. Results are expressed as log χ in 10⁻⁹ m³/kg.</p>
+<p>Magnetic susceptibility (χ) was measured using a KLY5-A Kappabridge (AGICO, Czech Republic) at the Laboratorio de Paleomagnetismo, Universidad de Chile. Measurements were conducted in 2020 and 2025 at a frequency of 1220 Hz and an inducing field of 400 A/m. Each sample was measured in three orthogonal positions (YZ, XZ, XY) with 3 measurements per position, yielding 9 readings per fragment. Results are expressed as log χ in 10⁻⁹ m³/kg.</p>
 
 <p>Classification follows Rochette et al. (2003, 2012): H group (log χ ≥ 5.08), L group (4.68 ≤ log χ < 5.08), LL group (4.37 ≤ log χ < 4.68), and carbonaceous chondrites (log χ < 4.37). For weathered samples, the corrected susceptibility is calculated as χ<sub>corr</sub> = χ<sub>raw</sub> + W × 0.15, where W is the weathering grade (W0–W5). Only samples with W ≤ 3 are considered reliable for corrected classification.</p>
 
-<p>For fragmentation analysis, samples were considered potential pairs if their corrected magnetic susceptibility values differed by Δχ ≤ 0.04 (log units), following the approach of Rochette et al. (2003) who suggested that fragments from the same fall typically show variations within 0.02–0.05 log units.</p>
+<p>For fragmentation analysis, samples were considered potential pairs if their corrected magnetic susceptibility values differed by Δχ ≤ 0.04 (log units), following the approach of Rochette et al. (2003). Bulk density was then used as a secondary criterion: magnetic pairs with density variation exceeding 20% were rejected, as fragments from the same fall are expected to have similar densities.</p>
 
 <h3>2.3 Petrography</h3>
 <p>Double-polished thin sections (70 μm thick) were prepared at the Laboratorio de Cortes, Universidad de Chile. Petrographic characterization was performed using an Olympus optical microscope at the Laboratorio de Inclusiones. Classification followed the parameters of Van Schmus and Wood (1967) for petrologic type, Stöffler et al. (1991) for shock stage, and Wlotzka (1993) for weathering grade. Chemical group determination followed modal analysis of metal, sulfide, and chondrule abundances (Craig, 1964; Keil and Fredriksson, 1964; Scott and Krot, 2014).</p>
 
-<p>A total of 14 samples have complete petrographic classification. Of these, 7 were analyzed in detail by Figueroa (2023). Petrography was performed by M.J. Figueroa and was a central component of her thesis work.</p>
+<p>A total of 14 samples have complete petrographic classification.</p>
+
+<p>For specimens without thin-section petrography, macroscopic weathering grades (W) were estimated following the Wlotzka (1993) scale using fusion crust preservation as the primary criterion: well-preserved fusion crust with minimal oxidation indicated low weathering (W0–W1), partial fusion crust with moderate metal oxidation indicated intermediate weathering (W2–W3), and heavily weathered surfaces with no visible fusion crust and pervasive oxidation indicated advanced weathering (W4–W5).</p>
 
 <h3>2.4 Raman Spectroscopy</h3>
 <p>Raman spectra were obtained at the Laboratorio Raman, Universidad de Chile, using a LabRAM HR Evolution instrument with a HeNe 532 nm/17 mW laser. Olivine and pyroxene crystals were analyzed for 5 seconds in 3 consecutive measurements. Compositional estimates (Fa mol% for olivine, Fs mol% for pyroxene) were calculated using the equations of Pittarello et al. (2015). Chemical group assignments based on Raman-composition correlations were: H (Fa16–20, Fs14–18), L (Fa22–26, Fs19–22), and LL (Fa27–32, Fs22–26).</p>
 
 <h3>2.5 Infrared Spectroscopy</h3>
-<p>Infrared spectra were acquired at the Laboratorio de Polvo Cósmico, Núcleo de Astronomía, Universidad Diego Portales, under the supervision of L. Cieza (laboratory director) using a FT-IR Bruker Vertex 80V spectrometer. Measurements were performed by G. Batalla, who contributed IR data for the classification pipeline. Samples were ground to powder in an agate mortar, mixed with infrared-grade KBr, and pressed into transparent pellets. Spectra were processed using Octave 8.2.0 and OPUS software. Comparisons were made with Chihara et al. (2002) for pyroxenes and Koike et al. (2003) for olivines.</p>
+<p>Infrared spectra were acquired at the Laboratorio de Polvo Cósmico, Núcleo de Astronomía, Universidad Diego Portales, using a FT-IR Bruker Vertex 80V spectrometer. Samples were ground to powder in an agate mortar, mixed with infrared-grade KBr, and pressed into transparent pellets. Spectra were processed using Octave 8.2.0 and OPUS software. Comparisons were made with Chihara et al. (2002) for pyroxenes and Koike et al. (2003) for olivines.</p>
 
 <p>Infrared spectroscopy data are available for 27 samples and pending for 8 samples. Newly incorporated A. Escobar will continue IR measurements under the guidance of L. Cieza and G. Batalla as part of his thesis work at the same laboratory.</p>
 
@@ -109,13 +128,13 @@ tr:nth-child(even){background:#f8f8f8}
 
 <p>Of the 14 samples with petrographic data, 9 agree with KLY5 classification (64.3%), 3 conflict (21.4%), and 2 have no KLY5 data. Among the 7 samples studied in detail by Figueroa (2023), the agreement rate is 66.6% (4 of 6 with valid KLY5 data).</p>
 
-<!-- Figure 1: Rochette Chart -->
+<!-- Figure 1: Mass vs Logχ -->
 <div class="fig-wrap">
   <div class="chart-container">
-    <canvas id="rochetteCanvas" width="760" height="420"></canvas>
+    <canvas id="massLogChiCanvas" width="760" height="420"></canvas>
     <div id="chart-tooltip"></div>
   </div>
-  <div class="fig-caption"><strong>Figure 1.</strong> Magnetic susceptibility (log χ) vs. weathering grade (W) for Beatriz Levi Repository specimens, after Rochette et al. (2003, 2012). Colored bands show H (green), L (orange), and LL (brown) compositional fields. KLY5 classification is shown for samples with petrographic agreement (diamonds), conflicts (circles with connecting lines), and KLY5-only (circles). The saturation zone (log χ > 5.55) is shaded.</div>
+      <div class="fig-caption"><strong>Figure 1.</strong> Magnetic susceptibility (log χ) vs. initial specimen mass for KLY5-measured specimens of the Beatriz Levi Repository. Colored bands indicate the classification ranges of Rochette et al. (2003): H (4.89±0.31), L (4.55±0.28), and LL (3.98±0.41). Each point represents one specimen, colored by its KLY5 group.</div>
 </div>
 
 <!-- TABLE 1: Master Classification -->
@@ -151,19 +170,15 @@ tr:nth-child(even){background:#f8f8f8}
 
 <p><strong>Fall 1 (LL low cluster):</strong> 4 fragments with corrected χ 4.593–4.636 (Δ = 0.043). This is Médano's best candidate for a multiple fall. Includes Exp19-52 (anchor, IR✓, thin section✓), Exp19-54 (IR pending, thin section pending), Exp19-45 (W=0, fresh LL), and Exp19-46 (IR✓). All LL type, consistent magnetic and IR data.</p>
 
-<p><strong>Cluster 2 (LL/L mixed):</strong> 3 fragments (Exp19-44, Exp19-43, Exp19-56) with corrected χ 4.940–4.966 (Δ = 0.026). Exp19-43 and 56 form a strong magnetic pair (Δ=0.001, both L, both IR✓), while Exp19-44 (LL) has its closest match with Catalina 10 (Δ=0.012), suggesting possible inter-locality pairing.</p>
+<p><strong>Cluster 2 (LL/L mixed):</strong> 3 fragments (Exp19-44, Exp19-43, Exp19-56) with corrected χ 4.940–4.966 (Δ = 0.026). Exp19-43 and 56 form a strong magnetic pair (Δ=0.001, both L, both IR✓).</p>
 
 <p><strong>Possible H pair (Médano):</strong> Exp19-42 (H4) and Exp19-41 (L4, with KLY5→H) have Δ raw = 0.026 (same W=2). If the petrographic conflict of 41 is resolved as H, they would be paired fragments.</p>
 
 <p><strong>Individual meteorites in Médano:</strong> Exp19-40 (H), Exp19-43 (L)*, Exp19-47 (H), Exp19-48 (LL), Exp19-49 (LL, W5 invalid), Exp19-50 (L), Exp19-51 (LL), Exp19-53 (H, Raman conflict).</p>
 
-<h3>3.4 Inter-Locality Pairings</h3>
-<p>Several samples from Médano have magnetic counterparts in Catalina, suggesting possible shared falls across localities:</p>
-<p>• Exp19-40 (Médano 5, H, corr 5.112) ↔ Exp19-11 (Catalina 11, L, corr 5.121): Δ=0.009. Both borderline H/L.</p>
-<p>• Exp19-44 (Médano 9, LL, corr 4.940) ↔ Exp19-10 (Catalina 10, LL, corr 4.952): Δ=0.012. IR of 44 is "different from all others" but spectrally similar to Catalina 10.</p>
-<p>• Exp19-48 (Médano 13, LL, corr 4.850) ↔ Exp19-12 (Catalina 12, L, corr 4.851): Δ=0.001. Almost identical magnetic susceptibility.</p>
-<p>• Exp19-50 (Médano 15, L, corr 5.050) ↔ Exp19-04 (Catalina 4, L, corr 5.040): Δ=0.010. Both L with IR✓.</p>
-<p>• Exp19-53 (Médano 18, H, corr 5.224) ↔ Exp19-09 (Catalina 9, L→H?, corr 5.182): Δ=0.042. Both borderline H, pending IR confirmation.</p>
+
+
+<div id="pair-groups-paper"></div>
 
 <h3>3.5 Comparison with Figueroa (2023)</h3>
 <p>The present study significantly extends the work of Figueroa (2023), who analyzed 7 specimens in detail. The comparison between her results and our integrated classification is summarized in Table 2.</p>
@@ -200,20 +215,35 @@ tr:nth-child(even){background:#f8f8f8}
 <!-- Figure 2: Distribution chart -->
 <div class="fig-wrap">
   <canvas id="doughnutCanvas" width="300" height="300" style="max-width:250px;margin:0 auto;display:block"></canvas>
-  <div class="fig-caption"><strong>Figure 2.</strong> Distribution of chemical groups among the 44 specimens with KLY5 data in the Beatriz Levi Repository.</div>
+      <div class="fig-caption"><strong>Figure 2.</strong> Distribution of KLY5 groups among the 44 specimens with magnetic susceptibility data in the Beatriz Levi Repository. Classification follows the simple logχ ranges of Rochette et al. (2003) without weathering correction.</div>
 </div>
 
-<h3>4.2 Field Susceptibility vs. Laboratory KLY5 Measurements</h3>
+<!-- Figure 3: Petrologic grade vs Logχ -->
+<div class="fig-wrap">
+  <div class="chart-container">
+    <canvas id="petroGradeCanvas" width="700" height="420"></canvas>
+  </div>
+      <div class="fig-caption"><strong>Figure 3.</strong> Magnetic susceptibility (log χ) vs. petrologic grade for the 9 specimens with thin-section petrography and KLY5 data. Points are labeled by specimen code and colored by petrographic type (thin-section classification). Grade follows the Van Schmus and Wood (1967) petrologic scale.</div>
+</div>
+
+<!-- Figure 4: Density vs Logχ -->
+<div class="fig-wrap" style="position:relative">
+  <div class="chart-container">
+    <canvas id="densityChiCanvas" width="760" height="420"></canvas>
+  </div>
+  <div id="chart-tooltip4"></div>
+  <div class="fig-caption"><strong>Figure 4.</strong> Bulk density vs. magnetic susceptibility (log χ) for the 41 specimens with both density and KLY5 data in the Beatriz Levi Repository. Points are colored by KLY5 group. Hover for details.</div>
+</div>
+
+ <h3>4.2 Field Susceptibility vs. Laboratory KLY5 Measurements</h3>
 <p>Portable susceptibilimeter readings taken during the field campaign provide an opportunity to evaluate the reliability of in-situ magnetic screening. Of the 40 specimens with both field and KLY5 data, the Pearson correlation coefficient between field volume susceptibility (10⁻³ SI) and KLY5 mass-specific susceptibility (log χ, 10⁻⁹ m³/kg) is r = 0.23 (R² = 0.05), indicating a weak linear relationship. This low correlation is expected: field readings are obtained on weathered exterior surfaces with irregular geometry, whereas KLY5 measurements are performed on prepared laboratory samples (often interior fragments) under controlled conditions. Surface weathering, particularly for samples with W ≥ 2, systematically reduces near-surface magnetic susceptibility, depressing field values relative to interior KLY5 measurements.</p>
 
 <p>Despite this limitation, the field meter successfully identified specimens with very low metal content: all 8 specimens with field readings below 10 × 10⁻³ SI proved to be LL-type chondrites in KLY5 classification. Conversely, the 10 specimens with field readings above 50 × 10⁻³ SI included a mix of H (n = 3), L (n = 4), and LL (n = 3) types, showing that high field readings alone cannot reliably distinguish among ordinary chondrite groups. However, as a triage tool during collection, the field meter was effective at flagging metal-rich candidates and ensuring that both high- and low-susceptibility meteorites were represented in the repository.</p>
 
-<h3>4.3 Fragmentation Patterns</h3>
-<p>The identification of 6 falls in Catalina and 1 in Médano provides insights into the fragmentation history of ordinary chondrites in the Atacama Desert. The Catalina L/LL cluster (Fall 1) is particularly notable: 6 fragments with extremely tight magnetic susceptibility (Δ=0.035) collected over a relatively small area (~500 m radius). This suggests a recent, well-preserved fall with minimal post-depositional dispersion.</p>
+ <h3>4.3 Fragmentation Patterns</h3>
+<p>The identification of 3 falls in Catalina and 2 in Médano provides insights into the fragmentation history of ordinary chondrites in the Atacama Desert. The Catalina Fall 1 is particularly notable: 4 fragments with consistent magnetic susceptibility and bulk density collected over a relatively small area (~500 m radius). This suggests a recent, well-preserved fall with minimal post-depositional dispersion.</p>
 
 <p>In contrast, Médano Fall 1 (4 LL fragments) shows greater magnetic heterogeneity (Δ=0.043) and wider geographical distribution, suggesting either an older fall with more weathering-induced variability or a strewn field with intrinsic compositional heterogeneity.</p>
-
-<p>The inter-locality pairings between Médano and Catalina (~25 km apart) are intriguing but require confirmation through IR spectroscopy and petrography. If validated, these pairings would suggest that some meteorite falls in the Atacama can produce strewn fields spanning tens of kilometers, a phenomenon observed in other arid environments (Bland et al., 2006).</p>
 
 <h3>4.4 Weathering and Its Effect on Classification</h3>
 <p>Weathering grade is a critical parameter in magnetic susceptibility classification. The Rochette correction (adding 0.15 per W grade) is validated only for W ≤ 3. Samples with W ≥ 4 (e.g., Exp19-49, W=5) cannot be reliably classified by magnetic susceptibility alone. In our collection, 32 of 44 specimens with KLY5 data (72.7%) have W ≤ 2, consistent with the excellent preservation conditions of the Atacama Desert.</p>
@@ -230,9 +260,7 @@ tr:nth-child(even){background:#f8f8f8}
 
 <p>2. Magnetic susceptibility (KLY5-A) provides a reliable first-order classification, with 64.3% agreement with petrography. The method is most effective for samples with weathering grade W ≤ 3.</p>
 
-<p>3. Fragmentation analysis based on corrected magnetic susceptibility identifies 6 distinct meteorite falls in Catalina (18 paired fragments) and 1 confirmed fall in Médano (4 paired fragments), estimating ~19 distinct meteorites from Catalina and ~10 from Médano.</p>
-
-<p>4. Inter-locality magnetic pairings between Catalina and Médano suggest possible shared strewn fields spanning ~25 km, requiring confirmation through IR and petrography.</p>
+<p>3. Fragmentation analysis based on corrected magnetic susceptibility and bulk density consistency identifies 3 distinct meteorite falls in Catalina (10 paired fragments) and 2 confirmed falls in Médano (6 paired fragments).</p>
 
 <p>5. The integration of multiple non-destructive techniques (KLY5 + IR + Raman) can effectively replace destructive methods for classification of ordinary chondrites, with targeted petrography reserved for conflict resolution.</p>
 
@@ -265,11 +293,11 @@ tr:nth-child(even){background:#f8f8f8}
 
 <!-- ===== AUTHOR CONTRIBUTIONS ===== -->
 <h2>Author Contributions</h2>
-<p><strong>S. Aravena</strong> conceived the study, led the field expeditions (including portable susceptibilimeter screening), acquired and processed KLY5 magnetic susceptibility data, supervised the thesis of M.J. Figueroa, and wrote the manuscript. <strong>M.J. Figueroa Zambrano</strong> performed petrography, Raman spectroscopy, and magnetic susceptibility analysis on 7 reference samples as part of her undergraduate thesis at Universidad Mayor. <strong>G. Batalla</strong> acquired FT-IR infrared spectra for 27 samples. <strong>A. Escobar</strong> will continue IR measurements as part of his thesis work. <strong>D. Moncada</strong> and <strong>M. Peña</strong> supervised the thesis of M.J. Figueroa at Universidad Mayor. <strong>L. Cieza</strong> directs the Laboratorio de Polvo Cósmico at UDP and supervised IR spectroscopy measurements. <strong>A. Mohor, D. Castañeda, R. Valles, V. Cárcamo, L. Olivares,</strong> and <strong>S. Gatica</strong> participated in the field expedition as part of the <em>Fluidos Planetarios</em> elective course and collected the meteorite specimens.</p>
+<p><strong>S. Aravena</strong> conceived the study, led the field expeditions (including portable susceptibilimeter screening), acquired and processed KLY5 magnetic susceptibility data, supervised the thesis of M.J. Figueroa, and wrote the manuscript. <strong>M.J. Figueroa Zambrano</strong> performed petrography, Raman spectroscopy, and magnetic susceptibility analysis on 7 reference samples as part of her undergraduate thesis at Universidad Mayor. <strong>M.E. Parra</strong> performed petrographic classification on 4 samples (Exp19-01, Exp19-11, Exp19-15, Exp19-27) as part of her undergraduate thesis at Universidad de Chile under the guidance of D. Moncada. <strong>G. Batalla</strong> acquired FT-IR infrared spectra for 27 samples. <strong>A. Escobar</strong> will continue IR measurements as part of his thesis work. <strong>B. De la Fuente</strong> established the initial meteorite repository, measured densities, cut and powdered samples for IR spectroscopy, estimated macroscopic weathering grades (W) for all specimens based on fusion crust preservation following the Wlotzka (1993) scale, and performed primary magnetic susceptibility classification (H/L/LL) on the collection, all as part of her professional practice at Universidad de Chile under the supervision of S. Aravena. <strong>D. Moncada</strong> and <strong>M. Peña</strong> supervised the thesis of M.J. Figueroa at Universidad Mayor. <strong>D. Moncada</strong> also supervised the thesis of M.E. Parra at Universidad de Chile. <strong>L. Cieza</strong> and <strong>R. Lavín</strong> served on the thesis committee of M.E. Parra. <strong>L. Cieza</strong> directs the Laboratorio de Polvo Cósmico at Universidad Diego Portales and supervised IR spectroscopy measurements. <strong>A. Mohor, D. Castañeda, R. Valles, V. Cárcamo, L. Olivares,</strong> and <strong>S. Gatica</strong> participated in the field expedition as part of the <em>Fluidos Planetarios</em> elective course and collected the meteorite specimens.</p>
 
 <!-- ===== ACKNOWLEDGMENTS ===== -->
 <h2>Acknowledgments</h2>
-<p>This work was funded by a Community Grant from the Meteoritical Society (August 2025). The Beatriz Levi Repository is housed at the Department of Geology, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile. Magnetic susceptibility data were acquired by S. Aravena at the Laboratorio de Paleomagnetismo (UChile). Infrared spectroscopy was performed by G. Batalla at the Laboratorio de Polvo Cósmico, Núcleo de Astronomía, Universidad Diego Portales, under the supervision of L. Cieza; newly incorporated A. Escobar continues IR measurements under their guidance. Petrographic analysis was carried out by M.J. Figueroa at Universidad Mayor as part of her undergraduate thesis. We thank the field expedition team (April 2019) — Alfonso Mohor, Diego Castañeda, Roberto Valles, Víctor Cárcamo, Lorena Olivares, and Sebastián Gatica — all participants of the <em>Fluidos Planetarios</em> elective course led by S. Aravena. The Figueroa (2023) thesis was supported by FONDECYT Project N°11170210 and FONDEQUIP EQM170103, and co-guided by D. Moncada (Universidad Mayor), S. Aravena (Universidad de Chile), and M. Peña (Universidad Mayor).</p>
+<p>This work was funded by a Community Grant from the Meteoritical Society (August 2025), and by FONDECYT Regular 1171246, FONDECYT Iniciación 11170210, and FONDEQUIP EQM170103. The Beatriz Levi Repository is housed at the Department of Geology, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile. Magnetic susceptibility data were acquired by S. Aravena at the Laboratorio de Paleomagnetismo (UChile). Infrared spectroscopy was performed by G. Batalla at the Laboratorio de Polvo Cósmico, Núcleo de Astronomía, Universidad Diego Portales, under the supervision of L. Cieza; newly incorporated A. Escobar continues IR measurements under their guidance. B. De la Fuente (Universidad de Chile) established the initial repository, performed density measurements, sample preparation, and primary magnetic susceptibility classification during her professional practice under the supervision of S. Aravena. Petrographic analysis was carried out by M.J. Figueroa at Universidad Mayor and by M.E. Parra at Universidad de Chile as part of their undergraduate theses. We thank the field expedition team (April 2019) — Alfonso Mohor, Diego Castañeda, Roberto Valles, Víctor Cárcamo, Lorena Olivares, and Sebastián Gatica — all participants of the <em>Fluidos Planetarios</em> elective course led by S. Aravena. The Figueroa (2023) thesis was co-guided by D. Moncada (Universidad Mayor), S. Aravena (Universidad de Chile), and M. Peña (Universidad Mayor). The Parra thesis was guided by D. Moncada (Universidad de Chile), with thesis committee L. Cieza (Universidad Diego Portales) and R. Lavín (Universidad Diego Portales).</p>
 
 <!-- ===== REFERENCES ===== -->
 <h2>References</h2>
@@ -284,6 +312,7 @@ tr:nth-child(even){background:#f8f8f8}
 <p>Hutzler, A., Gattacceca, J., Rochette, P., et al. (2016). Meteorite flux at the Atacama Desert derived by a detailed weathering model. <em>Earth and Planetary Science Letters</em>, 444, 114-123.</p>
 <p>Keil, K., and Fredriksson, K. (1964). The iron, magnesium, and calcium distribution in coexisting olivines and rhombic pyroxenes of chondrites. <em>Journal of Geophysical Research</em>, 69(16), 3487-3515.</p>
 <p>Koike, C., Chihara, H., Tsuchiyama, A., et al. (2003). Compositional dependence of infrared absorption spectra of crystalline silicate-pyroxene. <em>Astronomy &amp; Astrophysics</em>, 399, 1101-1107.</p>
+<p>Parra, M.E. (2023). <em>Petrografía de meteoritos del Desierto de Atacama: clasificación y caracterización de condritas ordinarias</em>. Undergraduate thesis, Universidad de Chile, Santiago, Chile.</p>
 <p>Pittarello, L., Baert, K., Debaille, V., and Claeys, P. (2015). Micro-Raman spectroscopy of olivine and pyroxene in ordinary chondrites. <em>Meteoritics &amp; Planetary Science</em>, 50(6), 1074-1092.</p>
 <p>Reich, M., Palacios, C., and Vargas, G. (2009). The Atacama Desert: A hyperarid environment for the preservation of meteorites. <em>Geologica Acta</em>, 7(1-2), 245-254.</p>
 <p>Rochette, P., Sagnotti, L., Bourot-Denise, M., et al. (2003). Magnetic classification of stony meteorites. <em>Meteoritics &amp; Planetary Science</em>, 38(4), 535-546.</p>
@@ -354,6 +383,55 @@ const muestras = [
   {c:"LV-358",n:"Vientos 358", lc:null,pW:null,ir:"no",t:"C",loc:"Vientos",nota:"Carbonácea"},
   {c:"LV-357",n:"Vientos 357", lc:null,pW:null,ir:"no",t:"C",loc:"Vientos",nota:"Carbonácea"},
 ];
+
+const MASS_MAP = {
+  "Exp19-01":4.9,"Exp19-03":1.7,"Exp19-04":3.8,"Exp19-05":3.5,"Exp19-06":3.9,
+  "Exp19-07":71.4,"Exp19-09":8.9,"Exp19-10":1.6,"Exp19-11":12.9,"Exp19-12":3,
+  "Exp19-13":2.4,"Exp19-14":14.9,"Exp19-17":2.7,"Exp19-19":0.8,
+  "Exp19-21":5.4,"Exp19-22":1.7,"Exp19-23":1.1,"Exp19-24":5.9,"Exp19-25":1.9,
+  "Exp19-26":1.9,"Exp19-29":1,"Exp19-30":28.4,"Exp19-31":13,"Exp19-32":2.3,
+  "Exp19-33":1.6,"Exp19-34":1.2,"Exp19-40":260.8,"Exp19-41":113.5,"Exp19-42":26.4,
+  "Exp19-43":52.7,"Exp19-44":24,"Exp19-45":55.3,"Exp19-46":36.8,"Exp19-47":38.9,
+  "Exp19-48":3.7,"Exp19-49":26.1,"Exp19-50":29.8,"Exp19-51":32.1,"Exp19-52":297.5,
+  "Exp19-53":8.7,"Exp19-54":80.1,"Exp19-56":178.2
+};
+const PETRO_MAP = {
+  "Exp19-01":{type:"H",grade:5},
+  "Exp19-11":{type:"LL",grade:6},
+  "Exp19-14":{type:"H",grade:4},
+  "Exp19-21":{type:"H",grade:4},
+  "Exp19-30":{type:"H",grade:5},
+  "Exp19-41":{type:"L",grade:4},
+  "Exp19-42":{type:"H",grade:4},
+  "Exp19-49":{type:"H",grade:5},
+  "Exp19-53":{type:"H",grade:4}
+};
+const DISCOVERER_MAP = {
+  "Exp19-01":"Alfonso","Exp19-03":"Daniel","Exp19-04":"Daniel","Exp19-05":"Anji",
+  "Exp19-06":"Samanta, Rober","Exp19-07":"Alfonso","Exp19-09":"Rober","Exp19-10":"Diego",
+  "Exp19-11":"Alfonso","Exp19-12":"Anji","Exp19-13":"Alfonso","Exp19-14":"Víctor",
+  "Exp19-17":"Diego","Exp19-19":"Alfonso","Exp19-21":"Diego","Exp19-22":"Samanta",
+  "Exp19-23":"Diego","Exp19-24":"Rober, Seba","Exp19-25":"Rober","Exp19-26":"Samanta",
+  "Exp19-29":"Alfonso","Exp19-30":"Daniel","Exp19-31":"Seba","Exp19-32":"Rober",
+  "Exp19-33":"Seba","Exp19-34":"Alfonso","Exp19-40":"Diego","Exp19-41":"Samanta",
+  "Exp19-42":"Lore","Exp19-43":"Daniel","Exp19-44":"Seba","Exp19-45":"Alfonso, Samanta",
+  "Exp19-46":"Samanta, Alfonso","Exp19-47":"Seba, Profesor","Exp19-48":"Víctor",
+  "Exp19-49":"Daniel, Diego","Exp19-50":"Alfonso","Exp19-51":"Lore","Exp19-52":"Samanta et al.",
+  "Exp19-53":"Seba","Exp19-54":"Víctor","Exp19-56":"Diego"
+};
+const DENSITY_MAP = {
+  "Exp19-01":2.722,"Exp19-03":2.833,"Exp19-04":3.455,"Exp19-05":3.500,
+  "Exp19-06":1.840,"Exp19-07":2.859,"Exp19-09":3.069,"Exp19-10":2.667,
+  "Exp19-11":4.300,"Exp19-12":2.727,"Exp19-13":3.000,"Exp19-14":3.548,
+  "Exp19-17":2.700,"Exp19-19":2.667,"Exp19-21":3.176,"Exp19-22":2.429,
+  "Exp19-23":2.200,"Exp19-24":2.429,"Exp19-25":2.375,"Exp19-26":2.239,
+  "Exp19-29":2.500,"Exp19-30":3.572,"Exp19-31":2.826,"Exp19-32":2.556,
+  "Exp19-33":3.200,"Exp19-34":2.000,"Exp19-40":3.548,"Exp19-41":3.697,
+  "Exp19-42":3.718,"Exp19-43":3.764,"Exp19-44":3.871,"Exp19-45":1.590,
+  "Exp19-46":2.962,"Exp19-47":2.841,"Exp19-48":3.364,"Exp19-49":2.882,
+  "Exp19-50":3.590,"Exp19-51":3.178,"Exp19-53":3.107,"Exp19-54":3.658,
+  "Exp19-56":3.991
+};
 
 // ---- FIELD DATA (portable susceptibilimeter, 10⁻³ SI) ----
 const fieldData = {
@@ -442,6 +520,50 @@ function lookupKly(name) {
   if (nameToKly[withSpace]) return nameToKly[withSpace];
   return null;
 }
+
+// ---- PAIR GROUPS ----
+const PAIR_GROUPS = [
+  {locality:"Catalina",color:"#1a2a3a",falls:[
+    {name:"Fall 1",type:"L/LL",count:4,range:"4.652–4.959",delta:"0.035",tc:"#e67e22",
+     samples:["Exp19-10","Exp19-26","Exp19-29","Exp19-17"]},
+    {name:"Fall 2",type:"LL",count:4,range:"4.521–4.694",delta:"0.040",tc:"#b8860b",
+     samples:["Exp19-08","Exp19-05","Exp19-22","Exp19-19"]},
+    {name:"Fall 4",type:"H",count:2,range:"5.118–5.285",delta:"0.017",tc:"#27ae60",
+     samples:["Exp19-01","Exp19-21"]}
+  ]},
+  {locality:"Médano",color:"#1a2a3a",falls:[
+    {name:"Fall 1",type:"LL",count:3,range:"4.294–4.443",delta:"0.043",tc:"#b8860b",
+     samples:["Exp19-52","Exp19-54","Exp19-46"]},
+    {name:"Cluster 2",type:"LL/L",count:3,range:"4.640–4.966",delta:"0.026",tc:"#b8860b",
+     samples:["Exp19-44","Exp19-43","Exp19-56"]},
+    {name:"H pair",type:"H",count:2,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
+     samples:["Exp19-42","Exp19-41"]}
+  ]},
+];
+function sampleLookup(code){return muestras.find(s=>s.c===code);}
+function renderPaperPairGroups(){
+  const el=document.getElementById('pair-groups-paper');
+  if(!el)return;
+  let html='<h2 style="margin:28px 0 16px">Visual Summary of Magnetic Pairing Groups</h2>';
+  PAIR_GROUPS.forEach(g=>{
+    html+=`<div class="pair-locality"><h3 style="color:${g.color};font-size:15px;font-weight:700;margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid #ddd">${g.locality}</h3><div class="pair-grid">`;
+    g.falls.forEach(f=>{
+      html+=`<div class="pair-card"><div class="pair-card-header" style="background:${f.tc}"><span>${f.name}</span><span>${f.count} fragments · Δχ ${f.delta}</span></div><div class="pair-card-body"><div class="pair-info"><span>Type ${f.type}</span>${f.range?`<span>χ corr ${f.range}</span>`:''}</div>`;
+      f.samples.forEach(c=>{
+        const s=sampleLookup(c);if(!s)return;
+        const chi=s.lc!=null?s.lc.toFixed(3):'—';
+        const w=s.pW!=null?'W'+s.pW:(s.eW!=null?'W'+s.eW+'e':'—');
+        html+=`<div class="pair-sample"><span><span class="ps-code">${s.c}</span> <span class="ps-name">${s.n}</span></span><span><span class="ps-chi">χ ${chi}</span> · <span class="ps-w">${w}</span></span></div>`;
+      });
+      html+=`</div></div>`;
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+const clsTag = t => t==='H'?'tag-h':t==='L'?'tag-l':t==='LL'?'tag-ll':t==='C'?'tag-c':'tag-q';
 
 // ---- FIELD TABLE ----
 const fieldTbody = document.getElementById('field-tbody');
@@ -536,7 +658,6 @@ Object.entries(fieldData).forEach(([name, readings]) => {
 })();
 
 // ---- TABLE 1 ----
-const clsTag = t => t==='H'?'tag-h':t==='L'?'tag-l':t==='LL'?'tag-ll':t==='C'?'tag-c':'tag-q';
 const tbody = document.getElementById('master-tbody');
 muestras.forEach(m => {
   const kt = m.lc != null ? (m.lc >= 5.08 ? 'H' : m.lc >= 4.68 ? 'L' : m.lc >= 4.37 ? 'LL' : '??') : '—';
@@ -553,107 +674,350 @@ muestras.forEach(m => {
   </tr>`;
 });
 
-// ---- ROCHETTE CHART ----
-(function(){
-  const MARGIN={top:35,right:25,bottom:38,left:48},W_MIN=-0.5,W_MAX=5.5,CHI_MIN=3.7,CHI_MAX=5.9;
-  const cv=document.getElementById('rochetteCanvas');
-  const rect=cv.parentElement.getBoundingClientRect();
-  const dpr=window.devicePixelRatio||1;
-  const W=760,H=420;
-  cv.width=W*dpr;cv.height=H*dpr;
-  const ctx=cv.getContext('2d');
-  ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  const x0=MARGIN.left,y0=MARGIN.top,x1=W-MARGIN.right,y1=H-MARGIN.bottom;
-  const toCanvas=(w,chi)=>({x:x0+(w-W_MIN)/(W_MAX-W_MIN)*(x1-x0),y:y1-(chi-CHI_MIN)/(CHI_MAX-CHI_MIN)*(y1-y0)});
-  // axes labels
-  ctx.fillStyle='#444';ctx.font='11px Arial';ctx.textAlign='center';ctx.textBaseline='top';
-  for(let w=0;w<=5;w++){const p=toCanvas(w,0);ctx.fillText('W'+w,p.x,y1+6);}
-  ctx.textAlign='right';ctx.textBaseline='middle';
-  for(let c=3.8;c<=5.8;c+=0.2){const p=toCanvas(0,c);ctx.fillText(c.toFixed(1),p.x-6,p.y);}
-  ctx.fillStyle='#333';ctx.font='13px Arial';ctx.textAlign='center';ctx.textBaseline='top';
-  ctx.fillText('Weathering Grade (W)',(x0+x1)/2,y1+24);
-  ctx.save();ctx.translate(15,(y0+y1)/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.textBaseline='bottom';
-  ctx.fillText('log χ (10⁻⁹ m³/kg)',0,0);ctx.restore();
-  ctx.strokeStyle='#999';ctx.lineWidth=1;ctx.strokeRect(x0,y0,x1-x0,y1-y0);
-  ctx.save();ctx.beginPath();ctx.rect(x0,y0,x1-x0,y1-y0);ctx.clip();
-  // grid
-  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
-  for(let w=0;w<=5;w++){const p=toCanvas(w,0);ctx.beginPath();ctx.moveTo(p.x,y0);ctx.lineTo(p.x,y1);ctx.stroke();}
-  for(let c=3.8;c<=5.8;c+=0.2){const p=toCanvas(0,c);ctx.beginPath();ctx.moveTo(x0,p.y);ctx.lineTo(x1,p.y);ctx.stroke();}
-  // bands
-  const slope=-0.15, bands=[
-    {l:'H',c:5.18,h:0.10,c1:'rgba(39,174,96,0.10)',c2:'rgba(39,174,96,0.40)'},
-    {l:'L',c:4.78,h:0.10,c1:'rgba(230,126,34,0.10)',c2:'rgba(230,126,34,0.40)'},
-    {l:'LL',c:4.46,h:0.09,c1:'rgba(184,134,11,0.10)',c2:'rgba(184,134,11,0.40)'},
-  ];
-  bands.forEach(b=>{
-    const pts=[];
-    for(let w=-0.5;w<=5.5;w+=0.05){
-      const lo=b.c+slope*w-b.h;if(lo<CHI_MIN)continue;
-      pts.push(toCanvas(w,Math.min(lo,CHI_MAX)));
-    }
-    for(let w=5.5;w>=-0.5;w-=0.05){
-      const hi=b.c+slope*w+b.h;if(hi<CHI_MIN)continue;
-      pts.push(toCanvas(w,Math.min(hi,CHI_MAX)));
-    }
-    if(pts.length<4)return;
-    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
-    pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.closePath();ctx.fillStyle=b.c1;ctx.fill();
-    const p0=toCanvas(0,b.c);ctx.fillStyle=b.c2;ctx.font='bold 12px Arial';
-    ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText(b.l,p0.x+4,p0.y-2);
-    const p5=toCanvas(5,b.c+slope*5);ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p5.x,p5.y);
-    ctx.strokeStyle=b.c2;ctx.lineWidth=1.5;ctx.setLineDash([5,3]);ctx.stroke();ctx.setLineDash([]);
+// ---- MASS vs LOG CHI CHART ----
+const kly5Group = chi => {
+  if (chi >= 4.72) return 'H';
+  if (chi >= 4.265) return 'L';
+  return 'LL';
+};
+const massPoints = [];
+let massHover = -1;
+const CHART_DPR2 = window.devicePixelRatio || 1;
+function drawMassLogChiChart() {
+  massPoints.length = 0;
+  const cv = document.getElementById('massLogChiCanvas');
+  if (!cv) return;
+  const W = 760, H = 420;
+  cv.width = W * CHART_DPR2; cv.height = H * CHART_DPR2;
+  const ctx = cv.getContext('2d');
+  ctx.scale(CHART_DPR2, CHART_DPR2);
+  const MARGIN = { top: 30, right: 20, bottom: 42, left: 62 };
+  const CHI_MIN2 = 3.4, CHI_MAX2 = 5.6, MASS_LOG_MIN = -0.35, MASS_LOG_MAX = 2.55;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
+  const toX = c => x0 + (c - CHI_MIN2) / (CHI_MAX2 - CHI_MIN2) * (x1 - x0);
+  const toY = m => y1 - (Math.log10(m) - MASS_LOG_MIN) / (MASS_LOG_MAX - MASS_LOG_MIN) * (y1 - y0);
+
+  // Vertical classification bands (chi on X axis)
+  const bandColors = {
+    H: { fill: 'rgba(39,174,96,0.10)', stroke: 'rgba(39,174,96,0.35)', mean: 4.89, lo: 4.58, hi: 5.20 },
+    L: { fill: 'rgba(230,126,34,0.10)', stroke: 'rgba(230,126,34,0.35)', mean: 4.55, lo: 4.27, hi: 4.83 },
+    LL: { fill: 'rgba(184,134,11,0.10)', stroke: 'rgba(184,134,11,0.35)', mean: 3.98, lo: 3.57, hi: 4.39 },
+  };
+  Object.entries(bandColors).forEach(([label, b]) => {
+    const xLo = toX(b.lo), xHi = toX(b.hi);
+    ctx.fillStyle = b.fill;
+    ctx.fillRect(xLo, y0, xHi - xLo, y1 - y0);
+    ctx.strokeStyle = b.stroke; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(xLo, y0); ctx.lineTo(xLo, y1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xHi, y0); ctx.lineTo(xHi, y1); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = b.stroke; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(label + ' ' + b.lo.toFixed(2) + '\u2013' + b.hi.toFixed(2), xLo + 2, y0 - 2);
   });
-  // saturation zone
-  const sy=toCanvas(0,5.55).y;ctx.fillStyle='rgba(255,0,0,0.04)';
-  ctx.fillRect(x0,sy,x1-x0,y1-sy);
-  ctx.fillStyle='#999';ctx.font='9px Arial';ctx.textAlign='left';ctx.textBaseline='top';
-  ctx.fillText('Saturation',x1-60,sy+4);
-  // data points
-  const COL={H:'#27ae60',L:'#e67e22',LL:'#b8860b',C:'#8e44ad','??':'#95a5a6'};
-  muestras.filter(m=>m.lc!=null).forEach(m=>{
-    const W=m.pW!=null?m.pW:m.eW;if(W==null)return;
-    const p=toCanvas(W,m.lc);
-    ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);
-    ctx.fillStyle=(COL[m.t]||'#e74c3c')+'aa';ctx.fill();
-    ctx.strokeStyle=COL[m.t]||'#e74c3c';ctx.lineWidth=1.5;ctx.stroke();
+
+  // Axes
+  ctx.fillStyle = '#444'; ctx.font = '11px Arial';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let c = 3.6; c <= 5.6; c += 0.2) { ctx.fillText(c.toFixed(1), toX(c), y1 + 6); }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  const massTicks = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 300];
+  massTicks.forEach(m => { ctx.fillText(m, x0 - 6, toY(m)); });
+  ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('log \u03c7 (10\u207b\u2079 m\u00b3/kg)', (x0 + x1) / 2, y1 + 26);
+  ctx.save(); ctx.translate(18, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText('Mass (g)', 0, 0); ctx.restore();
+
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 0.5;
+  for (let c = 3.6; c <= 5.6; c += 0.2) { const px = toX(c); ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke(); }
+  massTicks.forEach(m => { const py = toY(m); ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke(); });
+
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
+  ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
+
+  const colors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b' };
+  const R = 4;
+  muestras.filter(m => m.lc != null && MASS_MAP[m.c] != null).forEach(m => {
+    const mg = MASS_MAP[m.c];
+    const px = toX(m.lc), py = toY(mg);
+    const grp = kly5Group(m.lc);
+    ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
+    ctx.fillStyle = colors[grp]; ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = colors[grp]; ctx.lineWidth = 2; ctx.stroke();
+    massPoints.push({ x: px, y: py, r: R, c: m.c, n: m.n, m: mg, lc: m.lc, grp });
   });
+
+  if (massHover >= 0 && massHover < massPoints.length) {
+    const hp = massPoints[massHover];
+    ctx.beginPath(); ctx.arc(hp.x, hp.y, R + 3, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#e74c3c'; ctx.lineWidth = 3; ctx.stroke();
+  }
   ctx.restore();
-})();
+
+  const lr = 4, lgap = 17, lpad = 8;
+  const legItems = [
+    { type: 'label', text: 'KLY5 group', h: 1 },
+    { type: 'color', label: 'H (\u03c7 4.89\u00b10.31)', color: '#27ae60', h: 1 },
+    { type: 'color', label: 'L (\u03c7 4.55\u00b10.28)', color: '#e67e22', h: 1 },
+    { type: 'color', label: 'LL (\u03c7 3.98\u00b10.41)', color: '#b8860b', h: 1 },
+  ];
+  const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
+  const lw = 150;
+  const lx = x1 - lw - 8, ly = y0 + 8;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(lx, ly, lw, lh, 4); ctx.fill(); ctx.stroke();
+  let yy = ly + lpad;
+  ctx.font = '10px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  legItems.forEach(item => {
+    const sy = yy + lgap / 2;
+    if (item.type === 'label') { ctx.fillStyle = '#999'; ctx.font = '9px Arial'; ctx.fillText(item.text, lx + lpad, sy); yy += lgap; return; }
+    if (item.type === 'color') {
+      ctx.fillStyle = item.color; ctx.beginPath(); ctx.arc(lx + lpad + lr, sy, lr, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#444'; ctx.font = '10px Arial'; ctx.fillText(item.label, lx + lpad + 12, sy);
+      yy += lgap;
+    }
+  });
+
+  if (!cv._massListeners) {
+    cv._massListeners = true;
+    cv.addEventListener('mousemove', function (e) {
+      const rect = cv.getBoundingClientRect();
+      const sc = cv.width / CHART_DPR2 / rect.width;
+      const cx = (e.clientX - rect.left) * sc, cy = (e.clientY - rect.top) * sc;
+      let hit = -1;
+      for (let i = 0; i < massPoints.length; i++) {
+        const p = massPoints[i], dx = cx - p.x, dy = cy - p.y;
+        if (dx*dx + dy*dy <= (p.r+4)*(p.r+4)) { hit = i; break; }
+      }
+      if (hit !== massHover) { massHover = hit; drawMassLogChiChart(); }
+      const tip = document.getElementById('chart-tooltip');
+      if (hit >= 0) {
+        const p = massPoints[hit];
+        const pos = cv.getBoundingClientRect();
+        tip.style.display = 'block'; tip.style.left = (e.clientX - pos.left + 12) + 'px'; tip.style.top = (e.clientY - pos.top - 10) + 'px';
+        tip.textContent = p.c + ' ' + p.n + ' | mass=' + p.m + ' g, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp;
+        cv.style.cursor = 'pointer';
+      } else { tip.style.display = 'none'; cv.style.cursor = 'crosshair'; }
+    });
+    cv.addEventListener('mouseleave', function () {
+      document.getElementById('chart-tooltip').style.display = 'none';
+      cv.style.cursor = 'default'; massHover = -1; drawMassLogChiChart();
+    });
+  }
+}
+drawMassLogChiChart();
 
 // ---- DOUGHNUT ----
 (function(){
-  const cv=document.getElementById('doughnutCanvas');
+  const cv = document.getElementById('doughnutCanvas');
+  if (!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = 300 * dpr; cv.height = 300 * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, 300, 300);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 300, 300);
+  const cx = 150, cy = 150, R = 110, types = {};
+  muestras.filter(m => m.lc != null).forEach(m => {
+    types[kly5Group(m.lc)] = (types[kly5Group(m.lc)] || 0) + 1;
+  });
+  const total = Object.values(types).reduce((a, b) => a + b, 0);
+  const colors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
+  let start = -Math.PI / 2;
+  Object.entries(types).forEach(([t, n]) => {
+    const a = (n / total) * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, start, start + a); ctx.closePath();
+    ctx.fillStyle = colors[t] || '#999'; ctx.fill();
+    const mid = start + a / 2;
+    const lx = cx + Math.cos(mid) * (R + 18), ly = cy + Math.sin(mid) * (R + 18);
+    ctx.fillStyle = '#333'; ctx.font = '11px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(t + ' (' + n + ')', lx, ly);
+    start += a;
+  });
+  ctx.beginPath(); ctx.arc(cx, cy, R * 0.35, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.fillStyle = '#333'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(total, cx, cy - 6);
+  ctx.font = '10px Arial'; ctx.fillText('samples', cx, cy + 12);
+})();
+
+
+
+function drawPetroGradeChart() {
+  const cv = document.getElementById('petroGradeCanvas');
+  if (!cv) return;
+  const W=700,H=420;
   const dpr=window.devicePixelRatio||1;
-  const W=300,H=300;
-  cv.width=W*dpr;cv.height=H*dpr;
+  cv.width=W*dpr; cv.height=H*dpr;
   const ctx=cv.getContext('2d');
   ctx.scale(dpr,dpr);
-  const counts={};muestras.filter(m=>m.lc!=null).forEach(m=>{counts[m.t]=(counts[m.t]||0)+1});
-  const labels=[],vals=[],bg=[];
-  ['H','L','LL','??','C'].forEach(t=>{if(counts[t]){labels.push(t);vals.push(counts[t]);bg.push({H:'#27ae60',L:'#e67e22',LL:'#b8860b','??':'#95a5a6',C:'#8e44ad'}[t]);}});
-  const total=vals.reduce((a,b)=>a+b,0);if(total===0)return;
-  const cx=W/2,cy=H/2,R=Math.min(W,H)/2-12;
+  const MARGIN={top:25,right:30,bottom:40,left:50};
+  const GRADE_MIN=3,GRADE_MAX=7,CHI_MIN=4.2,CHI_MAX=5.6;
   ctx.clearRect(0,0,W,H);
-  let sa=-Math.PI/2;
-  vals.forEach((v,i)=>{
-    const a=v/total*Math.PI*2;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,sa,sa+a);ctx.closePath();
-    ctx.fillStyle=bg[i];ctx.fill();
-    const ma=sa+a/2;const lx=cx+Math.cos(ma)*(R*0.65),ly=cy+Math.sin(ma)*(R*0.65);
-    ctx.fillStyle='#fff';ctx.font='bold 14px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(labels[i],lx,ly);
-    ctx.font='11px Arial';ctx.fillText(v,lx,ly+16);
-    sa+=a;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  const x0=MARGIN.left,y0=MARGIN.top,x1=W-MARGIN.right,y1=H-MARGIN.bottom;
+  const toX=g=>x0+(g-GRADE_MIN)/(GRADE_MAX-GRADE_MIN)*(x1-x0);
+  const toY=c=>y1-(c-CHI_MIN)/(CHI_MAX-CHI_MIN)*(y1-y0);
+  // axes
+  ctx.fillStyle='#444'; ctx.font='11px Arial';
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  for(let g=3;g<=7;g++) ctx.fillText(g,toX(g),y1+6);
+  ctx.textAlign='right'; ctx.textBaseline='middle';
+  for(let c=4.2;c<=5.6;c+=0.2) ctx.fillText(c.toFixed(1),toX(GRADE_MIN)-6,toY(c));
+  ctx.fillStyle='#333'; ctx.font='13px Arial'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('Petrologic Type (grade)',(x0+x1)/2,y1+26);
+  ctx.save(); ctx.translate(16,(y0+y1)/2); ctx.rotate(-Math.PI/2);
+  ctx.textAlign='center'; ctx.textBaseline='bottom';
+  ctx.fillText('log \u03c7 (10\u207b\u2079 m\u00b3/kg)',0,0); ctx.restore();
+  // grid
+  ctx.strokeStyle='rgba(0,0,0,0.06)'; ctx.lineWidth=0.5;
+  for(let g=3;g<=7;g++){const px=toX(g);ctx.beginPath();ctx.moveTo(px,y0);ctx.lineTo(px,y1);ctx.stroke();}
+  for(let c=4.2;c<=5.6;c+=0.2){const py=toY(c);ctx.beginPath();ctx.moveTo(x0,py);ctx.lineTo(x1,py);ctx.stroke();}
+  ctx.strokeStyle='#999'; ctx.lineWidth=1; ctx.strokeRect(x0,y0,x1-x0,y1-y0);
+  ctx.save(); ctx.beginPath(); ctx.rect(x0,y0,x1-x0,y1-y0); ctx.clip();
+  // points
+  const pcolors={H:'#27ae60',L:'#e67e22',LL:'#b8860b'};
+  const R=5;
+  muestras.filter(m=>m.lc!=null&&PETRO_MAP[m.c]).forEach(m=>{
+    const pm=PETRO_MAP[m.c];
+    const jitter=(Math.random()-0.5)*0.18;
+    const px=toX(pm.grade+jitter),py=toY(m.lc);
+    const col=pcolors[pm.type]||'#999';
+    ctx.beginPath(); ctx.arc(px,py,R,0,2*Math.PI);
+    ctx.fillStyle=col; ctx.globalAlpha=0.5; ctx.fill(); ctx.globalAlpha=1;
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#333'; ctx.font='9px Arial'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+    ctx.fillText(m.c,px+7,py-3);
   });
-  // center label
-  ctx.beginPath();ctx.arc(cx,cy,R*0.35,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
-  ctx.fillStyle='#333';ctx.font='bold 22px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(total,cx,cy-6);
-  ctx.font='10px Arial';ctx.fillText('samples',cx,cy+12);
-})();
+  ctx.restore();
+  // legend
+  const lr=4,lgap=17,lpad=8;
+  const li=[{type:'label',text:'Petrographic type',h:1},{type:'color',label:'H',color:'#27ae60',h:1},{type:'color',label:'L',color:'#e67e22',h:1},{type:'color',label:'LL',color:'#b8860b',h:1}];
+  const lh=li.reduce((s,i)=>s+i.h*lgap,0)+lpad*2;
+  const lw=120;
+  const lx=x1-lw-8,ly=y0+8;
+  ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(lx,ly,lw,lh,4); ctx.fill(); ctx.stroke();
+  let yy=ly+lpad; ctx.font='10px Arial'; ctx.textAlign='left'; ctx.textBaseline='middle';
+  li.forEach(item=>{
+    const sy=yy+lgap/2;
+    if(item.type==='label'){ctx.fillStyle='#999';ctx.font='9px Arial';ctx.fillText(item.text,lx+lpad,sy);yy+=lgap;return;}
+    if(item.type==='color'){ctx.fillStyle=item.color;ctx.beginPath();ctx.arc(lx+lpad+lr,sy,lr,0,2*Math.PI);ctx.fill();ctx.fillStyle='#444';ctx.font='10px Arial';ctx.fillText(item.label,lx+lpad+12,sy);yy+=lgap;}
+  });
+}
+drawPetroGradeChart();
+
+const densityPoints2 = [];
+let densityHover2 = -1;
+function drawDensityChart() {
+  densityPoints2.length = 0;
+  const cv = document.getElementById('densityChiCanvas');
+  if (!cv) return;
+  const W = 760, H = 420;
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const MARGIN = { top: 25, right: 30, bottom: 42, left: 58 };
+  const CHI_MIN = 3.4, CHI_MAX = 5.6, DENS_MIN = 1.4, DENS_MAX = 4.6;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
+  const toX = c => x0 + (c - CHI_MIN) / (CHI_MAX - CHI_MIN) * (x1 - x0);
+  const toY = d => y1 - (d - DENS_MIN) / (DENS_MAX - DENS_MIN) * (y1 - y0);
+  ctx.fillStyle = '#444'; ctx.font = '11px Arial';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let c = 3.6; c <= 5.6; c += 0.2) { ctx.fillText(c.toFixed(1), toX(c), y1 + 6); }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let d = 1.5; d <= 4.5; d += 0.5) { ctx.fillText(d.toFixed(1), x0 - 6, toY(d)); }
+  ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('log \u03c7 (10\u207b\u2079 m\u00b3/kg)', (x0 + x1) / 2, y1 + 26);
+  ctx.save(); ctx.translate(16, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText('Density (g/cm\u00b3)', 0, 0); ctx.restore();
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 0.5;
+  for (let c = 3.6; c <= 5.6; c += 0.2) { const px = toX(c); ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke(); }
+  for (let d = 1.5; d <= 4.5; d += 0.5) { const py = toY(d); ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke(); }
+  ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
+  ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
+  const colors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
+  const R = 4;
+  muestras.filter(m => m.lc != null && DENSITY_MAP[m.c] != null).forEach(m => {
+    const dens = DENSITY_MAP[m.c];
+    const px = toX(m.lc), py = toY(dens);
+    const grp = kly5Group(m.lc);
+    ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
+    ctx.fillStyle = colors[grp] || '#999';
+    ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = colors[grp] || '#999';
+    ctx.lineWidth = 2; ctx.stroke();
+    densityPoints2.push({ x: px, y: py, r: R, c: m.c, n: m.n, dens, lc: m.lc, grp });
+  });
+  if (densityHover2 >= 0 && densityHover2 < densityPoints2.length) {
+    const hp = densityPoints2[densityHover2];
+    ctx.beginPath(); ctx.arc(hp.x, hp.y, R + 3, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#e74c3c'; ctx.lineWidth = 3; ctx.stroke();
+  }
+  ctx.restore();
+  const lr = 4, lgap = 17, lpad = 8;
+  const nH = muestras.filter(m => m.lc != null && DENSITY_MAP[m.c] != null && kly5Group(m.lc) === 'H').length;
+  const nL = muestras.filter(m => m.lc != null && DENSITY_MAP[m.c] != null && kly5Group(m.lc) === 'L').length;
+  const nLL = muestras.filter(m => m.lc != null && DENSITY_MAP[m.c] != null && kly5Group(m.lc) === 'LL').length;
+  const legItems = [
+    { type: 'label', text: 'KLY5 group', h: 1 },
+    { type: 'color', label: 'H (n=' + nH + ')', color: '#27ae60', h: 1 },
+    { type: 'color', label: 'L (n=' + nL + ')', color: '#e67e22', h: 1 },
+    { type: 'color', label: 'LL (n=' + nLL + ')', color: '#b8860b', h: 1 },
+  ];
+  const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
+  const lw = 140;
+  const lx = x1 - lw - 8, ly = y0 + 8;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(lx, ly, lw, lh, 4); ctx.fill(); ctx.stroke();
+  let yy = ly + lpad;
+  ctx.font = '10px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  legItems.forEach(item => {
+    const sy = yy + lgap / 2;
+    if (item.type === 'label') { ctx.fillStyle = '#999'; ctx.font = '9px Arial'; ctx.fillText(item.text, lx + lpad, sy); yy += lgap; return; }
+    if (item.type === 'color') {
+      ctx.fillStyle = item.color; ctx.beginPath(); ctx.arc(lx + lpad + lr, sy, lr, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#444'; ctx.font = '10px Arial'; ctx.fillText(item.label, lx + lpad + 12, sy);
+      yy += lgap;
+    }
+  });
+  if (!cv._densityListeners) {
+    cv._densityListeners = true;
+    cv.addEventListener('mousemove', function(e) {
+      const rect = cv.getBoundingClientRect();
+      const sc = cv.width / dpr / rect.width;
+      const cx = (e.clientX - rect.left) * sc, cy = (e.clientY - rect.top) * sc;
+      let hit = -1;
+      for (let i = 0; i < densityPoints2.length; i++) {
+        const p = densityPoints2[i], dx = cx - p.x, dy = cy - p.y;
+        if (dx*dx + dy*dy <= (p.r+4)*(p.r+4)) { hit = i; break; }
+      }
+      if (hit !== densityHover2) { densityHover2 = hit; drawDensityChart(); }
+      const tip = document.getElementById('chart-tooltip4');
+      if (hit >= 0) {
+        const p = densityPoints2[hit];
+        const pos = cv.getBoundingClientRect();
+        tip.style.display = 'block'; tip.style.left = (e.clientX - pos.left + 12) + 'px'; tip.style.top = (e.clientY - pos.top - 10) + 'px';
+        tip.textContent = p.c + ' \u03c1=' + p.dens.toFixed(3) + ' g/cm\u00b3, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp;
+        cv.style.cursor = 'pointer';
+      } else { tip.style.display = 'none'; cv.style.cursor = 'crosshair'; }
+    });
+    cv.addEventListener('mouseleave', function() {
+      document.getElementById('chart-tooltip4').style.display = 'none';
+      cv.style.cursor = 'default'; densityHover2 = -1; drawDensityChart();
+    });
+  }
+}
+drawDensityChart();
+
+// ---- PAIR GROUPS RENDER ----
+renderPaperPairGroups();
 </script>
 </body>
 </html>
