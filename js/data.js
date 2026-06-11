@@ -75,6 +75,443 @@ const FIELD_DATA = {
   "Médano 21 f2":[92.22,92.26],"Médano 21 f3":[27.75,27.79],"Médano 21 f4":[4.758,4.755],
   "Mutante 1":[46.58,46.66]
 };
+const PAIR_GROUPS = [
+  {locality:"Catalina",color:"#1a2a3a",falls:[
+    {name:"Fall 1",type:"L/LL",count:4,range:"4.652–4.959",delta:"0.035",tc:"#e67e22",
+     samples:["Exp19-10","Exp19-26","Exp19-29","Exp19-17"]},
+    {name:"Fall 2",type:"LL",count:4,range:"4.521–4.694",delta:"0.040",tc:"#b8860b",
+     samples:["Exp19-08","Exp19-05","Exp19-22","Exp19-19"]},
+    {name:"Fall 4",type:"H",count:2,range:"5.118–5.285",delta:"0.017",tc:"#27ae60",
+     samples:["Exp19-01","Exp19-21"]}
+  ]},
+  {locality:"Médano",color:"#1a2a3a",falls:[
+    {name:"Fall 1",type:"LL",count:3,range:"4.294–4.443",delta:"0.043",tc:"#b8860b",
+     samples:["Exp19-52","Exp19-54","Exp19-46"]},
+    {name:"Cluster 2",type:"LL/L",count:3,range:"4.640–4.966",delta:"0.026",tc:"#b8860b",
+     samples:["Exp19-44","Exp19-43","Exp19-56"]},
+    {name:"H pair",type:"H",count:2,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
+     samples:["Exp19-42","Exp19-41"]}
+  ]},
+
+];
+
+function sampleLookup(code) {
+  return SAMPLES.find(s => s.c === code);
+}
+
 const TYPE_COLORS = {H:'#27ae60',L:'#e67e22',LL:'#b8860b',C:'#8e44ad','??':'#999'};
-function typeBadge(t) { const c={'H':'badge-h','L':'badge-l','LL':'badge-ll','C':'badge-c'}; return '<span class="badge '+(c[t]||'badge-q')+'">'+(t||'?')+'</span>'; }
-function typeTag(t) { const c={'H':'tag-h','L':'tag-l','LL':'tag-ll','C':'tag-c'}; return '<span class="'+(c[t]||'tag-q')+'">'+(t||'?')+'</span>'; }
+
+// Initial mass (grams) from Repositorio Meteoritos.xlsx catalog — total specimen mass (sum of all fragments)
+const MASS_MAP = {
+  "Exp19-01":4.9,"Exp19-03":1.7,"Exp19-04":3.8,"Exp19-05":3.5,"Exp19-06":3.9,
+  "Exp19-07":71.4,"Exp19-09":8.9,"Exp19-10":1.6,"Exp19-11":12.9,"Exp19-12":3,
+  "Exp19-13":2.4,"Exp19-14":14.9,"Exp19-17":2.7,"Exp19-19":0.8,
+  "Exp19-21":5.4,"Exp19-22":1.7,"Exp19-23":1.1,"Exp19-24":5.9,"Exp19-25":1.9,
+  "Exp19-26":1.9,"Exp19-29":1,"Exp19-30":28.4,"Exp19-31":13,"Exp19-32":2.3,
+  "Exp19-33":1.6,"Exp19-34":1.2,"Exp19-40":260.8,"Exp19-41":113.5,"Exp19-42":26.4,
+  "Exp19-43":52.7,"Exp19-44":24,"Exp19-45":55.3,"Exp19-46":36.8,"Exp19-47":38.9,
+  "Exp19-48":3.7,"Exp19-49":26.1,"Exp19-50":29.8,"Exp19-51":32.1,"Exp19-52":297.5,
+  "Exp19-53":8.7,"Exp19-54":80.1,"Exp19-56":178.2
+};
+
+// Petrologic grade (3–7) and type (H/L/LL) from thin-section petrography
+// Only for samples with both thin-section classification AND KLY5 data
+const PETRO_MAP = {
+  "Exp19-01":{type:"H",grade:5,note:"H/L5"},   // mixed H/L, grade 5
+  "Exp19-11":{type:"LL",grade:6,note:"LL6"},
+  "Exp19-14":{type:"H",grade:4,note:"H4"},
+  "Exp19-21":{type:"H",grade:4,note:"H4"},
+  "Exp19-30":{type:"H",grade:5,note:"H5"},
+  "Exp19-41":{type:"L",grade:4,note:"L4"},        // petro L4, despite KLY5→H
+  "Exp19-42":{type:"H",grade:4,note:"H4"},        // petro H4 (nota says H4, despite DETAILS class L)
+  "Exp19-49":{type:"H",grade:5,note:"H5"},        // petro H5 in DETAILS
+  "Exp19-53":{type:"H",grade:4,note:"H4"}         // petro H4 in DETAILS
+};
+
+// Discoverer(s) from the collection catalog (Repositorio Meteoritos.xlsx)
+const DISCOVERER_MAP = {
+  "Exp19-01":"Alfonso","Exp19-03":"Daniel","Exp19-04":"Daniel","Exp19-05":"Anji",
+  "Exp19-06":"Samanta, Rober","Exp19-07":"Alfonso","Exp19-09":"Rober","Exp19-10":"Diego",
+  "Exp19-11":"Alfonso","Exp19-12":"Anji","Exp19-13":"Alfonso","Exp19-14":"Víctor",
+  "Exp19-17":"Diego","Exp19-19":"Alfonso","Exp19-21":"Diego","Exp19-22":"Samanta",
+  "Exp19-23":"Diego","Exp19-24":"Rober, Seba","Exp19-25":"Rober","Exp19-26":"Samanta",
+  "Exp19-29":"Alfonso","Exp19-30":"Daniel","Exp19-31":"Seba","Exp19-32":"Rober",
+  "Exp19-33":"Seba","Exp19-34":"Alfonso","Exp19-40":"Diego","Exp19-41":"Samanta",
+  "Exp19-42":"Lore","Exp19-43":"Daniel","Exp19-44":"Seba","Exp19-45":"Alfonso, Samanta",
+  "Exp19-46":"Samanta, Alfonso","Exp19-47":"Seba, Profesor","Exp19-48":"Víctor",
+  "Exp19-49":"Daniel, Diego","Exp19-50":"Alfonso","Exp19-51":"Lore","Exp19-52":"Samanta et al.",
+  "Exp19-53":"Seba","Exp19-54":"Víctor","Exp19-56":"Diego"
+};
+
+// Bulk density (g/cm³) from the collection catalog (average of all fragments)
+const DENSITY_MAP = {
+  "Exp19-01":2.722,"Exp19-03":2.833,"Exp19-04":3.455,"Exp19-05":3.500,
+  "Exp19-06":1.840,"Exp19-07":2.859,"Exp19-09":3.069,"Exp19-10":2.667,
+  "Exp19-11":4.300,"Exp19-12":2.727,"Exp19-13":3.000,"Exp19-14":3.548,
+  "Exp19-17":2.700,"Exp19-19":2.667,"Exp19-21":3.176,"Exp19-22":2.429,
+  "Exp19-23":2.200,"Exp19-24":2.429,"Exp19-25":2.375,"Exp19-26":2.239,
+  "Exp19-29":2.500,"Exp19-30":3.572,"Exp19-31":2.826,"Exp19-32":2.556,
+  "Exp19-33":3.200,"Exp19-34":2.000,"Exp19-40":3.548,"Exp19-41":3.697,
+  "Exp19-42":3.718,"Exp19-43":3.764,"Exp19-44":3.871,"Exp19-45":1.590,
+  "Exp19-46":2.962,"Exp19-47":2.841,"Exp19-48":3.364,"Exp19-49":2.882,
+  "Exp19-50":3.590,"Exp19-51":3.178,"Exp19-53":3.107,"Exp19-54":3.658,
+  "Exp19-56":3.991
+};
+
+function typeBadge(t) {
+  const colors = {'H':'badge-h','L':'badge-l','LL':'badge-ll','C':'badge-c'};
+  return `<span class="badge ${colors[t]||'badge-q'}">${t||'?'}</span>`;
+}
+function typeTag(t) {
+  const cls = {'H':'tag-h','L':'tag-l','LL':'tag-ll','C':'tag-c'};
+  return `<span class="${cls[t]||'tag-q'}">${t||'?'}</span>`;
+}
+
+const SAMPLE_DETAILS = {
+  "Exp19-42": {
+    basic: {
+      name: "Exp19-42 f2",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "26.4 g",
+      pieces: 1
+    },
+    classification: {
+      class: "L; type 4",
+      classifier: "María José Figueroa (2023)",
+      description: "Figueroa (2023) classified Médano 7 as an L-group ordinary chondrite with 9 wt% Fe, average crystal size of 0.11 mm, and a metal composition of kamacite (50%), troilite (40%), and oxides (10%). It is classified as type 4 due to well-defined chondrules, nearly absent glass, and a matrix with clastic-looking coarsening."
+    },
+    weathering: {
+      grade: "W2",
+      description: "Classified as W2 due to moderate oxidation of metals and troilite affecting approximately 50% of the sample, with minor sectors where oxidation reaches up to 80%."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with irregular fracturing. The main mineralogy consists of olivine (60%), pyroxene (30%), opaques (10%), and 4% porosity. Mineral crystals tend to occur massively, with smaller grain sizes making them appear more numerous and granular.",
+      matrix: "Fine-grained granoblastic texture with medium recrystallization degree. Constitutes 35% of the sample with crystal size < 0.11 mm.",
+      chondrules: "Well-defined boundaries, representing 52% of the sample with an average size of 0.363 mm. Chondrule types in order of abundance: POP, GOP, PO, PP, CP.",
+      chemicalGroup: "Médano 7 contains 9 wt% Fe with an average crystal size of 0.11 mm."
+    },
+    location: {
+      coordinates: "7268171 E, 363453 N",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-41": {
+    basic: {
+      name: "Exp19-41 f2",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "113.5 g",
+      pieces: 1
+    },
+    classification: {
+      class: "L4",
+      classifier: "María José Figueroa (2023)",
+      description: "Figueroa (2023) classified the sample as type 4, with mostly well-defined chondrules and, to a lesser extent, delineated chondrules within a clastic, coarsened matrix. This specimen contains 10 wt% Fe, classifying it as L-group, with an average crystal size of 0.12 mm."
+    },
+    weathering: {
+      grade: "W2",
+      description: "Classified as W2 due to minor to moderate oxidation of metals and troilite, with approximately 45% replacement, and sectors near edges where oxidation is higher."
+    },
+    petrology: {
+      mineralogy: "The predominant dark brown color throughout the section is most noticeable in matrix areas. Chondritic texture with low linear fracturing. Main mineralogy: olivine (50%), pyroxene (40%), opaques (10%), and 2% porosity. Mineral crystals tend to occur massively.",
+      matrix: "Fine-grained granoblastic texture with high recrystallization degree and dark brown color. Constitutes 38% of the sample with crystal size < 0.15 mm.",
+      chondrules: "Well to moderately defined boundaries, representing 50% of the sample with an average size of 0.33 mm. Chondrule types in order of abundance: POP, CP, PO, PR.",
+      chemicalGroup: "Iron content is 10%, composed of kamacite (70%, avg. 0.12 mm), troilite (20%, avg. 0.11 mm), and oxides (10%, avg. 0.13 mm)."
+    },
+    location: {
+      coordinates: "7268192 E, 363544 N",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile"
+    }
+  },
+  "Exp19-49": {
+    basic: {
+      name: "Exp19-49 F3",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "18.6 g",
+      pieces: 2
+    },
+    classification: {
+      class: "H5",
+      classifier: "María José Figueroa (2023)",
+      description: "Médano 14 contains 14 wt% Fe, classifying it as an H-group ordinary chondrite with an average crystal size of 0.08 mm. It is classified as type 5 due to chondrules with defined boundaries but well integrated into a recrystallized, coarsened matrix."
+    },
+    weathering: {
+      grade: "W5",
+      description: "Classified as W5 due to nearly complete oxidation of metals and troilite, with incipient oxidation of silicates, especially toward the sample edges."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with irregular fracturing overall and planar fracturing in crystals. Main mineralogy: olivine (35%), pyroxene (25%), opaques (40%), and 3% porosity.",
+      matrix: "Coarse-grained granoblastic texture with high recrystallization degree and brown colors. Constitutes 43% of the sample with crystal size < 0.13 mm.",
+      chondrules: "Boundaries are definable but well integrated into the matrix, representing 40% of the sample with an average size of 0.21 mm. Chondrule types in order of abundance: POP, PP, CP, OB.",
+      chemicalGroup: "Médano 14 contains 14 wt% Fe with an average crystal size of 0.08 mm, composed of kamacite (7%), troilite (3%), and oxides (90%). Minerals occur massively, and in this sample a great abundance of oxides replacing the original minerals and forming veins can be observed."
+    },
+    location: {
+      coordinates: "7265296 E, 362940 N",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-53": {
+    basic: {
+      name: "Exp19-53 F2",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "8.7 g",
+      pieces: 1
+    },
+    classification: {
+      class: "H4",
+      classifier: "María José Figueroa (2023)",
+      description: "Contains 14 wt% Fe, classifying it as H-group. Classified as type 4 due to well-defined chondrules with good matrix integration and a minor proportion of delineated chondrules, within a less opaque recrystallized matrix. It also presents minor glass in chondrules and the presence of kamacite."
+    },
+    weathering: {
+      grade: "W2",
+      description: "Classified as W2 due to moderate oxidation of metals and troilite with approximately 30% replacement, and incipient silicate alteration with minor oxide veinlets along edge sectors."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with irregular and planar fracturing in larger crystals. Main mineralogy: olivine (40%), pyroxene (35%), opaques (25%), and 3% porosity.",
+      matrix: "Granoblastic texture with medium recrystallization degree. Constitutes 33% of the sample with crystal size < 0.1 mm.",
+      chondrules: "Boundaries delineated by good matrix integration, representing 50% of the sample with sizes ranging from 0.09 to 0.4 mm (average ~0.2 mm). Chondrule types in order of abundance: POP, CP, OB, GOP. This sample also exhibits a PR-type chondrule that is not fully defined, showing anhedral crystals that do not appear to disperse fully radially. Additionally, a compound chondrule is observed with two different chondrule halves: one PR and one PP.",
+      chemicalGroup: "Médano 18 contains 14 wt% Fe, composed of kamacite (80%, avg. 0.14 mm), troilite (15%, avg. 0.07 mm), and oxides (25%, avg. 0.09 mm)."
+    },
+    location: {
+      coordinates: "7265323 E, 362933 N",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-01": {
+    basic: {
+      name: "Exp19-01",
+      abbrev: "Catalina 1",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "4.9 g",
+      pieces: 1
+    },
+    classification: {
+      class: "H/L5",
+      classifier: "Parra (2023) — Universidad de Chile, guided by D. Moncada",
+      description: "After plotting the mass-normalized magnetic susceptibility average against the weathering stage (W2) on the Rochette et al. (2012) diagram, the sample falls between the H and L ordinary chondrite fields. Therefore classified as H/L ordinary chondrite. Chondrule textures are discernible but not clearly delineated. Matrix is recrystallized with orthopyroxene predominating over clinopyroxene and absence of well-developed plagioclase. Secondary feldspar occurs predominantly as microcrystalline aggregates. Petrologic type 5 per Van Schmus & Wood (1967)."
+    },
+    weathering: {
+      grade: "W2",
+      description: "Per Parra (2023), transmitted light reveals a limonite patina; reflected light shows kamacite and troilite oxidized ~30% with minor oxidized veinlets. Weathering stage W2 per Wlotzka (1993)."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with limonite patina. Small fractures (~0.2–3 mm) and minor oxide-filled veinlets (~0.2–3 mm). Olivine (~21%, ~0.1–0.7 mm), pyroxene (~20%, ~1 mm to cryptocrystalline), feldspar (~20%), kamacite (~28%, ~0.5–0.1 mm), troilite (~12%, ~0.25–0.5 mm). Olivine and pyroxene are subhedral; kamacite and troilite are anhedral. Olivine: ~100% of chondrules. Pyroxene: ~43% in chondrules, ~57% in matrix. Kamacite: ~10% in chondrules, ~90% in matrix. Troilite: ~10% in chondrules, ~90% in matrix.",
+      matrix: "~30% volume. Feldspar: ~60%, cryptocrystalline. Pyroxene: ~40%, cryptocrystalline. Presence of oxide- and opaque-filled veinlets (kamacite and troilite).",
+      chondrules: "~70% of total volume, radii 0.1–0.3 mm. Defined to irregularly defined, subrounded. Types: PO (~12%, ~0.3 mm), PP (~6%, ~0.1–0.2 mm), POP (~12%, ~0.2–0.3 mm), BO (~40%, ~0.1–0.3 mm), RP (~50%, ~0.3 mm), G (~5%, ~0.1 mm), C (~20%, ~0.3 mm).",
+      chemicalGroup: "H/L — magnetic susceptibility (log χ) = 4.73"
+    },
+    location: {
+      coordinates: "7225074 N, 410890 E",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-11": {
+    basic: {
+      name: "Exp19-11",
+      abbrev: "Catalina 11",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "12.9 g",
+      pieces: 1
+    },
+    classification: {
+      class: "LL6",
+      classifier: "Parra (2023) — Universidad de Chile, guided by D. Moncada",
+      description: "After plotting the mass-normalized magnetic susceptibility average against weathering stage (W1) on the Rochette et al. (2012) diagram, the sample falls in the LL ordinary chondrite field. Extensive obliteration of primary textures is observed, with recrystallized matrix and development of clear interstitial secondary feldspar grains. Petrologic type 6 per Van Schmus & Wood (1967)."
+    },
+    weathering: {
+      grade: "W1",
+      description: "Per Parra (2023), transmitted light reveals a limonite patina; reflected light shows kamacite and troilite oxidized ≤20% with minor oxidized veinlets. Weathering stage W1 per Wlotzka (1993)."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with extensive obliteration of primary textures and recrystallized matrix. Fractures, veinlets, and limonite patina. Oxide-filled veinlets ~0.25–12 mm. Olivine (~21%, ~0.1–0.4 mm), pyroxene (~14%, <0.2 mm), feldspar (~21%), kamacite (~9%, <0.7 mm), troilite (~9%, <0.4 mm). Olivine and pyroxene are prismatic and subhedral; kamacite and troilite are anhedral. Olivine: ~50% in chondrules, ~50% in matrix. Pyroxene: ~50% in chondrules, ~50% in matrix. Feldspar: ~20% in chondrules, ~80% in matrix. Kamacite: ~5% in chondrules, ~95% in matrix. Troilite: ~5% in chondrules, ~95% in matrix.",
+      matrix: "~40% volume. Almost entirely covered by limonite patina. Feldspar: ~50%, cryptocrystalline. Olivine subhedral: ~30%, ~0.1–0.4 mm. Pyroxene subhedral: ~20%, <0.3 mm. Troilite observed around chondrules.",
+      chondrules: "~60% of total volume, rounded to subrounded, radii 0.1–0.3 mm. Defined to irregularly defined. Types: PO (~29%, ~0.1–0.3 mm), PP (~67%, ~0.1–0.3 mm), BO (~5%, ~0.1 mm).",
+      chemicalGroup: "LL — magnetic susceptibility (log χ) = 4.29"
+    },
+    location: {
+      coordinates: "7224994 N, 409437 E",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-14": {
+    basic: {
+      name: "Catalina 14 f2",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "14.9 g",
+      pieces: 1
+    },
+    classification: {
+      class: "H4",
+      classifier: "María José Figueroa (2023)",
+      description: "Classified as petrologic type 4 due to mostly well-defined chondrules, some delineated within a less opaque clastic matrix. Catalina 14 contains 15 wt% Fe, classifying it as H-group."
+    },
+    weathering: {
+      grade: "W3",
+      description: "Classified as W3 due to moderate to strong oxidation of metals and troilite with approximately 60% replacement. Incipient silicate alteration is also observed."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with moderate linear fracturing mainly affecting crystals. Olivine (55%), pyroxene (35%), opaques (10%), and 12% porosity.",
+      matrix: "33% of sample. Clastic and fine- to medium-grained granoblastic texture with moderate recrystallization. Orange coloration indicates oxidation near metal areas.",
+      chondrules: "40% of sample. Boundaries range from well to poorly defined. Identified chondrule types: POP, GOP, PR, CP, PO, OB.",
+      chemicalGroup: "15 wt% Fe, composed of kamacite (85%, avg. 0.18 mm), troilite (10%, avg. 0.065 mm), and oxides (5%, avg. 0.14 mm) which mainly affect other minerals."
+    },
+    location: {
+      coordinates: "7224869 E, 409425 N",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-15": {
+    basic: {
+      name: "Exp19-15",
+      abbrev: "Catalina 15",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "1.1 g",
+      pieces: 4
+    },
+    classification: {
+      class: "LL4",
+      classifier: "Parra (2023) — Universidad de Chile, guided by D. Moncada",
+      description: "After plotting mass-normalized magnetic susceptibility against weathering stage (W2) on the Rochette et al. (2012) diagram, the sample falls in the LL ordinary chondrite field. Chondrules are well defined; clinopyroxene is more abundant than orthopyroxene. Secondary feldspar occurs predominantly as microcrystalline aggregates. Petrologic type 4 per Van Schmus & Wood (1967)."
+    },
+    weathering: {
+      grade: "W2",
+      description: "Per Parra (2023), transmitted light reveals a limonite patina; reflected light shows kamacite and troilite oxidized ~30% with minor oxidized veinlets. Weathering stage W2 per Wlotzka (1993)."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with well-defined chondrules. Limonite patina. Oxide-filled veinlets ~1 mm. Olivine (~29%, ~0.1–0.5 mm), pyroxene (~21%, ~0.2–0.4 mm), feldspar (~20%, ~0.2 mm), kamacite (~21%, <0.6 mm), troilite (~9%, <0.4 mm). Olivine and pyroxene are prismatic and subhedral; kamacite and troilite are anhedral. Olivine: ~71% in chondrules, ~29% in matrix. Pyroxene: ~50% in chondrules, ~50% in matrix. Feldspar: ~29% in chondrules, ~71% in matrix. Kamacite: ~5% in chondrules, ~95% in matrix. Troilite: ~10% in chondrules, ~90% in matrix.",
+      matrix: "~30% volume. Inequigranular granoblastic texture with limonite patina. Feldspar: ~50%, cryptocrystalline. Olivine subhedral–anhedral: ~20%, ~0.2–0.3 mm. Pyroxene subhedral–anhedral: ~30%, ~0.2–0.3 mm. Oxidized opaques around chondrules.",
+      chondrules: "~70% of total volume, rounded to subrounded, well defined, radii ~0.1–0.8 mm. Types: PO (~12%, ~0.3–0.8 mm), PP (~4%, ~0.2 mm), POP (~24%, ~0.2–0.5 mm), BO (~20%, ~0.2–0.25 mm), RP (~10%, ~0.5 mm), G (~20%, ~0.1 mm), C (~10%, ~0.2 mm).",
+      chemicalGroup: "LL — magnetic susceptibility (log χ) = 4.01"
+    },
+    location: {
+      coordinates: "7224868 N, 409407 E",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-21": {
+    basic: {
+      name: "Exp19-21 F2",
+      abbrev: "Catalina 21",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "5.4 g",
+      pieces: 1
+    },
+    classification: {
+      class: "H4",
+      classifier: "María José Figueroa (2023)",
+      description: "Classified as type 4, with predominantly delineated chondrules within a generally recrystallized matrix. Glass present inside chondrules. Contains 12 wt% Fe, classifying Catalina 21 as H-group."
+    },
+    weathering: {
+      grade: "W3",
+      description: "Classified as W3 due to moderate to strong oxidation of metals and troilite with approximately 65% metal replacement. Incipient silicate alteration also observed."
+    },
+    petrology: {
+      mineralogy: "Olivine (45%), pyroxene (35%), opaques (20%), and 2% porosity.",
+      matrix: "Fine-grained granoblastic texture with high recrystallization degree. Constitutes 45% of the sample with crystal size < 0.11 mm.",
+      chondrules: "Well to moderately defined boundaries, representing ~41% of the sample with an average size of 0.38 mm. Recognized chondrule types in order of abundance: POP, CP, GOP.",
+      chemicalGroup: "12 wt% Fe, composed of kamacite (80%, avg. 0.21 mm), troilite (15%, avg. 0.51 mm), and oxides (5%, avg. 0.2 mm). Oxide size increases toward edges, indicating replacement progresses from edges toward the center."
+    },
+    location: {
+      coordinates: "7224986 N, 409273 E",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-27": {
+    basic: {
+      name: "Exp19-27",
+      abbrev: "Catalina 27",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "2.5 g",
+      pieces: 1
+    },
+    classification: {
+      class: "LL5",
+      classifier: "Parra (2023) — Universidad de Chile, guided by D. Moncada",
+      description: "After plotting mass-normalized magnetic susceptibility against weathering stage (W2) on the Rochette et al. (2012) diagram, the sample falls in the LL ordinary chondrite field. Chondrule textures are discernible but not clearly delineated. Matrix is recrystallized. Orthopyroxene predominates over clinopyroxene with absence of well-developed plagioclase. Secondary feldspar occurs predominantly as microcrystalline aggregates. Petrologic type 5 per Van Schmus & Wood (1967)."
+    },
+    weathering: {
+      grade: "W2",
+      description: "Per Parra (2023), transmitted light reveals a limonite patina; reflected light shows kamacite and troilite oxidized ~40% with oxidized veinlets. Weathering stage W2 per Wlotzka (1993)."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with discernible but not clearly delineated chondrules. Oxide-filled veinlets ~0.5–3 mm. Limonite patina. Olivine (~25%, ~0.1–0.3 mm), pyroxene (~29%, ~0.2–0.3 mm), feldspar (~16%), kamacite (~21%, <0.6 mm), troilite (~9%, <0.5 mm). Olivine and pyroxene are subhedral and prismatic; kamacite and troilite are anhedral. Olivine: ~100% in chondrules. Pyroxene: ~30% in chondrules, ~70% in matrix. Feldspar: ~40% in chondrules, ~60% in matrix. Kamacite: ~5% in chondrules, ~95% in matrix. Troilite: ~5% in chondrules, ~95% in matrix.",
+      matrix: "~30% volume. Inequigranular granoblastic texture with limonite patina. Feldspar (~30%, cryptocrystalline) and pyroxene subhedral–anhedral (~70%, ~0.2–0.3 mm). Opaques (kamacite and troilite) in matrix and around chondrules. Oxide-filled veinlets in matrix.",
+      chondrules: "~70% of total volume, radii 0.1–0.3 mm, rounded to subrounded, defined to irregularly defined. Types: PO (~10%, ~0.2–0.3 mm), PP (~30%, ~0.2–0.5 mm), POP (~60%, ~0.2–1 mm), BO (~20%, ~0.2–0.3 mm), RP (~30%, ~0.3 mm).",
+      chemicalGroup: "LL — magnetic susceptibility (log χ) = 3.72"
+    },
+    location: {
+      coordinates: "7224868 N, 409248 E",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  },
+  "Exp19-30": {
+    basic: {
+      name: "Exp19-30 F1-2",
+      abbrev: "Catalina 30",
+      observedFall: "No",
+      yearFound: 2019,
+      country: "Chile",
+      mass: "20.8 g",
+      pieces: 2
+    },
+    classification: {
+      class: "H5",
+      classifier: "María José Figueroa (2023)",
+      description: "Classified as type 5, with delineated to probably defined chondrules within a less opaque clastic matrix. Catalina 30 contains 19 wt% Fe, classifying it as H-group, with an average crystal size of 0.013 mm."
+    },
+    weathering: {
+      grade: "W3",
+      description: "Classified as W3 due to moderate metal oxidation affecting approximately 60%, along with incipient alteration of silicates such as olivine."
+    },
+    petrology: {
+      mineralogy: "Chondritic texture with irregular and linear fracturing at edges. Main mineralogy: olivine (40%), pyroxene (35%), opaques (25%), and 4% porosity.",
+      matrix: "Fine-grained granoblastic texture with low recrystallization degree, increasing toward edges. Represents 42% of the sample with crystal size < 0.13 mm.",
+      chondrules: "Moderately defined boundaries, representing ~35% of the sample with an average size of 0.46 mm. Chondrule types in order of abundance: POP, PR, GOP.",
+      chemicalGroup: "19 wt% Fe total, composed of kamacite (85%, avg. 0.16 mm), troilite (10%, avg. 0.088 mm), and oxides (5%, avg. ~1.14 mm). Minerals generally occur massively; in this sample, troilite and kamacite occasionally appear granular."
+    },
+    location: {
+      coordinates: "7224986 E, 409273 N",
+      mainMass: "Universidad de Chile",
+      finder: "Universidad de Chile",
+      state: "Antofagasta"
+    }
+  }
+};
