@@ -246,7 +246,7 @@ async function showSample(code) {
       <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
         <div class="icon">&#x1F4C1;</div>
         <p><strong>Click to upload</strong> or drag &amp; drop<br>Photos (.jpg, .png) or spectra (.dpt, .txt)</p>
-        <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.gif,.dpt,.txt,.csv" style="display:none"
+        <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.gif,.tif,.tiff,.dpt,.txt,.csv" style="display:none"
           onchange="handleFileUpload(event)">
       </div>
       <div id="file-preview"></div>
@@ -424,7 +424,7 @@ async function loadFiles(sampleCode) {
   for (const f of data) {
     const url = _supabase.storage.from('sample-files').getPublicUrl(f.storage_path).data.publicUrl;
     const ext = f.filename.split('.').pop().toLowerCase();
-    const isImg = ['jpg','jpeg','png','gif'].includes(ext);
+    const isImg = ['jpg','jpeg','png','gif','tif','tiff'].includes(ext);
     const isDpt = ext === 'dpt';
     const isTxt = ['txt','csv'].includes(ext);
     const specId = 'spec_' + f.id;
@@ -445,13 +445,20 @@ async function loadFiles(sampleCode) {
       </div>`;
 
     if (isImg) {
+      const isTif = ext === 'tif' || ext === 'tiff';
       html += `<span class="type-badge type-photo">Photo</span>`;
-      html += `<img src="${url}" class="file-thumb" onclick="window.open('${url}','_blank')" title="Click to enlarge">`;
+      if (isTif) {
+        html += `<div class="tif-thumb" id="tif_${f.id}"><canvas class="file-thumb" style="height:48px;width:auto"></canvas></div>`;
+      } else {
+        html += `<img src="${url}" class="file-thumb" onclick="window.open('${url}','_blank')" title="Click to enlarge">`;
+      }
     } else if (isDpt) {
       html += `<span class="type-badge type-ir">IR</span>`;
     } else if (isTxt) {
       html += `<span class="type-badge type-unknown">?</span>`;
-    } else {
+    }
+    html += `<a href="${url}" download="${f.filename}" class="btn btn-sm" title="Download ${f.filename}" style="margin-right:4px">⬇</a>`;
+    if (!isImg && !isDpt && !isTxt) {
       html += `<a href="${url}" target="_blank" class="btn btn-sm">View</a>`;
     }
 
@@ -489,36 +496,58 @@ async function loadFiles(sampleCode) {
   html += '</div>';
   el.innerHTML = html;
 
-  // Second pass: load spectrum data and attach type-switch handlers
+  // Second pass: load spectrum data, attach type-switch handlers, render .tif
   for (const f of data) {
     const ext = f.filename.split('.').pop().toLowerCase();
-    if (!['txt','csv','dpt'].includes(ext)) continue;
     const url = _supabase.storage.from('sample-files').getPublicUrl(f.storage_path).data.publicUrl;
     const cid = 'spec_' + f.id;
-    const container = document.getElementById(cid);
-    if (!container) continue;
 
-    const sel = container.querySelector('.spec-type-select');
-    if (sel) {
-      const badge = container.previousElementSibling.querySelector('.type-badge');
-      sel.addEventListener('change', () => {
-        const type = sel.value;
-        const labels = defaultLabels[type];
-        const xl = container.querySelector('.spec-xlabel');
-        const yl = container.querySelector('.spec-ylabel');
-        xl.value = labels.x;
-        yl.value = labels.y;
-        container.dataset.type = type;
-        if (badge) {
-          badge.className = 'type-badge type-' + type;
-          badge.textContent = type.toUpperCase();
-        }
-        const ev = new Event('input', { bubbles: true });
-        xl.dispatchEvent(ev);
-      });
+    if (['txt','csv','dpt'].includes(ext)) {
+      const container = document.getElementById(cid);
+      if (!container) continue;
+      const sel = container.querySelector('.spec-type-select');
+      if (sel) {
+        const badge = container.previousElementSibling.querySelector('.type-badge');
+        sel.addEventListener('change', () => {
+          const type = sel.value;
+          const labels = defaultLabels[type];
+          const xl = container.querySelector('.spec-xlabel');
+          const yl = container.querySelector('.spec-ylabel');
+          xl.value = labels.x;
+          yl.value = labels.y;
+          container.dataset.type = type;
+          if (badge) {
+            badge.className = 'type-badge type-' + type;
+            badge.textContent = type.toUpperCase();
+          }
+          const ev = new Event('input', { bubbles: true });
+          xl.dispatchEvent(ev);
+        });
+      }
+      loadSpectrumData(url, cid);
     }
 
-    loadSpectrumData(url, cid);
+    // Render .tif thumbnails
+    if (['tif','tiff'].includes(ext)) {
+      const tifDiv = document.getElementById('tif_' + f.id);
+      if (!tifDiv) continue;
+      const cvs = tifDiv.querySelector('canvas');
+      if (!cvs) continue;
+      fetch(url).then(r => r.arrayBuffer()).then(buf => {
+        const ifds = UTIF.decode(buf);
+        UTIF.decodeImage(buf, ifds[0]);
+        const rgba = UTIF.toRGBA8(ifds[0]);
+        const imgData = new ImageData(new Uint8ClampedArray(rgba), ifds[0].width, ifds[0].height);
+        cvs.width = ifds[0].width; cvs.height = ifds[0].height;
+        const aspect = ifds[0].width / ifds[0].height;
+        if (aspect > 1) { cvs.style.width = 'auto'; cvs.style.height = '48px' }
+        else { cvs.style.width = '48px'; cvs.style.height = 'auto' }
+        const ctx = cvs.getContext('2d');
+        ctx.putImageData(imgData, 0, 0);
+        cvs.style.cursor = 'pointer';
+        cvs.onclick = () => window.open(url, '_blank');
+      }).catch(() => { tifDiv.innerHTML = '<span style="font-size:10px;color:#c0392b">TIF error</span>' });
+    }
   }
 }
 
