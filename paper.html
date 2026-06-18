@@ -46,6 +46,7 @@ tr:nth-child(even){background:#f8f8f8}
 .ir-pair-canvas{display:block;margin:0 auto;border:1px solid #eee;border-radius:4px}
 @media(max-width:600px){.paper{padding:20px 12px}h1{font-size:18px}.table-wrap{font-size:10px}td,th{padding:3px 4px;font-size:9px}}
 </style>
+<script src="meteoritos-app/js/ir-data.js"></script>
 </head>
 <body>
 <div class="paper">
@@ -310,7 +311,6 @@ tr:nth-child(even){background:#f8f8f8}
 
 <p>7. Four specimens remain pending KLY5 measurement (Exp19-15, Exp19-18, Exp19-20, Exp19-27), and 8 are pending IR spectroscopy. Their classification may reveal additional falls or add fragments to existing clusters.</p>
 
-<!-- ===== SUPPLEMENTARY: FIELD SUSCEPTIBILITY ===== -->
 
 
 <!-- ===== AUTHOR CONTRIBUTIONS ===== -->
@@ -357,7 +357,6 @@ tr:nth-child(even){background:#f8f8f8}
 
 </div><!-- /paper -->
 
-<script src="js/ir-data.js"></script>
 <script>
 // ---- DATA ----
 const muestras = [
@@ -495,7 +494,6 @@ const COORDS_MAP = {
   "Exp19-59":"7266426 N, 406086 E"
 };
 
-// ---- FIELD DATA (portable susceptibilimeter, 10⁻³ SI) ----
 
 
 // ---- PAIR GROUPS ----
@@ -521,7 +519,7 @@ const PAIR_GROUPS = [
   {locality:"Médano",color:"#1a2a3a",falls:[
     {name:"Cluster 9",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
      samples:["Exp19-54","Exp19-46"]},
-    {name:"Cluster 10",type:"H",count:2,range:"4.965–4.966",delta:"0.001",tc:"#27ae60",
+     {name:"Cluster 10",type:"H",count:2,range:"4.965–4.966",delta:"0.001",tc:"#27ae60",
      samples:["Exp19-43","Exp19-56"]},
     {name:"Cluster 11: H4",type:"H",count:3,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
      samples:["Exp19-42","Exp19-40","Exp19-41"]}
@@ -996,7 +994,7 @@ drawDensityChart();
 // ---- PAIR GROUPS RENDER ----
 renderPaperPairGroups();
 
-// ---- FIGURE 5: IR SPECTRA OF CLUSTERS 2, 8, 11 ----
+// ---- FIGURE 5: IR MATCH RANKING ----
 function drawIRClusterSpectra() {
   const cv = document.getElementById('ir-cluster-spectra');
   if (!cv || typeof IR_DATA === 'undefined') return;
@@ -1014,22 +1012,18 @@ function drawIRClusterSpectra() {
   const x0=ml, x1=W-mr, y0=mt, y1=H-mb;
   const wlMin=6, wlMax=16;
   const toX=wl=>x0+(wl-wlMin)/(wlMax-wlMin)*(x1-x0);
-  // find global y range
   let aMin=Infinity, aMax=-Infinity;
   targetClusters.forEach(g=>g.codes.forEach(c=>IR_DATA[c].forEach(d=>{const wl=10000/d[0];if(wl>=wlMin&&wl<=wlMax){if(d[1]<aMin)aMin=d[1];if(d[1]>aMax)aMax=d[1];}})));
   const aRng=(aMax-aMin)||1;
   const toY=v=>y1-(v-aMin)/aRng*(y1-y0);
-  // grid
   ctx.strokeStyle='#eee'; ctx.lineWidth=0.5; ctx.beginPath();
   [6,8,10,12,14,16].forEach(wl=>{const x=toX(wl);ctx.moveTo(x,y0);ctx.lineTo(x,y1);});
   ctx.stroke();
-  // spectra
-  const dashPat = []; // solid
-  const styles = [[],[3,3],[],[3,3],[]]; // solid, dashed, solid, dashed
+  const styles = [[],[3,3],[],[3,3],[]];
   targetClusters.forEach((g,gi)=>{
     g.codes.forEach((c,si)=>{
       const pts=IR_DATA[c];
-      ctx.strokeStyle=g.color; ctx.lineWidth=gi===2?1.1:1.1;
+      ctx.strokeStyle=g.color; ctx.lineWidth=1.1;
       ctx.setLineDash(styles[si]||[]);
       ctx.beginPath(); let started=false;
       pts.forEach(d=>{
@@ -1038,7 +1032,6 @@ function drawIRClusterSpectra() {
         if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
       });
       ctx.stroke();
-      // label at last point
       const last=pts.filter(d=>{const wl=10000/d[0];return wl>=wlMin&&wl<=wlMax;});
       if(last.length){
         const lp=last[last.length-1], lx=toX(10000/lp[0])+2, ly=toY(lp[1]);
@@ -1048,13 +1041,11 @@ function drawIRClusterSpectra() {
     });
   });
   ctx.setLineDash([]);
-  // cluster labels
   const legY=[y0+15,y0+(y1-y0)/2,y1-15];
   targetClusters.forEach((g,i)=>{
     ctx.fillStyle=g.color; ctx.font='bold 11px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
     ctx.fillRect(x1+8,legY[i]-4,10,10); ctx.fillText(g.name,x1+22,legY[i]);
   });
-  // axes
   ctx.strokeStyle='#ccc'; ctx.lineWidth=0.5;
   ctx.strokeRect(x0,y0,x1-x0,y1-y0);
   ctx.fillStyle='#888'; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
@@ -1138,11 +1129,7 @@ function drawIROverviewPaper() {
   [2,4,6,8,10,12,14,16,18,20,22].forEach(t=>ctx.fillText(t.toString(),toX(t),y1+4));
   ctx.fillStyle='#bbb'; ctx.font='9px sans-serif'; ctx.fillText('Wavelength (µm)',W/2,y1+18);
 }
-try { drawIROverviewPaper(); } catch(e) {
-  console.warn('IR overview error:', e);
-  const cv = document.getElementById('ir-overview-paper');
-  if (cv) { const cx=cv.getContext('2d'); cx.fillStyle='#ccc'; cx.font='14px sans-serif'; cx.textAlign='center'; cx.fillText('IR data not loaded',cv.width/2,cv.height/2); }
-}
+drawIROverviewPaper();
 try { drawIRClusterSpectra(); } catch(e) {
   console.warn('IR cluster spectra error:', e);
   const cv = document.getElementById('ir-cluster-spectra');
