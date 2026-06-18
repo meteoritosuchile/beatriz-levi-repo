@@ -1,3 +1,13 @@
+﻿// IR consistency scores for existing clusters (from full-range cosine analysis)
+const _IR_CLUSTER_STATUS = {
+  'Cluster 2':        { ok: true,  d:0.039, note:'IR consistent' },
+  'Cluster 4':        { ok: null, d:null,  note:'1 sample with IR — pending' },
+  'Cluster 5':        { ok: null, d:null,  note:'1 sample with IR — pending' },
+  'Cluster 7: H5':    { ok: null, d:null,  note:'1 sample with IR — pending' },
+  'Cluster 8: H(4-5)':{ ok: true, d:0.034, note:'IR consistent' },
+  'Cluster 11: H4':   { ok: true, d:0.024, note:'IR consistent' },
+};
+
 // ---------- Supabase ----------
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
@@ -201,7 +211,7 @@ function renderSamples(filter = '') {
         <th>Class</th>
         <th>Type</th>
         <th style="text-align:right">Shock</th>
-        <th style="text-align:right">W</th>
+        <th style="text-align:right">Weathering</th>
         <th style="text-align:right">Mass (g)</th>
         <th style="text-align:right">Density (g/cm³)</th>
         <th style="text-align:right">log χ</th>
@@ -216,7 +226,7 @@ function renderSamples(filter = '') {
           const typeLetter = typeClass ? typeClass.match(/^(H|LL|L)/)?.[1] : (s.t !== '??' ? s.t : null);
           const typeLabel = typeClass || typeLetter || '—';
           const typeColor = typeLetter ? {H:'h',L:'l',LL:'ll'}[typeLetter] : 'q';
-          const wStr = s.pW != null ? s.pW : '—';
+          const wStr = s.pW != null ? 'W' + s.pW : '—';
           const irStr = s.ir === 'sí' ? '✓' : s.ir === 'disp' ? '…' : '—';
           return `<tr onclick="navigate('sample','${s.c}')" class="clickable">
             <td><strong>${s.c}</strong></td>
@@ -278,6 +288,7 @@ async function showSample(code) {
         <dt>Density (g/cm³)</dt><dd>${DENSITY_MAP[s.c] ? DENSITY_MAP[s.c].toFixed(3) : '—'}</dd>
         <dt>Fragments</dt><dd>${FRAGMENTS_MAP[s.c] != null ? FRAGMENTS_MAP[s.c] === 'Briquette' ? 'Briquette (1 pellet)' : `${FRAGMENTS_MAP[s.c]} fragment${FRAGMENTS_MAP[s.c] > 1 ? 's' : ''}` : s.pieces ? `${s.pieces} fragment${s.pieces > 1 ? 's' : ''}` : '—'}</dd>
       </div>
+
       ${renderSampleDetails(s.c)}
       ${!SAMPLE_DETAILS[s.c] ? `
       <div class="sample-details" style="margin-top:20px;border-top:1px solid #ddd;padding-top:16px">
@@ -295,29 +306,20 @@ async function showSample(code) {
     </div>
 
     <div id="sample-tab-files" style="display:none">
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
-        <div class="icon">&#x1F4C1;</div>
-        <p><strong>Click to upload</strong> or drag &amp; drop<br>Spectra (.dpt, .txt, .csv)</p>
-        <input type="file" id="file-input" multiple accept=".dpt,.txt,.csv" style="display:none"
-          onchange="handleFileUpload(event)">
-      </div>
-      <div id="file-preview"></div>
-      <div id="sample-files-list"><div class="loading">Loading files...</div></div>
+      ${IR_FILES[s.c] ? `
+      <div class="ir-spectrum-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3 style="font-size:15px;margin:0">IR Spectrum (FTIR)</h3>
+          <a href="${encodeURI(IR_DIR + IR_FILES[s.c])}" download class="btn btn-sm" style="font-size:12px">&#x2B07; Download</a>
+        </div>
+        <canvas id="ir-spectrum-canvas" style="width:100%;max-width:700px;height:280px;display:block;margin:0 auto"></canvas>
+        <p style="font-size:11px;color:#888;text-align:center;margin-top:6px">Wavenumber (cm⁻¹) vs Absorbance</p>
+      </div>` : '<p style="color:#888;font-size:13px;text-align:center;padding:40px 0">No IR spectrum available for this sample</p>'}
     </div>
   `;
 
-  // Load files from Supabase
-  loadFiles(s.c);
-
-  // Drag & drop
-  const zone = document.getElementById('upload-zone');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files, s.c);
-  });
+  // Load IR spectrum from local file
+  if (IR_FILES[s.c]) loadIRSpectrum(s.c);
 }
 
 function switchSampleTab(tab) {
@@ -326,6 +328,14 @@ function switchSampleTab(tab) {
     const el = document.getElementById('sample-tab-' + t);
     if (el) el.style.display = t === tab ? 'block' : 'none';
   });
+  if (tab === 'files' && currentSample) {
+    const canvas = document.getElementById('ir-spectrum-canvas');
+    if (IR_DATA[currentSample.c]) {
+      if (canvas) drawIRSpectrum(canvas, IR_DATA[currentSample.c], currentSample.c);
+    } else if (IR_FILES[currentSample.c]) {
+      loadIRSpectrum(currentSample.c);
+    }
+  }
 }
 
 // ---------- Sample Details ----------
@@ -704,6 +714,35 @@ function closeLightbox() {
   _galleryIdx = -1;
 }
 
+function openFigOverlay(canvasId) {
+  const src = document.getElementById(canvasId);
+  if (!src) return;
+  const wrap = document.getElementById('fig-overlay-wrap');
+  wrap.innerHTML = '';
+  const cv = document.createElement('canvas');
+  cv.width = src.width;
+  cv.height = src.height;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(src, 0, 0);
+  wrap.appendChild(cv);
+  document.getElementById('fig-overlay').classList.add('active');
+  const label = canvasId === 'massLogChiCanvas' ? 'Figure 1' :
+    canvasId === 'doughnutCanvas' ? 'Figure 2' :
+    canvasId === 'petroGradeCanvas' ? 'Figure 3' :
+    canvasId === 'densityChiCanvas' ? 'Figure 4' :
+    canvasId === 'irClusterSpectraPaper' ? 'Figure 5' : '';
+  document.getElementById('fig-overlay-label').textContent = label;
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('keydown', _figEscKey);
+}
+function closeFigOverlay() {
+  document.getElementById('fig-overlay').classList.remove('active');
+  document.getElementById('fig-overlay-wrap').innerHTML = '';
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', _figEscKey);
+}
+function _figEscKey(e) { if (e.key === 'Escape') closeFigOverlay(); }
+
 function showLightboxImage(idx) {
   const f = _galleryPhotos[idx];
   const url = _supabase.storage.from('sample-files').getPublicUrl(f.storage_path).data.publicUrl;
@@ -873,6 +912,7 @@ function renderPaperCharts() {
     drawDoughnutChart();
     drawPetroGradeChart();
     drawDensityChart();
+    try { drawIRClusterSpectraPaper(); } catch(e) { console.warn('Fig 5 error:', e); }
   }, 50);
 }
 
@@ -894,7 +934,7 @@ const kly5Group = chi => {
 function isInconsistent(s) {
   if (!s.lc || s.t === '??') return false;
   const kg = kly5Group(s.lc);
-  if (s.nota && (s.nota.includes('KLY5→') || s.nota.includes('⚡') || s.nota.includes('W5 invalid'))) return 'KLY5: ' + kg + (kg === s.t ? '' : ', petrography: ' + s.t) + ' — review';
+  if (s.nota && (s.nota.includes('KLY5→') || s.nota.includes('⚡'))) return 'KLY5: ' + kg + (kg === s.t ? '' : ', petrography: ' + s.t) + ' — review';
   if ((kg === 'H' && s.t === 'LL') || (kg === 'LL' && s.t === 'H')) return 'KLY5: ' + kg + ', petrography: ' + s.t + ' — review';
   return false;
 }
@@ -915,23 +955,25 @@ function drawMassLogChiChart() {
   const toX = c => x0 + (c - CHI_MIN) / (CHI_MAX - CHI_MIN) * (x1 - x0);
   const toY = m => y1 - (Math.log10(m) - MASS_LOG_MIN) / (MASS_LOG_MAX - MASS_LOG_MIN) * (y1 - y0);
 
-  // Vertical classification bands (χ on X axis)
-  const bandColors = {
-    H: { fill: 'rgba(39,174,96,0.10)', stroke: 'rgba(39,174,96,0.35)', mean: 4.89, lo: 4.58, hi: 5.20 },
-    L: { fill: 'rgba(230,126,34,0.10)', stroke: 'rgba(230,126,34,0.35)', mean: 4.55, lo: 4.27, hi: 4.83 },
-    LL: { fill: 'rgba(184,134,11,0.10)', stroke: 'rgba(184,134,11,0.35)', mean: 3.98, lo: 3.57, hi: 4.39 },
-  };
-  Object.entries(bandColors).forEach(([label, b]) => {
+  // Vertical classification bands (kly5Group thresholds)
+  const thrHL = 4.82, thrLL = 4.265;
+  const bands = [
+    { lo: thrHL, hi: CHI_MAX, fill: 'rgba(39,174,96,0.10)', stroke: 'rgba(39,174,96,0.35)' },
+    { lo: thrLL, hi: thrHL, fill: 'rgba(230,126,34,0.10)', stroke: 'rgba(230,126,34,0.35)' },
+    { lo: CHI_MIN, hi: thrLL, fill: 'rgba(184,134,11,0.10)', stroke: 'rgba(184,134,11,0.35)' },
+  ];
+  bands.forEach(b => {
     const xLo = toX(b.lo), xHi = toX(b.hi);
     ctx.fillStyle = b.fill;
     ctx.fillRect(xLo, y0, xHi - xLo, y1 - y0);
     ctx.strokeStyle = b.stroke; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
-    ctx.beginPath(); ctx.moveTo(xLo, y0); ctx.lineTo(xLo, y1); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(xHi, y0); ctx.lineTo(xHi, y1); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = b.stroke; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText(label + ' ' + b.lo.toFixed(2) + '\u2013' + b.hi.toFixed(2), xLo + 2, y0 - 2);
   });
+  ctx.fillStyle = 'rgba(39,174,96,0.6)'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+  ctx.fillText('H/L ' + thrHL.toFixed(2), toX(thrHL) + 2, y0 - 2);
+  ctx.fillStyle = 'rgba(230,126,34,0.6)';
+  ctx.fillText('L/LL ' + thrLL.toFixed(2), toX(thrLL) + 2, y0 - 2);
 
   // Axes
   ctx.fillStyle = '#444'; ctx.font = '11px Arial';
@@ -956,17 +998,18 @@ function drawMassLogChiChart() {
 
   // Data points — X=chi, Y=mass
   const colors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999', C: '#8e44ad' };
-  const R = 4;
+  const R = 5;
   SAMPLES.filter(s => s.lc != null && MASS_MAP[s.c] != null).forEach(s => {
     const m = MASS_MAP[s.c];
     const px = toX(s.lc), py = toY(m);
     const grp = kly5Group(s.lc);
+    const hasPetro = s.pW != null;
     ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
-    ctx.fillStyle = colors[grp] || '#999';
-    ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = hasPetro ? (colors[grp] || '#999') : '#fff';
+    ctx.globalAlpha = hasPetro ? 0.5 : 1; ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = colors[grp] || '#999';
-    ctx.lineWidth = 2; ctx.stroke();
-    massPoints.push({ x: px, y: py, r: R, c: s.c, n: s.n, m, lc: s.lc, grp });
+    ctx.lineWidth = hasPetro ? 2 : 2.5; ctx.stroke();
+    massPoints.push({ x: px, y: py, r: R, c: s.c, n: s.n, m, lc: s.lc, grp, hasPetro });
   });
 
   // Highlight hovered point
@@ -982,9 +1025,10 @@ function drawMassLogChiChart() {
   const lr = 4, lgap = 17, lpad = 8;
   const legItems = [
     { type: 'label', text: 'KLY5 group', h: 1 },
-    { type: 'color', label: 'H (\u03c7 4.89\u00b10.31)', color: '#27ae60', h: 1 },
-    { type: 'color', label: 'L (\u03c7 4.55\u00b10.28)', color: '#e67e22', h: 1 },
-    { type: 'color', label: 'LL (\u03c7 3.98\u00b10.41)', color: '#b8860b', h: 1 },
+    { type: 'color', label: 'H (\u03c7 \u2265 4.82)', color: '#27ae60', h: 1 },
+    { type: 'color', label: 'L (4.265 \u2264 \u03c7 < 4.82)', color: '#e67e22', h: 1 },
+    { type: 'color', label: 'LL (\u03c7 < 4.265)', color: '#b8860b', h: 1 },
+    { type: 'label', text: '\u25cf petrography   \u25cb estimated', h: 1 },
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
   const lw = 150;
@@ -1028,7 +1072,7 @@ function drawMassLogChiChart() {
         tip.style.display = 'block';
         tip.style.left = (e.clientX - pos.left + 12) + 'px';
         tip.style.top = (e.clientY - pos.top - 10) + 'px';
-        tip.textContent = p.c + ' ' + p.n + ' | mass=' + p.m + ' g, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp;
+        tip.textContent = p.c + ' ' + p.n + ' | mass=' + p.m + ' g, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (no petro)');
         cv.style.cursor = 'pointer';
       } else {
         tip.style.display = 'none';
@@ -1049,6 +1093,80 @@ function renderPairing() {
   if (!el) return;
   let html = '<h1 style="margin-bottom:8px">Pairing Groups</h1>';
   html += '<p style="text-align:center;color:#666;font-size:13px;margin-bottom:24px">Groups of samples identified as fragments of the same meteorite fall based on magnetic susceptibility (Δχ ≤ 0.08 within same KLY5 class) and validated by bulk density consistency. Magnetic pairs with density variation exceeding 20% were rejected.</p>';
+  html += '<h2 style="text-align:center;margin:20px 0 8px;font-size:15px;color:#444">IR Spectra Overview</h2>';
+  html += '<div style="text-align:center"><canvas id="ir-overview-chart" class="ir-pair-canvas" style="max-width:800px"></canvas></div>';
+
+  // IR match ranking table
+  const grid = Array.from({length:200},(_,i)=>400+i*18);
+  function interpToGrid(code) {
+    const pts = IR_DATA[code].slice().sort((a,b)=>a[0]-b[0]);
+    return grid.map(t => {
+      let lo=0, hi=pts.length-1;
+      while (lo<hi-1) { const m=(lo+hi)>>1; if (pts[m][0]<t) lo=m; else hi=m; }
+      const [x0,y0]=pts[lo],[x1,y1]=pts[hi];
+      return x1===x0 ? y0 : y0+(t-x0)*(y1-y0)/(x1-x0);
+    });
+  }
+  function cosSim(a,b) {
+    let dot=0,na=0,nb=0;
+    for (let i=0;i<a.length;i++) { dot+=a[i]*b[i]; na+=a[i]*a[i]; nb+=b[i]*b[i]; }
+    return dot/(Math.sqrt(na)*Math.sqrt(nb)||1);
+  }
+  const interpCache = {};
+  function getInterp(code) { return interpCache[code] || (interpCache[code]=interpToGrid(code)); }
+
+  const irClusterRank = [];
+  PAIR_GROUPS.forEach(g => {
+    g.falls.forEach(f => {
+      const irCodes = f.samples.filter(c => IR_DATA[c]);
+      if (irCodes.length < 2) return;
+      let totalSim = 0, pairs = 0;
+      for (let i=0;i<irCodes.length;i++) {
+        const a = getInterp(irCodes[i]);
+        for (let j=i+1;j<irCodes.length;j++) {
+          totalSim += cosSim(a, getInterp(irCodes[j]));
+          pairs++;
+        }
+      }
+      irClusterRank.push({ name: f.name, sim: totalSim/pairs, codes: irCodes, allSamples: f.samples });
+    });
+  });
+  irClusterRank.sort((a,b)=>b.sim-a.sim);
+
+  if (irClusterRank.length) {
+    html += '<h2 style="text-align:center;margin:28px 0 12px;font-size:15px;color:#444">IR Match Ranking (best match first)</h2>';
+    html += '<div style="overflow-x:auto;margin-bottom:20px"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<thead><tr style="background:#f7f7f7">';
+    ['#','Cluster','IR Match','Samples','KLY5','Density','Type'].forEach(h => {
+      html += `<th style="padding:6px 8px;text-align:left;border-bottom:2px solid #ddd;font-weight:600">${h}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+    irClusterRank.forEach((r,i) => {
+      const sCodes = r.allSamples;
+      const groups = [...new Set(sCodes.map(c => SAMPLES.find(x=>x.c===c)?.t||'?'))].join('/');
+      const dens = sCodes.map(c => DENSITY_MAP[c]).filter(d=>d!=null);
+      const densStr = dens.length>=2
+        ? `${Math.min(...dens).toFixed(3)}–${Math.max(...dens).toFixed(3)}`
+        : dens.length===1 ? dens[0].toFixed(3) : '—';
+      const types = [...new Set(sCodes.map(c => {
+        const d = SAMPLE_DETAILS[c];
+        return d?.classification?.class || '';
+      }).filter(Boolean))].join('/') || '—';
+      html += `<tr${i%2===1?' style="background:#fafafa"':''}>`;
+      html += `<td style="padding:5px 8px;color:#888;font-weight:600">${i+1}</td>`;
+      html += `<td style="padding:5px 8px;font-weight:600">${r.name}</td>`;
+      const pct = (r.sim*100).toFixed(1);
+      const color = r.sim >= 0.99 ? '#27ae60' : r.sim >= 0.97 ? '#e67e22' : '#e74c3c';
+      html += `<td style="padding:5px 8px;color:${color};font-weight:600">${pct}%</td>`;
+      html += `<td style="padding:5px 8px">${r.codes.join(', ')}</td>`;
+      html += `<td style="padding:5px 8px">${groups}</td>`;
+      html += `<td style="padding:5px 8px">${densStr}</td>`;
+      html += `<td style="padding:5px 8px">${types}</td>`;
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
   html += '<div class="pair-section">';
   PAIR_GROUPS.forEach(g => {
     html += `<div class="pair-locality"><h3 style="color:${g.color}">${g.locality}</h3><div class="pair-grid">`;
@@ -1072,14 +1190,26 @@ function renderPairing() {
             <span>Type ${f.type}</span>
             ${f.range ? `<span>χ ${f.range}</span>` : ''}
           </div>`;
+      const irSamples = f.samples.filter(c => IR_DATA[c]);
+      const irStat = _IR_CLUSTER_STATUS[f.name];
+      if (irStat && irStat.ok === true) {
+        html += `<div class="pair-ir-badge" style="color:#27ae60;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">✓ IR: ${irStat.note} (d=${irStat.d.toFixed(3)})</div>`;
+      } else if (irStat && irStat.ok === false) {
+        html += `<div class="pair-ir-badge" style="color:#e74c3c;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">⚠ IR: ${irStat.note} (d=${irStat.d.toFixed(3)})</div>`;
+      } else if (irSamples.length === 1) {
+        html += `<div class="pair-ir-badge" style="color:#888;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">○ IR: 1 sample with data, ${f.samples.length - 1} pending</div>`;
+      } else if (irSamples.length === 0) {
+        html += `<div class="pair-ir-badge" style="color:#bbb;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">— No IR data available</div>`;
+      }
       f.samples.forEach(c => {
         const s = sampleLookup(c);
         if (!s) return;
         const chi = s.lc != null ? s.lc.toFixed(3) : '—';
         const w = s.pW != null ? 'W'+s.pW : '—';
         const dens = DENSITY_MAP[c] != null ? DENSITY_MAP[c].toFixed(3) : null;
+        const irTag = IR_DATA[c] ? ' <span class="ir-tag">IR</span>' : '';
         html += `<div class="pair-sample">
-          <span><span class="ps-code">${s.c}</span> <span class="ps-name">${s.n}</span></span>
+          <span><span class="ps-code">${s.c}</span> <span class="ps-name">${s.n}</span>${irTag}</span>
           <span><span class="ps-chi">χ ${chi}</span> · <span class="ps-w">${w}</span>${dens ? ` · <span class="ps-dens">ρ ${dens}</span>` : ''}</span>
         </div>`;
       });
@@ -1089,6 +1219,7 @@ function renderPairing() {
   });
   html += '</div>';
   el.innerHTML = html;
+  drawAllIRSpectra();
 }
 
 function drawDoughnutChart() {
@@ -1133,19 +1264,14 @@ function drawDoughnutChart() {
   ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
   ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
 
-  // Reference ranges from Rochette et al. (2003): H 4.89±0.31, L 4.55±0.28, LL 3.98±0.41
-  const refs = [
-    { label: 'H', mean: 4.89, sd: 0.31, color: 'rgba(39,174,96,0.12)' },
-    { label: 'L', mean: 4.55, sd: 0.28, color: 'rgba(230,126,34,0.12)' },
-    { label: 'LL', mean: 3.98, sd: 0.41, color: 'rgba(184,134,11,0.12)' },
-  ];
-  refs.forEach(r => {
-    const xl = toX(r.mean - r.sd), xr = toX(r.mean + r.sd);
-    ctx.fillStyle = r.color; ctx.fillRect(xl, y0, xr - xl, y1 - y0);
-    ctx.strokeStyle = '#999'; ctx.lineWidth = 0.5; ctx.setLineDash([3, 3]);
-    ctx.beginPath(); ctx.moveTo(toX(r.mean), y0); ctx.lineTo(toX(r.mean), y1); ctx.stroke();
-    ctx.setLineDash([]);
-  });
+  // kly5Group classification thresholds (vertical lines)
+  const thrHL = 4.82, thrLL = 4.265;
+  ctx.setLineDash([4, 3]); ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(39,174,96,0.35)';
+  ctx.beginPath(); ctx.moveTo(toX(thrHL), y0); ctx.lineTo(toX(thrHL), y1); ctx.stroke();
+  ctx.strokeStyle = 'rgba(230,126,34,0.35)';
+  ctx.beginPath(); ctx.moveTo(toX(thrLL), y0); ctx.lineTo(toX(thrLL), y1); ctx.stroke();
+  ctx.setLineDash([]);
 
   // Stacked bars
   const bw = (x1 - x0) / nbins * 0.7;
@@ -1221,52 +1347,46 @@ function drawPetroGradeChart() {
 
   ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
 
-  // Rochette classification bands (corrected χ = χ + 0.15×W)
-  const boundChi = (bc, w) => bc - 0.15 * w;
-  const B_HL = 5.18, B_LL = 4.78, B_XX = 4.46;
-  const bandColor = (col, a) => { const c = { H: '39,174,96', L: '230,126,34', LL: '184,134,11' }[col] || '153,153,153'; return 'rgba(' + c + ',' + a + ')'; };
-  // H
-  ctx.beginPath();
-  ctx.moveTo(toX(W_MIN), toY(boundChi(B_HL, W_MIN))); ctx.lineTo(toX(W_MAX), toY(boundChi(B_HL, W_MAX)));
-  ctx.lineTo(toX(W_MAX), toY(CHI_MAX)); ctx.lineTo(toX(W_MIN), toY(CHI_MAX)); ctx.closePath();
-  ctx.fillStyle = bandColor('H', 0.10); ctx.fill();
-  // L
-  ctx.beginPath();
-  ctx.moveTo(toX(W_MIN), toY(boundChi(B_HL, W_MIN))); ctx.lineTo(toX(W_MAX), toY(boundChi(B_HL, W_MAX)));
-  ctx.lineTo(toX(W_MAX), toY(boundChi(B_LL, W_MAX))); ctx.lineTo(toX(W_MIN), toY(boundChi(B_LL, W_MIN))); ctx.closePath();
-  ctx.fillStyle = bandColor('L', 0.10); ctx.fill();
-  // LL
-  ctx.beginPath();
-  ctx.moveTo(toX(W_MIN), toY(boundChi(B_LL, W_MIN))); ctx.lineTo(toX(W_MAX), toY(boundChi(B_LL, W_MAX)));
-  ctx.lineTo(toX(W_MAX), toY(boundChi(B_XX, W_MAX))); ctx.lineTo(toX(W_MIN), toY(boundChi(B_XX, W_MIN))); ctx.closePath();
-  ctx.fillStyle = bandColor('LL', 0.10); ctx.fill();
-  // ??
-  ctx.beginPath();
-  ctx.moveTo(toX(W_MIN), toY(boundChi(B_XX, W_MIN))); ctx.lineTo(toX(W_MAX), toY(boundChi(B_XX, W_MAX)));
-  ctx.lineTo(toX(W_MAX), toY(CHI_MIN)); ctx.lineTo(toX(W_MIN), toY(CHI_MIN)); ctx.closePath();
-  ctx.fillStyle = bandColor('??', 0.08); ctx.fill();
-  // Boundary lines (drawn inside clip to avoid extending beyond plot area)
+  // kly5Group classification bands with Rochette W correction (-0.15 per grade)
+  const thrHL = 4.82, thrLL = 4.265;
+  const bandF = (lo, hi, col) => {
+    ctx.beginPath();
+    ctx.moveTo(toX(W_MIN), toY(lo - 0.15 * W_MIN));
+    ctx.lineTo(toX(W_MAX), toY(lo - 0.15 * W_MAX));
+    ctx.lineTo(toX(W_MAX), toY(hi - 0.15 * W_MAX));
+    ctx.lineTo(toX(W_MIN), toY(hi - 0.15 * W_MIN));
+    ctx.closePath();
+    ctx.fillStyle = col; ctx.fill();
+  };
+  const bCol = (col, a) => { const c = { H: '39,174,96', L: '230,126,34', LL: '184,134,11' }[col] || '153,153,153'; return 'rgba(' + c + ',' + a + ')'; };
+  // H: χ ≥ 4.82 - 0.15W
+  bandF(thrHL, CHI_MAX, bCol('H', 0.12));
+  // L: 4.265 - 0.15W ≤ χ < 4.82 - 0.15W
+  bandF(thrLL, thrHL, bCol('L', 0.12));
+  // LL: χ < 4.265 - 0.15W
+  bandF(CHI_MIN, thrLL, bCol('LL', 0.12));
+  // Boundary lines at W=0 reference
   ctx.setLineDash([4, 3]); ctx.lineWidth = 1;
-  [{ bc: B_HL, col: bandColor('H', 0.4) }, { bc: B_LL, col: bandColor('L', 0.4) }, { bc: B_XX, col: bandColor('LL', 0.4) }].forEach(b => {
-    ctx.strokeStyle = b.col;
-    ctx.beginPath(); ctx.moveTo(toX(W_MIN), toY(boundChi(b.bc, W_MIN))); ctx.lineTo(toX(W_MAX), toY(boundChi(b.bc, W_MAX))); ctx.stroke();
+  [[thrHL,'rgba(39,174,96,0.4)'],[thrLL,'rgba(230,126,34,0.4)']].forEach(b => {
+    ctx.strokeStyle = b[1];
+    ctx.beginPath(); ctx.moveTo(toX(W_MIN), toY(b[0])); ctx.lineTo(toX(W_MAX), toY(b[0])); ctx.stroke();
   });
   ctx.setLineDash([]);
 
-  const weatherSamples = SAMPLES.filter(s => s.lc != null && s.pW != null);
   const groupColors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
   const R = 5;
-  weatherSamples.forEach(s => {
+  SAMPLES.filter(s => s.lc != null && s.pW != null).forEach(s => {
     const grp = kly5Group(s.lc);
     const col = groupColors[grp] || '#999';
     const jitter = (s.c.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 100 - 50) / 100 * 0.18;
     const px = toX(s.pW + jitter), py = toY(s.lc);
     ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
-    ctx.fillStyle = col; ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.stroke();
     ctx.fillStyle = '#333'; ctx.font = '9px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(s.c, px, py + 8);
-    petroPoints.push({ x: px, y: py, r: R, c: s.c, chi: s.lc, pW: s.pW, grp });
+    petroPoints.push({ x: px, y: py, r: R, c: s.c, chi: s.lc, pW: s.pW, grp, hasPetro: true });
   });
 
   ctx.restore();
@@ -1274,10 +1394,9 @@ function drawPetroGradeChart() {
   // Border and boundary labels drawn outside clip
   ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
   ctx.font = '9px Arial'; ctx.textBaseline = 'bottom';
-  ctx.fillStyle = bandColor('H', 0.6); ctx.textAlign = 'left';
-  ctx.fillText('H/L 5.18', toX(W_MIN) + 2, toY(boundChi(B_HL, W_MIN)) - 2);
-  ctx.fillStyle = bandColor('L', 0.6); ctx.fillText('L/LL 4.78', toX(W_MIN) + 2, toY(boundChi(B_LL, W_MIN)) - 2);
-  ctx.fillStyle = bandColor('LL', 0.6); ctx.fillText('LL/?? 4.46', toX(W_MIN) + 2, toY(boundChi(B_XX, W_MIN)) - 2);
+  ctx.fillStyle = 'rgba(39,174,96,0.6)'; ctx.textAlign = 'left'; ctx.font = '9px Arial';
+  ctx.fillText('H/L ' + thrHL.toFixed(2), toX(W_MIN) + 2, toY(thrHL) - 2);
+  ctx.fillStyle = 'rgba(230,126,34,0.6)'; ctx.fillText('L/LL ' + thrLL.toFixed(2), toX(W_MIN) + 2, toY(thrLL) - 2);
 
   const lr = 4, lgap = 17, lpad = 8;
   const legItems = [
@@ -1328,7 +1447,7 @@ function drawPetroGradeChart() {
         const p = petroPoints[hit];
         const pos = cv.getBoundingClientRect();
         tip.style.display = 'block'; tip.style.left = (e.clientX - pos.left + 12) + 'px'; tip.style.top = (e.clientY - pos.top - 10) + 'px';
-        tip.textContent = p.c + ' \u03c7=' + p.chi.toFixed(3) + ', pW=' + p.pW + ' | ' + p.grp;
+        tip.textContent = p.c + ' \u03c7=' + p.chi.toFixed(3) + ', W=' + p.pW + ' | ' + p.grp;
         cv.style.cursor = 'pointer';
       } else { tip.style.display = 'none'; cv.style.cursor = 'crosshair'; }
     });
@@ -1371,17 +1490,18 @@ function drawDensityChart() {
   ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
   ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
   const colors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
-  const R = 4;
+  const R = 5;
   SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null).forEach(s => {
     const dens = DENSITY_MAP[s.c];
     const px = toX(s.lc), py = toY(dens);
     const grp = kly5Group(s.lc);
+    const hasPetro = s.pW != null;
     ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
-    ctx.fillStyle = colors[grp] || '#999';
-    ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = hasPetro ? (colors[grp] || '#999') : '#fff';
+    ctx.globalAlpha = hasPetro ? 0.5 : 1; ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = colors[grp] || '#999';
-    ctx.lineWidth = 2; ctx.stroke();
-    densityPoints.push({ x: px, y: py, r: R, c: s.c, n: s.n, dens, lc: s.lc, grp });
+    ctx.lineWidth = hasPetro ? 2 : 2.5; ctx.stroke();
+    densityPoints.push({ x: px, y: py, r: R, c: s.c, n: s.n, dens, lc: s.lc, grp, hasPetro });
   });
   if (densityHover >= 0 && densityHover < densityPoints.length) {
     const hp = densityPoints[densityHover];
@@ -1398,9 +1518,10 @@ function drawDensityChart() {
     { type: 'color', label: 'H (n=' + nH + ')', color: '#27ae60', h: 1 },
     { type: 'color', label: 'L (n=' + nL + ')', color: '#e67e22', h: 1 },
     { type: 'color', label: 'LL (n=' + nLL + ')', color: '#b8860b', h: 1 },
+    { type: 'label', text: '\u25cf petro  \u25cb est.', h: 1 },
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
-  const lw = 140;
+  const lw = 145;
   const lx = x1 - lw - 8, ly = y0 + 8;
   ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.roundRect(lx, ly, lw, lh, 4); ctx.fill(); ctx.stroke();
@@ -1432,7 +1553,7 @@ function drawDensityChart() {
         const p = densityPoints[hit];
         const pos = cv.getBoundingClientRect();
         tip.style.display = 'block'; tip.style.left = (e.clientX - pos.left + 12) + 'px'; tip.style.top = (e.clientY - pos.top - 10) + 'px';
-        tip.textContent = p.c + ' \u03c1=' + p.dens.toFixed(3) + ' g/cm\u00b3, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp;
+        tip.textContent = p.c + ' \u03c1=' + p.dens.toFixed(3) + ' g/cm\u00b3, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (no petro)');
         cv.style.cursor = 'pointer';
       } else { tip.style.display = 'none'; cv.style.cursor = 'crosshair'; }
     });
@@ -1443,4 +1564,316 @@ function drawDensityChart() {
   }
 }
 
+function loadIRSpectrum(code) {
+  const data = IR_DATA[code];
+  if (!data) return;
+  const canvas = document.getElementById('ir-spectrum-canvas');
+  if (canvas) drawIRSpectrum(canvas, data, code);
+}
+
+function drawIRSpectrum(canvas, data, code) {
+  if (!data || data.length < 2) return;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width || 600, H = 250;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  const MARGIN = { top: 15, right: 15, bottom: 30, left: 50 };
+  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
+  const xMin = 2.5, xMax = 25;
+  let yMin = Infinity, yMax = -Infinity;
+  for (const d of data) {
+    const wl = 10000 / d[0];
+    if (wl < xMin || wl > xMax) continue;
+    if (d[1] < yMin) yMin = d[1];
+    if (d[1] > yMax) yMax = d[1];
+  }
+  const yPad = (yMax - yMin) * 0.05 || 0.01;
+  yMin -= yPad; yMax += yPad;
+  const toX = wl => x0 + (wl - xMin) / (xMax - xMin) * (x1 - x0);
+  const toY = y => y1 - (y - yMin) / (yMax - yMin) * (y1 - y0);
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(x1, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5;
+  for (let y = 0; y <= 1; y += 0.25) {
+    const yy = y0 + y * (y1 - y0);
+    ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x1, yy); ctx.stroke();
+  }
+  ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); let started = false;
+  for (const d of data) {
+    const wl = 10000 / d[0];
+    if (wl < xMin || wl > xMax) continue;
+    const x = toX(wl), y = toY(d[1]);
+    if (!started) { ctx.moveTo(x, y); started = true; }
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
+  const xTicks = [2,4,6,8,10,12,14,16,18,20,22,24];
+  xTicks.forEach(t => { ctx.fillText(t.toString(), toX(t), y1 + 16); });
+  ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif';
+  ctx.fillText('Wavelength (µm)', W / 2, H - 2);
+}
+
+const _IR_COLORS = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#2c3e50','#c0392b','#2980b9'];
+
+function drawPairIR(canvas, sampleCodes, clusterName, opts) {
+  opts = opts || {};
+  const rawData = sampleCodes.map(c => IR_DATA[c]).filter(Boolean);
+  if (rawData.length < 2) return;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width || 600, H = 280;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = opts.bg || '#fff';
+  ctx.fillRect(0, 0, W, H);
+  const MARGIN = { top: 10, right: 85, bottom: 28, left: 10 };
+  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
+  const xMin = 2.5, xMax = 22;
+  const toX = wl => x0 + (wl - xMin) / (xMax - xMin) * (x1 - x0);
+  const offset = (y1 - y0) / (rawData.length + 1);
+  const used = (rawData.length - 1 + 0.8) * offset;
+  const topPad = ((y1 - y0) - used) / 2;
+  // Global y-range across all spectra for uniform scaling
+  let yMin = Infinity, yMax = -Infinity;
+  for (const data of rawData)
+    for (const d of data) {
+      const wl = 10000 / d[0];
+      if (wl >= xMin && wl <= xMax) { if (d[1] < yMin) yMin = d[1]; if (d[1] > yMax) yMax = d[1]; }
+    }
+  const yRange = (yMax - yMin) || 1;
+  const toY = (val, idx) => y1 - topPad - idx * offset - ((val - yMin) / yRange) * offset * 0.8;
+
+  // Draw each spectrum with offset using true absorbance values on a shared scale
+  rawData.forEach((data, idx) => {
+    const color = _IR_COLORS[idx % _IR_COLORS.length];
+    ctx.strokeStyle = color; ctx.lineWidth = 1.2;
+    ctx.beginPath(); let started = false;
+    for (const d of data) {
+      const wl = 10000 / d[0];
+      if (wl < xMin || wl > xMax) continue;
+      const x = toX(wl), y = toY(d[1], idx);
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // Label on the right
+    ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = '11px sans-serif';
+    const labelY = toY(0, idx);
+    ctx.fillText(sampleCodes[idx], x1 + 6, labelY);
+  });
+
+  ctx.textAlign = 'center'; ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
+  const xTicks = [2,4,6,8,10,12,14,16,18,20,22];
+  xTicks.forEach(t => { ctx.fillText(t.toString(), toX(t), y1 + 14); });
+  ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif';
+  ctx.fillText('Wavelength (µm)', W / 2, H - 2);
+}
+
+function drawAllIRSpectra() {
+  const canvas = document.getElementById('ir-overview-chart');
+  if (!canvas) return;
+  const codes = Object.keys(IR_DATA);
+
+  const PALETTE = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
+  const groupOrder = [];
+  const sampleGroup = {};
+  const groupColor = {};
+  let palIdx = 0;
+
+  PAIR_GROUPS.forEach(g => {
+    g.falls.forEach(f => {
+      const inCluster = f.samples.filter(c => IR_DATA[c]);
+      if (inCluster.length >= 2) {
+        const key = f.name;
+        if (!groupOrder.includes(key)) groupOrder.push(key);
+        if (!groupColor[key]) { groupColor[key] = PALETTE[palIdx % PALETTE.length]; palIdx++; }
+        inCluster.forEach(c => sampleGroup[c] = key);
+      }
+    });
+  });
+
+  const candidates = [
+    ['Exp19-04','Exp19-08'],
+    ['Exp19-50','Exp19-53'],
+    ['Exp19-06','Exp19-34'],
+  ];
+  candidates.forEach((pair, i) => {
+    const key = 'Candidate ' + (i + 1);
+    groupOrder.push(key);
+    if (!groupColor[key]) { groupColor[key] = PALETTE[palIdx % PALETTE.length]; palIdx++; }
+    pair.forEach(c => sampleGroup[c] = key);
+  });
+
+  const unpaired = codes.filter(c => !sampleGroup[c]);
+  if (unpaired.length) {
+    groupOrder.push('Unpaired');
+    unpaired.forEach(c => sampleGroup[c] = 'Unpaired');
+    groupColor['Unpaired'] = '#ddd';
+  }
+
+  // Order spectra by similarity (most similar at bottom, most different at top)
+  const GRID_N = 200;
+  const comGrid = Array.from({ length: GRID_N }, (_, i) => 400 + i * (3600 / GRID_N));
+  function interpSpec(code) {
+    const pts = IR_DATA[code].slice().sort((a, b) => a[0] - b[0]);
+    return comGrid.map(t => {
+      let lo = 0, hi = pts.length - 1;
+      while (lo < hi - 1) { const m = (lo + hi) >> 1; if (pts[m][0] < t) lo = m; else hi = m; }
+      const [x0, y0] = pts[lo], [x1, y1] = pts[hi];
+      return x1 === x0 ? y0 : y0 + (t - x0) * (y1 - y0) / (x1 - x0);
+    });
+  }
+  function cosine(a, b) {
+    let dot = 0, na = 0, nb = 0;
+    for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
+    return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+  }
+  const interp = Object.fromEntries(codes.map(c => [c, interpSpec(c)]));
+  const avgSpec = comGrid.map((_, i) => codes.reduce((s, c) => s + interp[c][i], 0) / codes.length);
+  const sims = codes.map(c => ({ code: c, sim: cosine(interp[c], avgSpec) }));
+  sims.sort((a, b) => b.sim - a.sim);
+
+  const items = sims.map(s => ({
+    code: s.code,
+    group: sampleGroup[s.code] || 'Unpaired',
+    color: groupColor[sampleGroup[s.code]] || '#ddd',
+    sim: s.sim,
+  }));
+
+  const W = 800;
+  const LANE_H = 9, GROUP_GAP = 0, MARGIN = { top: 100, right: 80, bottom: 30, left: 85 };
+  const H = MARGIN.top + MARGIN.bottom + items.length * LANE_H + 10;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+
+  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
+  const xMin = 2.5, xMax = 22;
+  const toX = wl => x0 + (wl - xMin) / (xMax - xMin) * (x1 - x0);
+
+  let curY = y0;
+  const yPos = {};
+  items.forEach(item => {
+    yPos[item.code] = curY + LANE_H / 2;
+    curY += LANE_H;
+  });
+
+  let yMin = Infinity, yMax = -Infinity;
+  for (const code of codes)
+    for (const d of IR_DATA[code]) {
+      const wl = 10000 / d[0];
+      if (wl >= xMin && wl <= xMax) { if (d[1] < yMin) yMin = d[1]; if (d[1] > yMax) yMax = d[1]; }
+    }
+  const yRange = (yMax - yMin) || 1;
+
+  ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  for (let y = y0; y <= y1; y += LANE_H * 2) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); }
+  ctx.stroke();
+
+  for (const item of items) {
+    const data = IR_DATA[item.code];
+    const baseY = yPos[item.code];
+    ctx.strokeStyle = item.color; ctx.lineWidth = 1.1;
+    ctx.beginPath(); let started = false;
+    for (const d of data) {
+      const wl = 10000 / d[0];
+      if (wl < xMin || wl > xMax) continue;
+      const x = toX(wl), y = baseY - ((d[1] - yMin) / yRange) * LANE_H * 10;
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  ctx.textBaseline = 'bottom';
+  curY = y0;
+  items.forEach(item => {
+    const baseY = curY + LANE_H / 2;
+    ctx.fillStyle = item.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'right';
+    const label = item.group.length > 16 ? item.group.slice(0, 15) + '\u2026' : item.group;
+    ctx.fillText(label, x0 - 6, baseY);
+    ctx.fillStyle = item.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(item.code, x1 + 1, baseY - 30);
+    curY += LANE_H;
+  });
+
+  ctx.fillStyle = '#888'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  const xTicks = [2,4,6,8,10,12,14,16,18,20,22];
+  xTicks.forEach(t => ctx.fillText(t.toString(), toX(t), y1 + 4));
+  ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif';
+  ctx.fillText('Wavelength (µm)', W / 2, y1 + 18);
+}
+
+// ---- FIGURE 5: IR SPECTRA OF CLUSTERS 2, 8, 11 (Paper tab) ----
+function drawIRClusterSpectraPaper() {
+  const cv = document.getElementById('irClusterSpectraPaper');
+  if (!cv || typeof IR_DATA === 'undefined') return;
+  const targetClusters = [
+    { name:'Cluster 2', codes:['Exp19-10','Exp19-24'], color:'#1f77b4' },
+    { name:'Cluster 8', codes:['Exp19-14','Exp19-30'], color:'#2ca02c' },
+    { name:'Cluster 11', codes:['Exp19-41','Exp19-42'], color:'#d62728' },
+  ];
+  const W=700, H=270, dpr=window.devicePixelRatio||1;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  const ml=65, mr=20, mt=25, mb=35;
+  const x0=ml, x1=W-mr, y0=mt, y1=H-mb;
+  const wlMin=6, wlMax=16;
+  const toX=wl=>x0+(wl-wlMin)/(wlMax-wlMin)*(x1-x0);
+  let aMin=Infinity, aMax=-Infinity;
+  targetClusters.forEach(g=>g.codes.forEach(c=>IR_DATA[c].forEach(d=>{const wl=10000/d[0];if(wl>=wlMin&&wl<=wlMax){if(d[1]<aMin)aMin=d[1];if(d[1]>aMax)aMax=d[1];}})));
+  const aRng=(aMax-aMin)||1;
+  const toY=v=>y1-(v-aMin)/aRng*(y1-y0);
+  ctx.strokeStyle='#eee'; ctx.lineWidth=0.5; ctx.beginPath();
+  [6,8,10,12,14,16].forEach(wl=>{const x=toX(wl);ctx.moveTo(x,y0);ctx.lineTo(x,y1);});
+  ctx.stroke();
+  const styles = [[],[3,3],[],[3,3],[]];
+  targetClusters.forEach((g,gi)=>{
+    g.codes.forEach((c,si)=>{
+      const pts=IR_DATA[c];
+      ctx.strokeStyle=g.color; ctx.lineWidth=1.1;
+      ctx.setLineDash(styles[si]||[]);
+      ctx.beginPath(); let started=false;
+      pts.forEach(d=>{
+        const wl=10000/d[0]; if(wl<wlMin||wl>wlMax)return;
+        const x=toX(wl),y=toY(d[1]);
+        if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      const last=pts.filter(d=>{const wl=10000/d[0];return wl>=wlMin&&wl<=wlMax;});
+      if(last.length){
+        const lp=last[last.length-1], lx=toX(10000/lp[0])+2, ly=toY(lp[1]);
+        ctx.fillStyle=g.color; ctx.font='9px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
+        ctx.fillText(c,lx,ly);
+      }
+    });
+  });
+  ctx.setLineDash([]);
+  const legY=[y0+15,y0+(y1-y0)/2,y1-15];
+  targetClusters.forEach((g,i)=>{
+    ctx.fillStyle=g.color; ctx.font='bold 11px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
+    ctx.fillRect(x1+8,legY[i]-4,10,10); ctx.fillText(g.name,x1+22,legY[i]);
+  });
+  ctx.strokeStyle='#ccc'; ctx.lineWidth=0.5;
+  ctx.strokeRect(x0,y0,x1-x0,y1-y0);
+  ctx.fillStyle='#888'; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
+  [6,8,10,12,14,16].forEach(wl=>ctx.fillText(wl.toString(),toX(wl),y1+4));
+  ctx.fillStyle='#bbb'; ctx.font='9px sans-serif'; ctx.fillText('Wavelength (µm)',W/2,y1+18);
+}
 

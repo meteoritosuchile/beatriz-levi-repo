@@ -5,7 +5,7 @@ const SAMPLES = [
   {c:"Exp19-05",n:"Catalina 5",lc:4.654,pW:null,eW:1,ir:"no",t:"LL",loc:"Catalina",nota:"LL; Caída 2"},
   {c:"Exp19-06",n:"Catalina 6",lc:4.837,pW:null,eW:1,ir:"sí",t:"L",loc:"Catalina",nota:"L; IR listo; f2 a SD"},
   {c:"Exp19-07",n:"Catalina 7",lc:4.991,pW:null,eW:1,ir:"disp",t:"L",loc:"Catalina",nota:"L→H?; borde H"},
-  {c:"Exp19-08",n:"Catalina 8",lc:4.686,pW:null,eW:1,ir:"sí",t:"LL",loc:"Catalina",nota:"LL; IR listo"},
+  {c:"Exp19-08",n:"Catalina 8",lc:4.686,pW:null,eW:1,ir:"sí",t:"L",loc:"Catalina",nota:"L; IR listo"},
   {c:"Exp19-09",n:"Catalina 9",lc:4.882,pW:null,eW:2,ir:"disp",t:"L",loc:"Catalina",nota:"L→H?; pendiente IR"},
   {c:"Exp19-10",n:"Catalina10",lc:4.652,pW:null,eW:2,ir:"sí",t:"LL",loc:"Catalina",nota:"LL; IR listo"},
     {c:"Exp19-11",n:"Catalina11",lc:4.971,pW:1,ir:"sí",t:"H",shk:"S6",loc:"Catalina",nota:"H6 S6; ringwoodite in olivine, mosaicism S5–S6"},
@@ -31,19 +31,19 @@ const SAMPLES = [
   {c:"Exp19-33",n:"Catalina33",lc:4.834,pW:null,eW:1,ir:"no",t:"L",loc:"Catalina",nota:"L; pareada con 06"},
   {c:"Exp19-34",n:"Catalina34",lc:4.728,pW:null,eW:1,ir:"sí",t:"L",loc:"Catalina",nota:"L; IR: parece 10"},
   {c:"Exp19-40",n:"Médano 5",lc:5.112,pW:null,eW:0,ir:"disp",t:"H",loc:"Médano",nota:"H"},
-  {c:"Exp19-41",n:"Médano 6",lc:5.117,pW:2,ir:"sí",t:"L",loc:"Médano",nota:"L4; petro L4, KLY5→H"},
-  {c:"Exp19-42",n:"Médano 7",lc:5.091,pW:2,ir:"sí",t:"L",loc:"Médano",nota:"L4; petro L4, KLY5→H"},
+  {c:"Exp19-41",n:"Médano 6",lc:5.117,pW:2,ir:"sí",t:"H",loc:"Médano",nota:"H4; petro H4"},
+  {c:"Exp19-42",n:"Médano 7",lc:5.091,pW:2,ir:"sí",t:"H",loc:"Médano",nota:"H4; petro H4"},
   {c:"Exp19-43",n:"Médano 8",lc:4.965,pW:null,eW:0,ir:"disp",t:"L",loc:"Médano",nota:"L; par con 56"},
   {c:"Exp19-44",n:"Médano 9",lc:4.640,pW:null,eW:2,ir:"sí",t:"LL",loc:"Médano",nota:"LL; IR único"},
   {c:"Exp19-45",n:"Médano10",lc:4.611,pW:null,eW:0,ir:"disp",t:"LL",loc:"Médano",nota:"LL; Caída 1"},
   {c:"Exp19-46",n:"Médano11",lc:4.336,pW:null,eW:2,ir:"sí",t:"LL",loc:"Médano",nota:"LL; Caída 1"},
   {c:"Exp19-47",n:"Médano12",lc:5.168,pW:null,eW:1,ir:"sí",t:"H",loc:"Médano",nota:"H"},
   {c:"Exp19-48",n:"Médano13",lc:4.550,pW:null,eW:2,ir:"sí",t:"LL",loc:"Médano",nota:"LL; IR: parece 44"},
-  {c:"Exp19-49",n:"Médano14",lc:4.631,pW:5,ir:"sí",t:"H",loc:"Médano",nota:"H5; W5 invalid"},
+  {c:"Exp19-49",n:"Médano14",lc:4.631,pW:5,ir:"sí",t:"H",loc:"Médano",nota:"H5; W5 — KLY5 unreliable (W\u22653)"},
   {c:"Exp19-50",n:"Médano15",lc:4.750,pW:null,eW:2,ir:"sí",t:"L",loc:"Médano",nota:"L"},
   {c:"Exp19-51",n:"Médano16",lc:4.464,pW:null,eW:2,ir:"sí",t:"LL",loc:"Médano",nota:"LL"},
   {c:"Exp19-52",n:"Médano17",lc:4.443,pW:null,eW:1,ir:"sí",t:"LL",loc:"Médano",nota:"LL; Caída 1"},
-  {c:"Exp19-53",n:"Médano18",lc:4.924,pW:2,ir:"sí",t:"H",loc:"Médano",nota:"⚡ KLY5→H vs Raman→LL"},
+  {c:"Exp19-53",n:"Médano18",lc:4.924,pW:2,ir:"sí",t:"H",loc:"Médano",nota:"H; KLY5→H (Raman Fo-rich olivine, not bulk LL)"},
   {c:"Exp19-54",n:"Médano19",lc:4.294,pW:null,eW:2,ir:"disp",t:"LL",loc:"Médano",nota:"LL; Caída 1"},
   {c:"Exp19-56",n:"Médano21",lc:4.966,pW:null,eW:0,ir:"sí",t:"L",loc:"Médano",nota:"L; par con 43"},
   {c:"Exp19-58",n:"San Juan 1",lc:null,pW:null,ir:"no",t:"??",loc:"San Juan",nota:"?"},
@@ -75,31 +75,29 @@ const FIELD_DATA = {
 };
 const PAIR_GROUPS = [
   {locality:"Catalina",color:"#1a2a3a",falls:[
-    {name:"Cluster L1",type:"L",count:2,range:"4.505–4.521",delta:"0.016",tc:"#e67e22",
+    {name:"Cluster 1",type:"L",count:2,range:"4.505–4.521",delta:"0.016",tc:"#e67e22",
      samples:["Exp19-23","Exp19-22"]},
-    {name:"Cluster L2",type:"L",count:3,range:"4.581–4.652",delta:"0.071",tc:"#e67e22",
+    {name:"Cluster 2",type:"L",count:3,range:"4.581–4.652",delta:"0.071",tc:"#e67e22",
      samples:["Exp19-03","Exp19-24","Exp19-10"]},
-    {name:"Cluster L3",type:"L",count:2,range:"4.655–4.694",delta:"0.039",tc:"#e67e22",
+    {name:"Cluster 3",type:"L",count:2,range:"4.655–4.694",delta:"0.039",tc:"#e67e22",
      samples:["Exp19-26","Exp19-19"]},
-    {name:"Cluster L4",type:"L",count:2,range:"4.762–4.817",delta:"0.055",tc:"#e67e22",
+    {name:"Cluster 4",type:"L",count:2,range:"4.762–4.817",delta:"0.055",tc:"#e67e22",
      samples:["Exp19-32","Exp19-17"]},
-    {name:"Cluster H1",type:"H",count:3,range:"4.834–4.882",delta:"0.048",tc:"#27ae60",
+    {name:"Cluster 5",type:"H",count:3,range:"4.834–4.882",delta:"0.048",tc:"#27ae60",
      samples:["Exp19-33","Exp19-12","Exp19-09"]},
-    {name:"Cluster H2",type:"H",count:2,range:"4.959–4.991",delta:"0.032",tc:"#27ae60",
+    {name:"Cluster 6",type:"H",count:2,range:"4.959–4.991",delta:"0.032",tc:"#27ae60",
      samples:["Exp19-29","Exp19-07"]},
-    {name:"Cluster H3",type:"H",count:2,range:"5.118–5.166",delta:"0.048",tc:"#27ae60",
-     samples:["Exp19-21","Exp19-13"]},
-    {name:"Cluster H4",type:"H",count:2,range:"5.252–5.285",delta:"0.033",tc:"#27ae60",
+    {name:"Cluster 7: H5",type:"H",count:2,range:"5.252–5.285",delta:"0.033",tc:"#27ae60",
      samples:["Exp19-25","Exp19-01"]},
-    {name:"Cluster H5",type:"H",count:2,range:"5.274–5.348",delta:"0.074",tc:"#27ae60",
+    {name:"Cluster 8: H(4-5)",type:"H",count:2,range:"5.274–5.348",delta:"0.074",tc:"#27ae60",
      samples:["Exp19-30","Exp19-14"]}
   ]},
   {locality:"Médano",color:"#1a2a3a",falls:[
-    {name:"Cluster L1",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
+    {name:"Cluster 9",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
      samples:["Exp19-54","Exp19-46"]},
-    {name:"Cluster H1",type:"H",count:2,range:"4.965–4.966",delta:"0.001",tc:"#27ae60",
+    {name:"Cluster 10",type:"H",count:2,range:"4.965–4.966",delta:"0.001",tc:"#27ae60",
      samples:["Exp19-43","Exp19-56"]},
-    {name:"Cluster H2",type:"H",count:3,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
+    {name:"Cluster 11: H4",type:"H",count:3,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
      samples:["Exp19-42","Exp19-40","Exp19-41"]}
   ]}
 ];
@@ -113,14 +111,14 @@ const TYPE_COLORS = {H:'#27ae60',L:'#e67e22',LL:'#b8860b',C:'#8e44ad','??':'#999
 // Initial mass (grams) from Repositorio Meteoritos.xlsx catalog — total specimen mass (sum of all fragments)
 const MASS_MAP = {
   "Exp19-01":4.9,"Exp19-03":1.7,"Exp19-04":3.8,"Exp19-05":3.5,"Exp19-06":3.9,
-  "Exp19-07":71.4,"Exp19-09":8.9,"Exp19-10":1.6,"Exp19-11":12.9,"Exp19-12":3,
-  "Exp19-13":2.4,"Exp19-14":14.9,"Exp19-17":2.7,"Exp19-19":0.8,
+  "Exp19-07":71.4,"Exp19-08":5.97,"Exp19-09":8.9,"Exp19-10":1.6,"Exp19-11":12.9,"Exp19-12":3,
+  "Exp19-13":2.4,"Exp19-14":14.9,"Exp19-15":1.1,"Exp19-17":2.7,"Exp19-18":8.8,"Exp19-19":0.8,"Exp19-20":2.3,"Exp19-27":2.5,
   "Exp19-21":5.4,"Exp19-22":1.7,"Exp19-23":1.1,"Exp19-24":5.9,"Exp19-25":1.9,
   "Exp19-26":1.9,"Exp19-29":1,"Exp19-30":28.4,"Exp19-31":13,"Exp19-32":2.3,
   "Exp19-33":1.6,"Exp19-34":1.2,"Exp19-40":260.8,"Exp19-41":113.5,"Exp19-42":26.4,
   "Exp19-43":52.7,"Exp19-44":24,"Exp19-45":55.3,"Exp19-46":36.8,"Exp19-47":38.9,
   "Exp19-48":3.7,"Exp19-49":26.1,"Exp19-50":29.8,"Exp19-51":32.1,"Exp19-52":297.5,
-  "Exp19-53":8.7,"Exp19-54":80.1,"Exp19-56":178.2
+  "Exp19-53":8.7,"Exp19-54":80.1,"Exp19-56":178.2,"Exp19-58":4.8,"Exp19-59":23.2
 };
 
 // Petrologic grade (3–7) and type (H/L/LL) from thin-section petrography
@@ -131,8 +129,8 @@ const PETRO_MAP = {
   "Exp19-14":{type:"H",grade:4,note:"H4"},
   "Exp19-21":{type:"H",grade:4,note:"H4"},
   "Exp19-30":{type:"H",grade:5,note:"H5"},
-  "Exp19-41":{type:"L",grade:4,note:"L4"},        // petro L4, despite KLY5→H
-  "Exp19-42":{type:"L",grade:4,note:"L4"},        // petro L4 (Figueroa)
+  "Exp19-41":{type:"H",grade:4,note:"H4"},        // reclassified H4 (KLY5→H)
+  "Exp19-42":{type:"H",grade:4,note:"H4"},        // reclassified H4 (KLY5→H)
   "Exp19-49":{type:"H",grade:5,note:"H5"},        // petro H5 in DETAILS
   "Exp19-53":{type:"H",grade:4,note:"H4"}         // petro H4 in DETAILS
 };
@@ -156,17 +154,17 @@ const DISCOVERER_MAP = {
 
 // Bulk density (g/cm³) from the collection catalog (average of all fragments)
 const DENSITY_MAP = {
-  "Exp19-01":2.722,"Exp19-03":2.833,"Exp19-04":3.455,"Exp19-05":3.500,
-  "Exp19-06":1.840,"Exp19-07":2.859,"Exp19-09":3.069,"Exp19-10":2.667,
-  "Exp19-11":4.300,"Exp19-12":2.727,"Exp19-13":3.000,"Exp19-14":3.548,
-  "Exp19-17":2.700,"Exp19-19":2.667,"Exp19-21":3.176,"Exp19-22":2.429,
-  "Exp19-23":2.200,"Exp19-24":2.429,"Exp19-25":2.375,"Exp19-26":2.239,
-  "Exp19-29":2.500,"Exp19-30":3.572,"Exp19-31":2.826,"Exp19-32":2.556,
-  "Exp19-33":3.200,"Exp19-34":2.000,"Exp19-40":3.548,"Exp19-41":3.697,
-  "Exp19-42":3.718,"Exp19-43":3.764,"Exp19-44":3.871,"Exp19-45":1.590,
-  "Exp19-46":2.962,"Exp19-47":2.841,"Exp19-48":3.364,"Exp19-49":2.882,
-  "Exp19-50":3.590,"Exp19-51":3.178,"Exp19-53":3.107,"Exp19-54":3.658,
-  "Exp19-56":3.991
+  "Exp19-01":2.240,"Exp19-03":2.338,"Exp19-04":2.850,"Exp19-05":2.880,
+  "Exp19-06":1.513,"Exp19-07":2.850,"Exp19-08":2.805,"Exp19-09":2.532,"Exp19-10":2.200,
+  "Exp19-11":3.548,"Exp19-12":2.250,"Exp19-13":2.475,"Exp19-14":2.927,
+  "Exp19-17":2.228,"Exp19-19":2.200,"Exp19-21":2.621,"Exp19-22":2.004,
+  "Exp19-23":1.815,"Exp19-24":2.004,"Exp19-25":1.959,"Exp19-26":2.239,
+  "Exp19-29":2.063,"Exp19-30":2.947,"Exp19-31":2.332,"Exp19-32":2.108,
+  "Exp19-33":2.640,"Exp19-34":1.650,"Exp19-40":2.927,"Exp19-41":3.050,
+  "Exp19-42":3.068,"Exp19-43":3.106,"Exp19-44":3.194,"Exp19-45":1.590,
+  "Exp19-46":2.444,"Exp19-47":2.344,"Exp19-48":2.775,"Exp19-49":2.377,
+  "Exp19-50":2.962,"Exp19-51":2.622,"Exp19-52":2.365,"Exp19-53":2.563,"Exp19-54":3.017,
+  "Exp19-56":3.293, "Exp19-59":2.226
 };
 
 // Coordinates map: Northing N, Easting E format
@@ -220,9 +218,9 @@ const SAMPLE_DETAILS = {
       pieces: 1
     },
     classification: {
-      class: "L4",
+      class: "H4",
       classifier: "M. J. Figueroa, M. Peña, D. Moncada (2023) & C. S. Aravena (2026)",
-      description: "Figueroa (2023) classified Médano 7 as an L-group ordinary chondrite with 9 wt% Fe, average crystal size of 0.11 mm, and a metal composition of kamacite (50%), troilite (40%), and oxides (10%). It is classified as type 4 due to well-defined chondrules, nearly absent glass, and a matrix with clastic-looking coarsening."
+      description: "Figueroa (2023) classified Médano 7 as type 4 due to well-defined chondrules, nearly absent glass, and a matrix with clastic-looking coarsening. Reclassified as H-group based on KLY5 magnetic susceptibility (log χ = 5.091, consistent with H field of Rochette et al., 2003)."
     },
     weathering: {
       grade: "W2",
@@ -232,7 +230,7 @@ const SAMPLE_DETAILS = {
       mineralogy: "Chondritic texture with irregular fracturing. The main mineralogy consists of olivine (60%), pyroxene (30%), opaques (10%), and 4% porosity. Mineral crystals tend to occur massively, with smaller grain sizes making them appear more numerous and granular.",
       matrix: "Fine-grained granoblastic texture with medium recrystallization degree. Constitutes 35% of the sample with crystal size < 0.11 mm.",
       chondrules: "Well-defined boundaries, representing 52% of the sample with an average size of 0.363 mm. Chondrule types in order of abundance: POP, GOP, PO, PP, CP.",
-      chemicalGroup: "Médano 7 contains 9 wt% Fe with an average crystal size of 0.11 mm."
+      chemicalGroup: "H — magnetic susceptibility (log χ) = 5.091"
     },
     location: {
       coordinates: "7268171 N, 363453 E",
@@ -251,9 +249,9 @@ const SAMPLE_DETAILS = {
       pieces: 1
     },
     classification: {
-      class: "L4",
+      class: "H4",
       classifier: "M. J. Figueroa, M. Peña, D. Moncada (2023) & C. S. Aravena (2026)",
-      description: "Figueroa (2023) classified the sample as type 4, with mostly well-defined chondrules and, to a lesser extent, delineated chondrules within a clastic, coarsened matrix. This specimen contains 10 wt% Fe, classifying it as L-group, with an average crystal size of 0.12 mm."
+      description: "Figueroa (2023) classified the sample as type 4, with mostly well-defined chondrules and, to a lesser extent, delineated chondrules within a clastic, coarsened matrix. Reclassified as H-group based on KLY5 magnetic susceptibility (log χ = 5.117, consistent with H field of Rochette et al., 2003)."
     },
     weathering: {
       grade: "W2",
@@ -263,7 +261,7 @@ const SAMPLE_DETAILS = {
       mineralogy: "The predominant dark brown color throughout the section is most noticeable in matrix areas. Chondritic texture with low linear fracturing. Main mineralogy: olivine (50%), pyroxene (40%), opaques (10%), and 2% porosity. Mineral crystals tend to occur massively.",
       matrix: "Fine-grained granoblastic texture with high recrystallization degree and dark brown color. Constitutes 38% of the sample with crystal size < 0.15 mm.",
       chondrules: "Well to moderately defined boundaries, representing 50% of the sample with an average size of 0.33 mm. Chondrule types in order of abundance: POP, CP, PO, PR.",
-      chemicalGroup: "Iron content is 10%, composed of kamacite (70%, avg. 0.12 mm), troilite (20%, avg. 0.11 mm), and oxides (10%, avg. 0.13 mm)."
+      chemicalGroup: "H — magnetic susceptibility (log χ) = 5.117"
     },
     location: {
       coordinates: "7268192 N, 363544 E",
@@ -559,4 +557,35 @@ const SAMPLE_DETAILS = {
       state: "Antofagasta"
     }
   }
+};
+
+const IR_DIR = location.href.substring(0, location.href.lastIndexOf('/') + 1) + 'Espectros IR/';
+
+const IR_FILES = {
+  "Exp19-01":"Exp19-01f2_60m_604_0.5.txt",
+  "Exp19-04":"Exp19-04f2_60m_537_0.5.txt",
+  "Exp19-06":"Exp19-06f3_60m_674_0.5.txt",
+  "Exp19-08":"Exp19-08f2_60m_718_0.5.txt",
+  "Exp19-10":"Exp19-10f2_60m_571_0.5.txt",
+  "Exp19-11":"Exp19-11f2_60m_668_0.5.txt",
+  "Exp19-12":"Exp19-12f2_60m_737_0.5.txt",
+  "Exp19-13":"Exp19-13f2_60m_783_0.5.txt",
+  "Exp19-14":"Exp19-14f3_60m_594_0.5.txt",
+  "Exp19-21":"Exp19-21f3_60m_730_0.5.txt",
+  "Exp19-24":"Exp19-24f3_60m_725_0.5.txt",
+  "Exp19-30":"Exp19-30f1-3_60m_774_0.5.txt",
+  "Exp19-32":"Exp19-32f2_60m_702_0.5.txt",
+  "Exp19-34":"Exp19-34f2_60m_772_0.5.txt",
+  "Exp19-41":"Exp19-41f3_60m_802_0.5.txt",
+  "Exp19-42":"Exp19-42f3_60m_773_0.5.txt",
+  "Exp19-44":"Exp19-44f2_60m_748_0.5.txt",
+  "Exp19-46":"Exp19-46f2-2_60m_914_0.5.txt",
+  "Exp19-47":"Exp19-47f3_60m_769_0.5.txt",
+  "Exp19-48":"Exp19-48f2_60m_732_0.5.txt",
+  "Exp19-49":"Exp19-49f2-3_60m_752_0.5.txt",
+  "Exp19-50":"Exp19-50f2_60m_845_0.5.txt",
+  "Exp19-51":"Exp19-51f2_60m_659_0.5.txt",
+  "Exp19-52":"Exp19-52f25-26_60m_639_0.5.txt",
+  "Exp19-53":"Exp19-53f3_60m_962_0.5.txt",
+  "Exp19-56":"Exp19-56f4_60m_836_0.5.txt"
 };
