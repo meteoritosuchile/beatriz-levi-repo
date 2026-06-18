@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,6 +9,7 @@
 <script src="https://unpkg.com/utif@3.1.0/UTIF.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/data.js"></script>
+<script src="js/ir-data.js"></script>
 </head>
 <body>
 
@@ -24,51 +25,72 @@
   <a href="#" id="auth-btn" onclick="toggleAuth()" style="font-size:12px;color:#ccc">Login</a>
 </nav>
 
+<!-- HOME -->
 <div class="page active" id="page-home"><div id="home-content"></div></div>
+
+<!-- SAMPLES -->
 <div class="page" id="page-samples"><div id="samples-content"></div></div>
+
+<!-- SAMPLE DETAIL -->
 <div class="page" id="page-sample"><div id="sample-content"></div></div>
+
+<!-- PAIRING -->
 <div class="page" id="page-pairing"><div id="pairing-content"></div></div>
+
+<!-- PAPER -->
 <div class="page" id="page-paper">
   <div class="paper-content" style="max-width:820px;margin:0 auto">
     <h1>Classification and Fragmentation Analysis of Ordinary Chondrites from the Atacama Desert</h1>
-    <p style="text-align:center;color:#444;font-size:14px">Samanta Aravena<sup>1</sup>, Grace Batalla<sup>3,4</sup>, María José Figueroa Zambrano<sup>2</sup>, María Eugenia Parra<sup>1</sup>, Daniel Moncada<sup>1</sup>, Lucas Cieza<sup>3,4</sup>, Roberto Lavín<sup>3</sup>, Matías Peña<sup>2</sup>, Axel Escobar<sup>3,4</sup>, Bárbara De la Fuente<sup>1</sup>, Víctor Cárcamo<sup>1</sup>, Diego Castañeda<sup>1</sup>, Sebastián Gatica<sup>1</sup>, Alfonso Mohor<sup>1</sup>, Lorena Olivares<sup>1</sup>, Roberto Valles<sup>1</sup></p>
+    <p style="text-align:center;color:#444;font-size:14px">C. S. Aravena González<sup>1</sup>, D. Moncada<sup>1</sup>, L. Cieza<sup>3,4</sup>, G. Batalla<sup>3,4</sup>, A. Escobar<sup>3,4</sup>, M. J. Figueroa Zambrano<sup>2</sup>, M. E. Parra<sup>1</sup>, M. Peña<sup>2</sup>, R. Lavín<sup>3</sup>, B. De la Fuente<sup>1</sup>, V. Cárcamo<sup>1</sup>, D. Castañeda<sup>1</sup>, S. Gatica<sup>1</sup>, A. Mohor<sup>1</sup>, L. Olivares<sup>1</sup>, R. Valles<sup>1</sup></p>
     <p style="text-align:center;color:#888;font-size:12px;font-style:italic;line-height:1.3;margin-bottom:24px">
       <sup>1</sup>Departamento de Geología, Universidad de Chile<br>
       <sup>2</sup>Escuela de Geología, Universidad Mayor<br>
       <sup>3</sup>Instituto de Estudios Astrofísicos, Universidad Diego Portales<br>
       <sup>4</sup>Cosmic Dust Laboratory, Universidad Diego Portales<br>
     </p>
+
     <div class="logos">
-      <img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" style="height:90px">
-      <img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" style="height:70px">
-      <img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" style="height:48px">
-      <img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" style="height:60px">
-      <img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Lab" style="height:60px">
-      <img src="Logos/U%20de%20Chile.jpg" alt="Universidad de Chile" style="height:60px">
+      <img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px">
+      <img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px">
+      <img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px">
+      <img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px">
+      <img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Lab" title="Laboratorio Fluidos Planetarios, Universidad de Chile" style="height:60px">
+      <img src="Logos/U%20de%20Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:60px">
     </div>
+
     <div class="abstract-box">
       <strong>Abstract</strong><br>
       We present a comprehensive classification and fragmentation analysis of 49 meteorite specimens from the Atacama Desert (Catalina, El Médano, San Juan, and Los Vientos areas), recovered during the 2019 expedition and forming the Beatriz Levi Repository at the Department of Geology, Universidad de Chile. The specimens were classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography, following the methodologies of Rochette et al. (2003, 2012), Van Schmus and Wood (1967), and Pittarello et al. (2015). Of the 49 specimens, 43 yielded magnetic susceptibility data, classified by KLY5 midpoints (Rochette et al., 2003) as 25 H-type, 17 L-type, and 1 LL-type. Including specimens classified by petrography, the collection comprises 25 H-type, 17 L-type, 4 LL-type, and 3 unclassified. Our results demonstrate that magnetic susceptibility, when combined with IR spectroscopy and petrography, provides a robust, cost-effective classification pipeline for large meteorite collections.
     </div>
-    <div class="fig-wrap" style="position:relative">
+
+    <div class="fig-wrap fig-thumb" onclick="openFigOverlay('massLogChiCanvas')" style="position:relative;cursor:pointer">
       <canvas id="massLogChiCanvas" width="760" height="420"></canvas>
-      <div id="chart-tooltip"></div>
-      <div class="fig-caption"><strong>Figure 1.</strong> Magnetic susceptibility (log χ) vs. initial specimen mass for KLY5-measured specimens of the Beatriz Levi Repository. Colored bands indicate the classification ranges of Rochette et al. (2003): H (4.89±0.31), L (4.55±0.28), and LL (3.98±0.41). Each point represents one specimen, colored by its KLY5 group. Hover for details.</div>
+      <div id="chart-tooltip" style="display:none"></div>
+      <div class="fig-caption"><strong>Figure 1.</strong> Magnetic susceptibility (log χ) vs. initial specimen mass. Click to enlarge.</div>
     </div>
-    <div class="fig-wrap">
-      <canvas id="doughnutCanvas" width="600" height="300" style="max-width:500px;margin:0 auto;display:block"></canvas>
-      <div class="fig-caption"><strong>Figure 2.</strong> Histogram of magnetic susceptibility (log χ) for the 43 KLY5-measured specimens in the Beatriz Levi Repository, stacked by KLY5 group. Shaded regions show mean±1σ ranges from Rochette et al. (2003) for H (4.89±0.31), L (4.55±0.28), and LL (3.98±0.41).</div>
+
+    <div class="fig-wrap fig-thumb" onclick="openFigOverlay('doughnutCanvas')" style="cursor:pointer">
+      <canvas id="doughnutCanvas" width="600" height="300"></canvas>
+      <div class="fig-caption"><strong>Figure 2.</strong> Histogram of magnetic susceptibility (log χ) grouped by KLY5 type. Click to enlarge.</div>
     </div>
-    <div class="fig-wrap" style="position:relative">
+
+    <div class="fig-wrap fig-thumb" onclick="openFigOverlay('petroGradeCanvas')" style="position:relative;cursor:pointer">
       <canvas id="petroGradeCanvas" width="700" height="420"></canvas>
-      <div id="chart-tooltip3"></div>
-      <div class="fig-caption"><strong>Figure 3.</strong> Weathering grade (petrographic, Wlotzka 1993) vs. magnetic susceptibility (log χ) for the 9 specimens with thin-section petrographic weathering (pW) and KLY5 data. Diagonal bands show the W-corrected classification regions (Rochette et al., 2003).</div>
+      <div id="chart-tooltip3" style="display:none"></div>
+      <div class="fig-caption"><strong>Figure 3.</strong> Weathering grade vs. magnetic susceptibility (log χ) with Rochette W correction. Click to enlarge.</div>
     </div>
-    <div class="fig-wrap" style="position:relative">
+
+    <div class="fig-wrap fig-thumb" onclick="openFigOverlay('densityChiCanvas')" style="position:relative;cursor:pointer">
       <canvas id="densityChiCanvas" width="760" height="420"></canvas>
-      <div id="chart-tooltip4"></div>
-      <div class="fig-caption"><strong>Figure 4.</strong> Bulk density vs. magnetic susceptibility (log χ) for the 41 specimens with both density and KLY5 data in the Beatriz Levi Repository. Points are colored by KLY5 group. Hover for details.</div>
+      <div id="chart-tooltip4" style="display:none"></div>
+      <div class="fig-caption"><strong>Figure 4.</strong> Bulk density vs. magnetic susceptibility (log χ). Click to enlarge.</div>
     </div>
+
+    <div class="fig-wrap fig-thumb" onclick="openFigOverlay('irClusterSpectraPaper')" style="cursor:pointer">
+      <canvas id="irClusterSpectraPaper" width="700" height="270"></canvas>
+      <div class="fig-caption"><strong>Figure 5.</strong> Infrared spectra of the three IR-consistent magnetic clusters (2, 8, 11). Click to enlarge.</div>
+    </div>
+
     <p style="text-align:center;margin-top:24px">
       <a href="paper.html" target="_blank" class="btn">📄 View Full Pre-print (standalone)</a>
       <a href="#" class="btn" onclick="navigate('samples');return false" style="margin-left:10px">🔬 Browse All Samples</a>
@@ -76,9 +98,12 @@
   </div>
 </div>
 
+<!-- CONTACT -->
 <div class="page" id="page-contact"><div id="contact-content"></div></div>
+
 <div id="toast"></div>
 
+<!-- AUTH MODAL -->
 <div id="auth-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;justify-content:center;align-items:center" onclick="if(event.target===this)closeAuth()">
   <div style="background:#fff;padding:28px;border-radius:8px;max-width:360px;width:90%;position:relative">
     <button onclick="closeAuth()" style="position:absolute;top:8px;right:12px;border:none;background:none;font-size:20px;cursor:pointer;color:#888">&times;</button>
@@ -101,7 +126,14 @@
   <div class="lb-counter" id="lb-counter"></div>
 </div>
 
+<div id="fig-overlay" class="fig-overlay" onclick="if(event.target===this)closeFigOverlay()">
+  <span class="fig-close" onclick="closeFigOverlay()">&times;</span>
+  <div class="fig-overlay-wrap" id="fig-overlay-wrap"></div>
+  <div class="fig-label" id="fig-overlay-label"></div>
+</div>
+
 <script src="js/app.js"></script>
 <script>navigate('home');</script>
 </body>
 </html>
+
