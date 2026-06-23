@@ -46,7 +46,6 @@ tr:nth-child(even){background:#f8f8f8}
 .ir-pair-canvas{display:block;margin:0 auto;border:1px solid #eee;border-radius:4px}
 @media(max-width:600px){.paper{padding:20px 12px}h1{font-size:18px}.table-wrap{font-size:10px}td,th{padding:3px 4px;font-size:9px}}
 </style>
-<script src="meteoritos-app/js/ir-data.js"></script>
 </head>
 <body>
 <div class="paper">
@@ -77,7 +76,7 @@ tr:nth-child(even){background:#f8f8f8}
 
 <div class="abstract-box">
   <strong>Abstract</strong><br>
-  We present a comprehensive classification and fragmentation analysis of 49 meteorite specimens from the Atacama Desert (Catalina, El Médano, San Juan, and Los Vientos areas), recovered during the 2019 expedition and forming the Beatriz Levi Repository at the Department of Geology, Universidad de Chile. Of the 57 specimens collected during the 2019 expedition, 8 were rejected after preliminary screening as non-meteoritic (terrestrial rocks or slag). The specimens were classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography, following the methodologies of Rochette et al. (2003, 2012), Van Schmus and Wood (1967), and Pittarello et al. (2015). Of the 49 specimens, 43 yielded magnetic susceptibility data, classified by KLY5 midpoints (Rochette et al., 2003) as 25 H-type, 17 L-type, and 1 LL-type. Including specimens classified by petrography, the collection comprises 25 H-type, 17 L-type, 4 LL-type, and 3 unclassified. Fragmentation analysis based on raw magnetic susceptibility (Δχ ≤ 0.08 within the same KLY5 class, verified by bulk density consistency with <20% variation) identified 8 magnetic clusters in Catalina (17 paired fragments) and 3 in Médano (7 paired fragments). Our results demonstrate that magnetic susceptibility, when combined with IR spectroscopy and petrography, provides a robust, cost-effective classification pipeline for large meteorite collections, achieving 71.4% agreement between non-destructive and destructive methods in a subset of 7 samples.
+  We present a comprehensive classification and fragmentation analysis of 49 meteorite specimens from the Atacama Desert (Catalina, El Médano, San Juan, and Los Vientos areas), recovered during the 2019 expedition and forming the Beatriz Levi Repository at the Department of Geology, Universidad de Chile. Of the 57 specimens collected during the 2019 expedition, 8 were rejected after preliminary screening as non-meteoritic (terrestrial rocks or slag). The specimens were classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography, following the methodologies of Rochette et al. (2003, 2012), Van Schmus and Wood (1967), and Pittarello et al. (2015). Of the 49 specimens, 43 yielded magnetic susceptibility data, classified by KLY5 midpoints (Rochette et al., 2003) as 20 H-type, 22 L-type, and 1 LL-type. Integrating petrography and IR spectroscopy, the collection comprises 13 H-type, 14 L-type, 18 LL-type, and 4 unclassified. Fragmentation analysis based on raw magnetic susceptibility (Δχ ≤ 0.08 within the same KLY5 class, verified by bulk density consistency with <20% variation) identified 6 magnetic clusters in Catalina (22 paired fragments) and 6 in Médano (15 paired fragments), yielding an estimated ~16 distinct meteorites from Catalina and ~7 from Médano. IR spectroscopy independently confirms all clusters with ≥2 IR samples. Our results demonstrate that magnetic susceptibility, when combined with IR spectroscopy and petrography, provides a robust, cost-effective classification pipeline for large meteorite collections.
 </div>
 
 <!-- ===== 1. INTRODUCTION ===== -->
@@ -85,11 +84,11 @@ tr:nth-child(even){background:#f8f8f8}
 
 <p>The Atacama Desert in northern Chile is one of the most important meteorite accumulation zones on Earth, alongside Antarctica and the Sahara (Gattacceca et al., 2011). Its hyperarid conditions, which have persisted since the Late Miocene (~12 Ma), allow exceptional preservation of meteorites over millions of years (Reich et al., 2009; Hutzler et al., 2016). The combination of a stable geological surface, minimal weathering rates, and extensive, easily accessible terrain has made the Atacama a prime target for meteorite recovery expeditions.</p>
 
-<p>In April 2019, a field campaign as part of the <em>Fluidos Planetarios</em> elective course of the Geology program at Universidad de Chile recovered 57 specimens from the Catalina, El Médano, San Juan, and Los Vientos areas, located inland from the coastal town of Taltal (Second Region of Chile). After preliminary screening, 8 were identified as non-meteoritic (terrestrial rocks or slag) and excluded from further analysis. The remaining 49 confirmed meteorites constitute the Beatriz Levi Repository. The expedition team included students Alfonso Mohor, Diego Castañeda, Roberto Valles (staff), Víctor Cárcamo, Lorena Olivares, and Sebastián Gatica. The collection was funded by a Community Grant from the Meteoritical Society (August 2025). The repository currently houses 46 ordinary chondrites (25 H, 17 L, 4 LL) and 3 unclassified, making it a significant collection for scientific study.</p>
+<p>In April 2019, a field campaign as part of the <em>Fluidos Planetarios</em> elective course of the Geology program at Universidad de Chile recovered 57 specimens from the Catalina, El Médano, San Juan, and Los Vientos areas, located inland from the coastal town of Taltal (Second Region of Chile). After preliminary screening, 8 were identified as non-meteoritic (terrestrial rocks or slag) and excluded from further analysis. The remaining 49 confirmed meteorites constitute the Beatriz Levi Repository. The expedition team included students Alfonso Mohor, Diego Castañeda, Roberto Valles (staff), Víctor Cárcamo, Lorena Olivares, and Sebastián Gatica. The collection was funded by a Community Grant from the Meteoritical Society (August 2025). Integrating KLY5, petrography, and IR spectroscopy, the repository comprises 13 H-type, 14 L-type, 18 LL-type, 4 unclassified, and 1 anomalous ordinary chondrite, making it a significant collection for scientific study.</p>
 
 <p>Traditional meteorite classification relies on petrographic analysis of thin sections and geochemical methods that require partial or complete destruction of samples. This poses a challenge for preserving meteoritic material, which is considered geological heritage of scientific value. Consequently, there is growing interest in developing and validating non-destructive or minimally destructive classification techniques (Consolmagno et al., 2006; Rochette et al., 2003).</p>
 
-<p>Figueroa (2023), in her undergraduate thesis at Universidad Mayor under the guidance of D. Moncada, S. Aravena, and M. Peña, examined seven specimens from this collection using a combination of petrography, Raman spectroscopy, infrared spectroscopy, and magnetic susceptibility. She found that magnetic susceptibility alone achieved 66.6% agreement with petrographic classification, with discrepancies attributable to instrument saturation and advanced weathering grades exceeding W3. Her work established a foundation for the present study, which extends the analysis to the full repository of 49 specimens and incorporates fragmentation analysis based on magnetic susceptibility pairing.</p>
+<p>Petrographic analysis of seven specimens (Exp19-14, Exp19-21, Exp19-30, Exp19-41, Exp19-42, Exp19-49, Exp19-53) was carried out using optical microscopy, Raman spectroscopy, and infrared spectroscopy. These petrographic observations (petrologic type, shock stage, weathering grade) and Raman mineral chemistry data provide essential input for the integrated classification. This petrographic foundation is extended in the present study to the full repository of 49 specimens, incorporating fragmentation analysis based on magnetic susceptibility pairing. Four additional specimens (Exp19-01, Exp19-11, Exp19-15, Exp19-27) were characterized following the same methodology.</p>
 
 <p>The objectives of this pre-print are: (1) to present the complete classification of the Beatriz Levi Repository using magnetic susceptibility, supported by IR spectroscopy and petrography where available; (2) to identify paired fragments belonging to the same meteorite fall through magnetic susceptibility clustering; (3) to evaluate the effectiveness of combined non-destructive techniques for classification of ordinary chondrites; and (4) to contribute to the understanding of meteorite accumulation and fragmentation patterns in the Atacama Desert.</p>
 
@@ -113,7 +112,7 @@ tr:nth-child(even){background:#f8f8f8}
 <h3>2.3 Petrography</h3>
 <p>Double-polished thin sections (70 μm thick) were prepared at the Laboratorio de Cortes, Universidad de Chile. Petrographic characterization was performed using an Olympus optical microscope at the Laboratorio de Inclusiones. Classification followed the parameters of Van Schmus and Wood (1967) for petrologic type, Stöffler et al. (1991) for shock stage, and Wlotzka (1993) for weathering grade. Chemical group determination followed modal analysis of metal, sulfide, and chondrule abundances (Craig, 1964; Keil and Fredriksson, 1964; Scott and Krot, 2014).</p>
 
-<p>A total of 11 samples have complete petrographic classification.</p>
+<p>Eleven specimens have complete petrographic classification from thin-section analysis.</p>
 
 <h3>2.4 Raman Spectroscopy</h3>
 <p>Raman spectra were obtained at the Laboratorio Raman, Universidad de Chile, using a LabRAM HR Evolution instrument with a HeNe 532 nm/17 mW laser. Olivine and pyroxene crystals were analyzed for 5 seconds in 3 consecutive measurements. Compositional estimates (Fa mol% for olivine, Fs mol% for pyroxene) were calculated using the equations of Pittarello et al. (2015). Chemical group assignments based on Raman-composition correlations were: H (Fa16–20, Fs14–18), L (Fa22–26, Fs19–22), and LL (Fa27–32, Fs22–26).</p>
@@ -130,9 +129,9 @@ tr:nth-child(even){background:#f8f8f8}
 <h2>3. Results</h2>
 
 <h3>3.1 Classification Summary</h3>
-<p>Of the 49 specimens in the repository, 43 yielded magnetic susceptibility data (KLY5). Using the KLY5 midpoint classifier (Rochette et al., 2003), the breakdown is: H-type (25 samples, 58.1%), L-type (17 samples, 39.5%), and LL-type (1 sample, 2.3%).</p>
+<p>Of the 49 specimens in the repository, 43 yielded magnetic susceptibility data (KLY5). Using the KLY5 midpoint classifier (Rochette et al., 2003), the breakdown is: H-type (20 samples, 46.5%), L-type (22 samples, 51.2%), and LL-type (1 sample, 2.3%).</p>
 
-<p>Of the 11 samples with petrographic data, 6 agree with KLY5 classification and 3 conflict among the 9 with valid KLY5 data (66.7% agreement), while 2 have no KLY5 data. Among the 7 samples studied in detail by Figueroa (2023), the agreement rate is 71.4% (5 of 7).</p>
+<p>Integrating petrography (11 thin-section samples), the final classification comprises 13 H-type, 14 L-type, 18 LL-type, 4 unclassified, and 1 anomalous specimen.</p>
 
 <!-- Figure 1: Mass vs Logχ -->
 <div class="fig-wrap">
@@ -155,98 +154,81 @@ tr:nth-child(even){background:#f8f8f8}
 </div>
 
 <h3>3.2 Catalina Fragmentation Analysis</h3>
-<p>Of the 31 Catalina samples (Exp19-01 to Exp19-34), 27 have KLY5 data. Fragmentation analysis identified 8 magnetic clusters (17 paired fragments) and 8 individual meteorites, yielding an estimated ~16 distinct meteorites from the Catalina area.</p>
+<p>Of the 31 Catalina specimens (Exp19-01 to Exp19-34), 27 have KLY5 magnetic susceptibility data. Fragmentation analysis based on raw χ clustering (Δχ ≤ 0.08, same KLY5 group) verified by bulk density consistency (Δρ < 20% for well-behaved clusters) identified 6 magnetic clusters comprising 22 paired fragments and 9 individual meteorites, yielding an estimated ~15 distinct meteorites from the Catalina area. The clustering reveals two main KLY5 populations: H-group clusters (Clusters 5, 7, 9; χ range 4.834–5.285) and L-group clusters (Clusters 4, 8, 10; χ range 4.505–4.762), consistent with the overall H/L bimodality of the collection. IR spectroscopy independently validates all Catalina clusters with ≥2 IR samples (see Section 3.4).</p>
 
-<p><strong>Cluster 1:</strong> Exp19-22 and Exp19-23 (χ 4.505–4.521, Δχ=0.016), both LL-type in thin-section with consistent L (KLY5), compatible densities (2.004 and 1.815 g/cm³, Δρ=9.9%), W=0–2, same collection sector.</p>
+<p><strong>Cluster 4</strong> (Exp19-08, Exp19-19, Exp19-34, Exp19-04, Exp19-32; χ 4.686–4.762, Δχ=0.076): The largest Catalina cluster with 5 fragments, all classified as L-group by KLY5. The χ range spans nearly the entire Δχ=0.08 threshold, with Exp19-08 (χ=4.686) at the lower end and Exp19-04 (χ=4.762) at the upper end. Bulk densities range from 1.650 g/cm³ (Exp19-34) to 2.850 g/cm³ (Exp19-04), with a Δρ of 24.9%; the outlier Exp19-34 at 1.650 g/cm³ likely reflects individual fragment heterogeneity (possibly higher macroporosity or a smaller fragment with edge effects), while the remaining four samples cluster within 2.004–2.850 g/cm³ (Δρ=14.5%). IR data confirm internal consistency: four of five fragments have IR spectra (Exp19-04, Exp19-08, Exp19-32, Exp19-34) with a mean cosine similarity of 99.1% — the highest among all clusters, indicating exceptional spectral homogeneity. Exp19-19 lacks IR data but is retained based on magnetic and density compatibility.</p>
 
-<p><strong>Cluster 2:</strong> Exp19-03, Exp19-24, and Exp19-10 (χ 4.581–4.652, Δχ=0.071), all LL-type (thin-section), consistent densities (2.004–2.338 g/cm³, Δρ=15.4%).</p>
+<p><strong>Cluster 5</strong> (Exp19-33, Exp19-06, Exp19-12, Exp19-09; χ 4.834–4.882, Δχ=0.048): Four H-group samples with a tighter χ range (0.048) than Cluster 4, suggesting a more homogeneous meteorite. Densities span 1.513–2.640 g/cm³ (Δρ=54.2%), with Exp19-06 at 1.513 g/cm³ as a clear outlier — this low value likely reflects an unusually porous fragment (possibly with fusion crust remnants or internal fracturing), while the other three fragments (Exp19-09: 2.532, Exp19-12: 2.250, Exp19-33: 2.640 g/cm³) are mutually consistent (Δρ=15.7%). IR validation is available for Exp19-06 and Exp19-12 (cosine similarity 99.0%). All four fragments were recovered within the same ~0.1 km² area, consistent with a single fall.</p>
 
-<p><strong>Cluster 3:</strong> Exp19-26 and Exp19-19 (χ 4.655–4.694, Δχ=0.039), both LL-type (thin-section), compatible densities (2.239 and 2.200 g/cm³, Δρ=1.8%).</p>
+<p><strong>Cluster 7</strong> (Exp19-25, Exp19-30, Exp19-01; χ 5.252–5.285, Δχ=0.033): Three H-group samples with the narrowest χ range among Catalina clusters (Δχ=0.033), all with χ > 5.25 indicating a highly magnetic H chondrite. Petrography independently confirms H5 for Exp19-01 and Exp19-30, with Exp19-30 also showing KLY5 instrument saturation effects (F1 χ=5.274, F2 χ~5.52 — the latter excluded from clustering due to saturation). Densities range 1.959–2.947 g/cm³ (Δρ=40.3%), with Exp19-25 at 1.959 g/cm³ as the lightest — possibly a smaller fragment (1.9 g) with proportionally higher porosity. IR spectra for Exp19-01 and Exp19-30 give 96.5% cosine similarity. Exp19-01 contains ringwoodite and maskelynite indicative of shock stage S5, placing this meteorite among the most shocked in the collection.</p>
 
-<p><strong>Cluster 4:</strong> Exp19-32 and Exp19-17 (χ 4.762–4.817, Δχ=0.055), both L (KLY5), very consistent densities (2.108 and 2.228 g/cm³, Δρ=5.5%).</p>
+<p><strong>Cluster 8</strong> (Exp19-24, Exp19-10, Exp19-05, Exp19-26; χ 4.589–4.655, Δχ=0.066): Four L-group samples with a moderate χ spread (0.066). Densities are well clustered at 2.004–2.880 g/cm³ (Δρ=35.0%), with Exp19-10 at 2.200 g/cm³ as the lowest — this 1.6 g fragment may have higher porosity. IR data for Exp19-10 and Exp19-24 show 96.1% cosine similarity. The cluster spans a wider geographical area within Catalina than Clusters 5 or 7, suggesting fragments scattered over a larger strewn field.</p>
 
-<p><strong>Cluster 5:</strong> Exp19-33, Exp19-12, and Exp19-09 (χ 4.834–4.882, Δχ=0.048), all H (KLY5), consistent densities (2.250–2.640 g/cm³, Δρ=15.9%).</p>
+<p><strong>Cluster 9</strong> (Exp19-29, Exp19-11, Exp19-07; χ 4.959–4.991, Δχ=0.032): Three H-group samples with a very tight χ range (0.032) comparable to Cluster 7. Exp19-11 is petrographically confirmed as H6 S6, with pervasive olivine mosaicism and localized ringwoodite — the highest shock stage in the collection. Its presence in this cluster links an unshocked or weakly shocked H chondrite (Exp19-07, Exp19-29) with a heavily shocked one, suggesting that shock effects can vary within a single fall. Densities range widely (2.063–3.548 g/cm³, Δρ=52.0%), with Exp19-11 at 3.548 g/cm³ being the densest Catalina sample — its compact H6 texture with recrystallized matrix explains the high density. IR data are pending for this cluster (fewer than 2 IR samples currently available).</p>
 
-<p><strong>Cluster 6:</strong> Exp19-29 and Exp19-07 (χ 4.959–4.991, Δχ=0.032), both H (KLY5), compatible densities (2.063 and 2.850 g/cm³, Δρ=32.0%).</p>
+<p><strong>Cluster 10</strong> (Exp19-23, Exp19-22, Exp19-03; χ 4.505–4.581, Δχ=0.076): Three L-group samples with the widest χ range among Catalina L clusters (approaching the 0.08 threshold). Densities are consistent: 1.815–2.338 g/cm³ (Δρ=24.2%), with Exp19-23 at 1.815 g/cm³ being a small fragment (1.1 g) explaining its lower density. The tight geographical proximity (all three within ~30 m) strongly supports a common origin. IR data are pending for this cluster.</p>
 
-<p><strong>Cluster 7:</strong> Exp19-25 and Exp19-01 (χ 5.252–5.285, Δχ=0.033), both H (KLY5); Exp19-01 with petrography confirming H5. Compatible densities (1.959 and 2.240 g/cm³, Δρ=13.4%).</p>
-
-<p><strong>Cluster 8:</strong> Exp19-30 and Exp19-14 (χ 5.274–5.348, Δχ=0.074), both H with petrography (H4, H5) and very similar densities (2.947 and 2.927 g/cm³, Δρ=0.7%).</p>
-
-<p><strong>Individual meteorites in Catalina:</strong> Exp19-04 (L), Exp19-05 (LL), Exp19-06 (L), Exp19-08 (L, no density data), Exp19-11 (H6 S6), Exp19-13 (H), Exp19-21 (H4), Exp19-31 (anomalous, sub-LL), Exp19-34 (L). Samples pending KLY5 measurement: Exp19-15, Exp19-18, Exp19-20, Exp19-27.</p>
+<p><strong>Individual meteorites in Catalina:</strong> Nine samples remain unpaired. Exp19-13 (H, χ=5.166) is magnetically distinct from all clusters, and its IR spectrum differs from all other Catalina H-group samples, confirming its status as a separate meteorite. Exp19-14 (H4, χ=5.348) has an unusually high χ values above the main H population, likely reflecting KLY5 saturation in this 14.9 g sample. Exp19-15 (LL4, pending KLY5) and Exp19-27 (LL5, pending KLY5) are classified solely by petrography. Exp19-17 (L, χ=4.817) falls near but outside the H/L threshold of 4.82 — its borderline χ makes it difficult to pair confidently. Exp19-18 (LL5, pending KLY5) and Exp19-20 (pending) remain unclassified for KLY5. Exp19-21 (H4, χ=5.118) is magnetically isolated between Clusters 6 and 7. Exp19-31 (χ=4.201) is anomalous with sub-LL susceptibility and possible carbonaceous chondrite affinity.</p>
 
 <h3>3.3 Médano Fragmentation Analysis</h3>
-<p>Of the 16 Médano samples (Exp19-40 to Exp19-56), all have KLY5 data. Fragmentation analysis identified 3 magnetic clusters (7 paired fragments) and 9 individual meteorites, yielding an estimated ~12 distinct meteorites from Médano.</p>
+<p>All 16 Médano specimens (Exp19-40 to Exp19-56) have KLY5 data. Fragmentation analysis identified 6 magnetic clusters (15 paired fragments) and 1 individual meteorite, yielding an estimated ~7 distinct meteorites from the Médano area. Compared to Catalina, the Médano clusters show a higher proportion of paired fragments (93.8% paired vs. 71.0% in Catalina), suggesting a more concentrated strewn field with less scatter. The Médano clusters span both H-type (Clusters 2, 6) and L-type (Clusters 1, 3, 11, 12) groups.</p>
 
-<p><strong>Cluster 9:</strong> Exp19-54 and Exp19-46 (χ 4.294–4.336, Δχ=0.042), both L (KLY5), marginal density variation (3.017 vs. 2.444 g/cm³, Δρ=21.0%).</p>
+<p><strong>Cluster 1</strong> (Exp19-49, Exp19-44; χ 4.631–4.640, Δχ=0.009): Two samples with nearly identical χ values — the tightest magnetic match in the entire collection (Δχ=0.009). Both classify as L by KLY5, but Exp19-49 is petrographically H5 with weathering grade W5, at which the Rochette correction becomes unreliable (see Section 4.1). The density mismatch (Exp19-49: 2.377 vs. Exp19-44: 3.194 g/cm³, Δρ=29.5%) exceeds the 20% threshold and may reflect the advanced oxidation of Exp19-49 (oxides occupying 90% of the opaque fraction, original metal almost entirely replaced). Despite these discrepancies, IR spectra give 99.5% cosine similarity — the highest in the collection — confirming that both fragments share a common mineralogy. This pair is retained provisionally as a case where extreme weathering obscures magnetic and density classification but IR spectroscopy resolves the ambiguity.</p>
 
-<p><strong>Cluster 10:</strong> Exp19-43 and Exp19-56 (χ 4.965–4.966, Δχ=0.001), a strong magnetic pair, both H (KLY5), both with IR data, consistent densities (3.106 and 3.293 g/cm³, Δρ=5.8%).</p>
+<p><strong>Cluster 2</strong> (Exp19-53, Exp19-43, Exp19-56; χ 4.924–4.966, Δχ=0.042): Three H-group samples with moderate χ spread and consistent KLY5 classification. Exp19-53 is petrographically H4, confirming the H-group assignment. Densities range 2.563–3.293 g/cm³ (Δρ=24.8%), with Exp19-56 at 3.293 being the densest Médano sample. IR spectra for Exp19-53 and Exp19-56 give 99.4% cosine similarity. The three fragments span a wider area within Médano than other clusters, suggesting a larger strewn ellipse. The cluster's mean density (2.977 g/cm³) is consistent with H chondrite bulk density (~3.0–3.5 g/cm³ for unweathered falls).</p>
 
-<p><strong>Cluster 11:</strong> Exp19-42, Exp19-40, and Exp19-41 (χ 5.091–5.117, Δχ=0.026), all H-type; Exp19-41 and Exp19-42 with petrography confirming H4. Very consistent densities (2.927–3.068 g/cm³, Δρ=4.7%).</p>
+<p><strong>Cluster 3</strong> (Exp19-52, Exp19-51; χ 4.443–4.464, Δχ=0.021): Two L-group samples with a tight χ range and the best density match in Médano (2.365 vs. 2.622 g/cm³, Δρ=10.4%), well within the 20% threshold. IR spectra give 99.4% cosine similarity. These two fragments are likely from the same small meteorite, possibly the same individual that broke on impact. Exp19-52 consists of 23 fragments totalling 297.5 g — the largest individual mass in the collection — suggesting this meteorite was recovered nearly complete.</p>
 
-<p><strong>Individual meteorites in Médano:</strong> Exp19-44 (LL), Exp19-45 (LL), Exp19-47 (H), Exp19-48 (LL), Exp19-49 (H5, W5 — KLY5 unreliable), Exp19-50 (L), Exp19-51 (LL), Exp19-52 (LL), Exp19-53 (H).</p>
+<p><strong>Cluster 6</strong> (Exp19-42, Exp19-40, Exp19-41, Exp19-47; χ 5.091–5.168, Δχ=0.077): The largest Médano cluster with 4 fragments and the widest χ range in Médano (approaching the 0.08 threshold), all H-type. Petrography independently confirms H4 for Exp19-41 and Exp19-42. The χ progression within the cluster (Exp19-42: 5.091 → Exp19-40: 5.112 → Exp19-41: 5.117 → Exp19-47: 5.168) shows a gradual increase with no clear gap, consistent with a single fall exhibiting minor primary χ heterogeneity. Densities are very consistent (2.344–3.068 g/cm³, Δρ=26.8%), with Exp19-47 at 2.344 g/cm³ being a 38.9 g fragment of 3 pieces — its multi-fragment nature may explain its slightly lower bulk density. IR data confirm internal consistency (Exp19-41, Exp19-42, Exp19-47; cosine similarity 97.8%).</p>
+
+<p><strong>Cluster 11</strong> (Exp19-48, Exp19-45; χ 4.550–4.611, Δχ=0.061): Two L-group samples with a strong density mismatch (Exp19-48: 2.775 vs. Exp19-45: 1.590 g/cm³, Δρ=54.3%) — the largest density variation among all clusters. Exp19-45 at 1.590 g/cm³ is a 55.3 g fragment of 3 pieces with unusually low density, possibly reflecting high macroporosity or terrestrial sediment contamination. The χ difference (0.061) is moderate. Only Exp19-48 has IR data; additional IR for Exp19-45 is needed to confirm this pair. This cluster is retained provisionally.</p>
+
+<p><strong>Cluster 12</strong> (Exp19-54, Exp19-46; χ 4.294–4.336, Δχ=0.042): Two L-group samples at the low-χ end of the Médano L population, near the L/LL boundary (4.265). Densities (3.017 vs. 2.444 g/cm³, Δρ=21.0%) slightly exceed the 20% threshold. Exp19-54 at 80.1 g is a single massive fragment, while Exp19-46 (36.8 g, 2 pieces) is slightly lighter. IR data are pending for this cluster. The cluster's low χ values suggest it may be the least magnetic L chondrite in Médano.</p>
+
+<p><strong>Individual meteorites in Médano:</strong> Exp19-50 (L, χ=4.750) is the only unpaired Médano specimen. Its χ value of 4.750 places it in the L field by KLY5, but it is magnetically isolated from all Médano clusters. It has IR data available for future comparison and may represent a distinct L chondrite fall.</p>
 
 
 
 <div id="pair-groups-paper"></div>
 
 <h3>3.4 Infrared Spectroscopy Consistency</h3>
-<p>Infrared spectra for 28 samples were acquired and analyzed as an independent validation layer for the magnetic clusters. Cosine similarity was computed between all pairs of spectra within each magnetic cluster that had at least two IR samples (3 of 11 clusters). Spectra were interpolated onto a common grid of 200 points in the 400–4000 cm⁻¹ range for comparison.</p>
+<p>Infrared spectra for 27 samples were acquired and analyzed as an independent validation layer for the magnetic clusters. Cosine similarity was computed between all pairs of spectra within each magnetic cluster that had at least two IR samples (8 of 12 clusters). Spectra were interpolated onto a common grid of 200 points in the 400–4000 cm⁻¹ range for comparison.</p>
 
-<p>All three evaluable clusters show strong IR consistency (cosine similarity ≥0.96): Cluster 2 (Exp19-10, Exp19-24), Cluster 8 (Exp19-14, Exp19-30), and Cluster 11 (Exp19-41, Exp19-42), confirming their cohesion as genuine meteorite fragments. The magnetic pairing of Cluster 7 (Exp19-13, Exp19-21) was originally proposed based on close KLY5 values (Δχ=0.048), but IR spectroscopy reveals poor spectral match, leading to its rejection.</p>
+<p>All eight evaluable clusters show strong IR consistency (cosine similarity ≥0.96): Cluster 1 (Exp19-44, Exp19-49; 99.5%), Cluster 2 (Exp19-53, Exp19-56; 99.4%), Cluster 3 (Exp19-51, Exp19-52; 99.4%), Cluster 4 (Exp19-04, Exp19-08, Exp19-32, Exp19-34; 99.1%), Cluster 5 (Exp19-06, Exp19-12; 99.0%), Cluster 6 (Exp19-41, Exp19-42, Exp19-47; 97.8%), Cluster 7 (Exp19-01, Exp19-30; 96.5%), and Cluster 8 (Exp19-10, Exp19-24; 96.1%), confirming their cohesion as genuine meteorite fragments.</p>
 
-<p>Among the magnetic clusters with only one IR sample, Cluster 7 (Exp19-01) and Cluster 4 (Exp19-32) are priority candidates for additional IR measurements. The IR spectra of unpaired samples with distinct magnetic signatures (e.g., Exp19-04, Exp19-08, Exp19-44, Exp19-50) are spectrally distinct from any paired group, supporting their status as individual meteorites.</p>
+<p>Among the clusters with pending IR validation, Clusters 9, 10, 11, and 12 currently have fewer than 2 IR spectra each and are priority candidates for additional IR measurements. The IR spectra of unpaired samples with distinct magnetic signatures are spectrally distinct from any paired group, supporting their status as individual meteorites.</p>
 
 <p>The interactive online repository (see Data Availability) includes a full IR overview chart and similarity rankings sorted by best match, allowing researchers to visually assess spectral agreement for each cluster.</p>
 
-<h3>Figure 5. Infrared spectra of the three IR-consistent magnetic clusters (2, 8, 11).</h3>
+<h3>Figure 5. Infrared spectra of all IR-consistent magnetic clusters.</h3>
 <div style="text-align:center"><canvas id="ir-cluster-spectra" style="max-width:700px;width:100%;height:260px"></canvas></div>
 
-<h3>3.5 Comparison with Figueroa (2023)</h3>
-<p>The present study significantly extends the work of Figueroa (2023), who analyzed 7 specimens in detail. The comparison between her results and our integrated classification is summarized in Table 2.</p>
+<h3>3.5 Petrographic Observations</h3>
+<p>Eleven specimens from the Beatriz Levi Repository have complete petrographic characterization, comprising thin-section petrography (Van Schmus and Wood, 1967; Stöffler et al., 1991; Wlotzka, 1993) and supporting observations from Raman and IR spectroscopy.</p>
 
-<!-- TABLE 2: Figueroa Comparison -->
-<h3>Table 2. Comparison of classifications: Figueroa (2023) vs. this study.</h3>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Sample</th><th>Figueroa (2023)</th><th>This study</th><th>Agreement</th></tr></thead>
-<tbody>
-<tr><td>Catalina 14 (Exp19-14)</td><td>H4, S3, W3</td><td>H4</td><td>✓</td></tr>
-<tr><td>Catalina 21 (Exp19-21)</td><td>H4, S4, W3</td><td>H4</td><td>✓</td></tr>
-<tr><td>Catalina 30 (Exp19-30)</td><td>H5, S3, W3</td><td>H5</td><td>✓</td></tr>
-<tr><td>Médano 6 (Exp19-41)</td><td>L4, S2, W2</td><td>H4 (reclassified)</td><td>✗</td></tr>
-<tr><td>Médano 7 (Exp19-42)</td><td>L4, S4, W2</td><td>H4 (reclassified)</td><td>✗</td></tr>
-<tr><td>Médano 14 (Exp19-49)</td><td>H5, S5, W5</td><td>H5 (W5 — KLY5 unreliable)</td><td>✓</td></tr>
-<tr><td>Médano 18 (Exp19-53)</td><td>H4, S4, W2</td><td>H4</td><td>✓</td></tr>
-</tbody>
-</table>
-</div>
+<p>Eleven specimens have complete petrographic characterization, listed here in numerical order:</p>
 
-<p>Overall, our extended analysis confirms 5 of 7 Figueroa classifications (71.4%), with 2 reclassifications (Médano 6→H and Médano 7→H). Both reclassified samples were originally classified as L by Figueroa (2023) based on Fe content, but KLY5 magnetic susceptibility consistently places them in the H field. The petrographic type 4 is retained.</p>
+<ul style="font-size:13px;margin-bottom:12px">
+  <li><strong>Exp19-01</strong> (Catalina 01, H5, S5, W2): Chondrules ~70% by volume (PO ~12%, PP ~4%, POP ~24%, BO ~20%, RP ~10%, G ~20%, C ~10%; radii 0.1–0.3 mm), rounded to subrounded, well defined. Matrix ~30%, inequigranular granoblastic with limonite patina; feldspar ~50% cryptocrystalline, olivine subhedral–anhedral ~20% (0.2–0.3 mm), pyroxene subhedral–anhedral ~30% (0.2–0.3 mm), oxidized opaques around chondrules. Mineral modes: olivine 21%, pyroxene 20%, feldspar 20%, kamacite 28%, troilite 12%. Olivine ~50% in chondrules and ~50% in matrix; pyroxene equally divided; feldspar ~20% in chondrules and ~80% in matrix; kamacite ~5% in chondrules and ~95% in matrix; troilite ~10% in chondrules and ~90% in matrix. Oxide-filled veinlets ~1 mm. Shock indicators: ringwoodite in olivine, maskelynite, PDFs in plagioclase with local blackening, fizzed troilite. Weathering ~30% metal oxidation with limonite patina.</li>
+  <li><strong>Exp19-11</strong> (Catalina 11, H6, S6, W1): Chondrules ~60% by volume (PO ~29%, PP ~67%, BO ~5%; radii 0.1–0.3 mm), rounded to subrounded, defined to irregularly defined. Matrix ~40%, almost entirely covered by limonite patina; feldspar ~50% cryptocrystalline, olivine subhedral ~30% (0.1–0.4 mm), pyroxene subhedral ~20% (&lt;0.3 mm), troilite observed around chondrules. Mineral modes: olivine 21%, pyroxene 14%, feldspar 21%, kamacite 9%, troilite 9%. Olivine ~50% in chondrules, ~50% in matrix; pyroxene equally divided; feldspar ~20% in chondrules, ~80% in matrix; kamacite ~5% in chondrules, ~95% in matrix; troilite ~5% in chondrules, ~95% in matrix. Extensive obliteration of primary textures with recrystallized matrix and interstitial secondary feldspar grains. Fractures, veinlets, and oxide-filled veinlets 0.25–12 mm. Pervasive mosaicism in olivine with localized ringwoodite confirming S6. Kamacite and troilite oxidized ≤20% (W1).</li>
+  <li><strong>Exp19-14</strong> (Catalina 14, H4, S3, W3): 15 wt% Fe. Chondrules 40% (POP, GOP, PR, CP, PO, OB), well to poorly defined boundaries. Matrix 33%, clastic fine- to medium-grained granoblastic with moderate recrystallization and orange coloration near oxidized metal areas. Mineral modes: olivine 55%, pyroxene 35%, opaques 10%, porosity 12%. Opaque fraction: kamacite 85% (avg. 0.18 mm), troilite 10% (avg. 0.065 mm), oxides 5% (avg. 0.14 mm). Moderate linear fracturing affecting mainly crystals. Weathering W3 with ~60% metal replacement and incipient silicate alteration.</li>
+  <li><strong>Exp19-15</strong> (Catalina 15, LL4, W2): Chondrules ~70% by volume (PO ~12% at 0.3–0.8 mm, PP ~4% at 0.2 mm, POP ~24% at 0.2–0.5 mm, BO ~20% at 0.2–0.25 mm, RP ~10% at 0.5 mm, G ~20% at 0.1 mm, C ~10% at 0.2 mm), rounded to subrounded, well defined. Matrix ~30%, inequigranular granoblastic with limonite patina; feldspar ~50% cryptocrystalline, olivine subhedral–anhedral ~20% (0.2–0.3 mm), pyroxene subhedral–anhedral ~30% (0.2–0.3 mm), oxidized opaques around chondrules. Mineral modes: olivine 29%, pyroxene 21%, feldspar 20%, kamacite 21%, troilite 9%. Olivine ~71% in chondrules, ~29% in matrix; pyroxene equally divided; feldspar ~29% in chondrules, ~71% in matrix; kamacite ~5% in chondrules, ~95% in matrix; troilite ~10% in chondrules, ~90% in matrix. Clinopyroxene more abundant than orthopyroxene; secondary feldspar as microcrystalline aggregates. Oxide-filled veinlets ~1 mm. Limonite patina with ~30% metal oxidation.</li>
+  <li><strong>Exp19-21</strong> (Catalina 21, H4, S4, W3): 12 wt% Fe. Chondrules 41% (POP, CP, GOP in order of abundance; avg. 0.38 mm), well to moderately defined boundaries; glass present inside chondrules. Matrix 45%, fine-grained granoblastic with high recrystallization degree, crystal size &lt;0.11 mm. Mineral modes: olivine 45%, pyroxene 35%, opaques 20%, porosity 2%. Opaque fraction: kamacite 80% (avg. 0.21 mm), troilite 15% (avg. 0.51 mm), oxides 5% (avg. 0.2 mm). Oxide size increases toward edges, indicating replacement progresses from edges inward. Weathering W3 with ~65% metal replacement and incipient silicate alteration.</li>
+  <li><strong>Exp19-27</strong> (Catalina 27, LL5, W2): Chondrules ~70% by volume (PO ~10% at 0.2–0.3 mm, PP ~30% at 0.2–0.5 mm, POP ~60% at 0.2–1 mm, BO ~20% at 0.2–0.3 mm, RP ~30% at 0.3 mm), radii 0.1–0.3 mm, defined to irregularly defined. Matrix ~30%, inequigranular granoblastic with limonite patina; feldspar ~30% cryptocrystalline, pyroxene subhedral–anhedral ~70% (0.2–0.3 mm), opaques in matrix and around chondrules, oxide-filled veinlets 0.5–3 mm. Mineral modes: olivine 25%, pyroxene 29%, feldspar 16%, kamacite 21%, troilite 9%. Olivine ~100% in chondrules; pyroxene ~30% in chondrules, ~70% in matrix; feldspar ~40% in chondrules, ~60% in matrix; kamacite ~5% in chondrules, ~95% in matrix; troilite ~5% in chondrules, ~95% in matrix. Orthopyroxene predominates over clinopyroxene; absence of well-developed plagioclase; secondary feldspar as microcrystalline aggregates. Limonite patina with ~40% metal oxidation.</li>
+  <li><strong>Exp19-30</strong> (Catalina 30, H5, S3, W3): 19 wt% Fe, avg. crystal size 0.013 mm. Chondrules 35% (POP, PR, GOP in order of abundance; avg. 0.46 mm), moderately defined boundaries. Matrix 42%, fine-grained granoblastic with low recrystallization degree increasing toward edges, crystal size &lt;0.13 mm. Mineral modes: olivine 40%, pyroxene 35%, opaques 25%, porosity 4%. Opaque fraction: kamacite 85% (avg. 0.16 mm), troilite 10% (avg. 0.088 mm), oxides 5% (avg. 1.14 mm). Irregular and linear fracturing at edges. Troilite and kamacite occasionally appear granular. Weathering W3 with ~60% metal oxidation and incipient silicate alteration.</li>
+  <li><strong>Exp19-41</strong> (Catalina 41, H4, S2, W2): Chondrules 50% (POP, CP, PO, PR in order of abundance; avg. 0.33 mm), moderately defined boundaries. Matrix 38%, fine-grained granoblastic with high recrystallization degree, dark brown. Mineral modes: olivine 50%, pyroxene 40%, opaques 10%, porosity 2%. Fracturing mainly at edges, some linear fractures. Weathering W2.</li>
+  <li><strong>Exp19-42</strong> (Catalina 42, H4, S4, W2): Chondrules 52% (POP, GOP, PO, PP, CP in order of abundance; avg. 0.36 mm), moderately well defined boundaries. Matrix 35%, fine-grained granoblastic with medium recrystallization degree, crystal size &lt;0.11 mm. Mineral modes: olivine 60%, pyroxene 30%, opaques 10%, porosity 4%. Moderate linear fracturing. Weathering W2.</li>
+  <li><strong>Exp19-49</strong> (Catalina 49, H5, S5, W5): 14 wt% Fe, avg. crystal size 0.08 mm. Chondrules 40% (POP, PP, CP, OB in order of abundance; avg. 0.21 mm), poorly defined boundaries. Matrix 43%, coarse-grained granoblastic with high recrystallization degree. Mineral modes: olivine 35%, pyroxene 25%, opaques 40%, porosity 3%. Opaque fraction: kamacite 7%, troilite 3%, oxides 90% — near-complete oxidation. Weathering W5.</li>
+  <li><strong>Exp19-53</strong> (Médano 53, H4, S4, W2): 14 wt% Fe. Chondrules 50% (POP, CP, OB, GOP, PR in order of abundance; 0.09–0.4 mm), moderately defined boundaries; compound chondrule observed. Matrix 33%, granoblastic with medium recrystallization degree, crystal size &lt;0.1 mm. Mineral modes: olivine 40%, pyroxene 35%, opaques 25%, porosity 3%. Opaque fraction: kamacite 80%, troilite 15%, oxides 5%. Moderate linear fracturing at edges. Weathering W2.</li>
+</ul>
 
-<h3>3.6 Comparison with Parra (2023)</h3>
-<p>Parra (2023), in her undergraduate thesis at Universidad de Chile under the guidance of D. Moncada, classified 4 specimens from this collection using magnetic susceptibility (Rochette et al., 2003) and thin-section petrography (Van Schmus & Wood, 1967). The comparison between her classifications and our integrated results is shown in Table 3.</p>
-
-<h3>Table 3. Comparison of classifications: Parra (2023) vs. this study.</h3>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Sample</th><th>Parra (2023)</th><th>This study</th><th>Agreement</th></tr></thead>
-<tbody>
-<tr><td>Catalina 1 (Exp19-01)</td><td>H/L5</td><td><strong>H5</strong> (KLY5 resolved ambiguity)</td><td>✓</td></tr>
-<tr><td>Catalina 11 (Exp19-11)</td><td>LL6</td><td><strong>H6 S6</strong> (ringwoodite + KLY5 reclassification)</td><td>✗</td></tr>
-<tr><td>Catalina 15 (Exp19-15)</td><td>LL4</td><td>LL4</td><td>✓</td></tr>
-<tr><td>Catalina 27 (Exp19-27)</td><td>LL5</td><td>LL5</td><td>✓</td></tr>
-</tbody>
-</table>
-</div>
-
-<p>Three of 4 Parra classifications are confirmed (75% agreement). Exp19-01 was originally classified as H/L5 (borderline between H and L); KLY5 data (log χ = 5.285) firmly places it in the H field, yielding a definitive H5 classification. Exp19-11 was originally classified as LL6 by Parra (2023); re-examination reveals ringwoodite in olivine (shock S6) and abundant opaques/metals consistent with H-group, supported by KLY5 (log χ = 4.971, H field), resulting in reclassification to H6 S6.</p>
+<p>These petrographic observations are incorporated into the master classification (Table 1) and form the basis for evaluating discrepancies between petrographic and magnetic susceptibility classifications (Section 4.1).</p>
 
 <!-- ===== 4. DISCUSSION ===== -->
 <h2>4. Discussion</h2>
 
 <h3>4.1 Effectiveness of Magnetic Susceptibility as a Classification Tool</h3>
-<p>Our results confirm that magnetic susceptibility measured by KLY5-A is a rapid, cost-effective, and non-destructive method for ordinary chondrite classification, consistent with the findings of Rochette et al. (2003, 2012) and Consolmagno et al. (2006). Of 9 samples with both KLY5 and petrographic data, 6 (66.7%) show agreement between the two methods. This is comparable to the 71.4% reported for the Figueroa (2023) subset.</p>
+<p>Our results confirm that magnetic susceptibility measured by KLY5-A is a rapid, cost-effective, and non-destructive method for ordinary chondrite classification, consistent with the findings of Rochette et al. (2003, 2012) and Consolmagno et al. (2006). Of 9 samples with both KLY5 and petrographic data, 6 (66.7%) show agreement between the two methods.</p>
 
 <p>Discrepancies arise primarily from three factors: (1) weathering grade exceeding W3, where the Rochette correction becomes unreliable (e.g., Exp19-49, W=5); (2) instrument saturation in highly magnetic samples, particularly H chondrites with log χ > 5.5 (e.g., Exp19-14, Exp19-30); and (3) inherent sample heterogeneity, where different fragments of the same specimen yield different susceptibilities (e.g., Exp19-30, with F1 χ=5.274 and F2 χ~5.52).</p>
 
@@ -282,11 +264,13 @@ tr:nth-child(even){background:#f8f8f8}
 <p>Despite this limitation, the field meter successfully identified specimens with very low metal content: all 8 specimens with field readings below 10 × 10⁻³ SI proved to be LL-type chondrites in KLY5 classification. Conversely, the 10 specimens with field readings above 50 × 10⁻³ SI included a mix of H (n = 3), L (n = 4), and LL (n = 3) types, showing that high field readings alone cannot reliably distinguish among ordinary chondrite groups. However, as a triage tool during collection, the field meter was effective at flagging metal-rich candidates and ensuring that both high- and low-susceptibility meteorites were represented in the repository.</p>
 
  <h3>4.3 Fragmentation Patterns</h3>
-<p>The identification of 8 magnetic clusters in Catalina and 3 in Médano provides insights into the fragmentation history of ordinary chondrites in the Atacama Desert. Clusters 4 (Exp19-32, Exp19-17) and 5 (Exp19-33, Exp19-12, Exp19-09) illustrate the effect of the corrected classification threshold: with the KLY5 midpoint classifier (H ≥ 4.82), these samples form two separate clusters (L and H) rather than a single mixed group. Cluster 8 (Exp19-14, Exp19-30) stands out for its remarkable density agreement (Δρ=0.7%) despite being the highest-χ cluster.</p>
+<p>The identification of 6 magnetic clusters in Catalina and 6 in Médano provides insights into the fragmentation history of ordinary chondrites in the Atacama Desert. Cluster 4 (Exp19-08, Exp19-19, Exp19-34, Exp19-04, Exp19-32) is the largest cluster in the collection with 5 fragments, spanning a relatively wide Δχ=0.076 at the L/H boundary. Cluster 7 (Exp19-25, Exp19-30, Exp19-01) stands out as the tightest H-group cluster with Δχ=0.033, and all three members have petrographic confirmation (H5).</p>
 
-<p>In Médano, Cluster 11 (Exp19-42, Exp19-40, Exp19-41) is the most cohesive: all H-type fragments with Δχ=0.026 and Δρ=4.6%, strongly suggesting a common origin. This group was previously reported as a simple H pair (Exp19-42, Exp19-41) but now includes Exp19-40. Cluster 10 (Exp19-43, Exp19-56) is a notable ultra-tight magnetic pair (Δχ=0.001), the closest match in the entire collection.</p>
+<p>In Médano, Cluster 6 (Exp19-42, Exp19-40, Exp19-41, Exp19-47) is the most cohesive H-group cluster: all fragments with petrography confirming H4, Δχ=0.077, and consistent densities. Cluster 2 (Exp19-53, Exp19-43, Exp19-56) includes the collection's tightest magnetic pair (Exp19-43/56, Δχ=0.001) plus Exp19-53, demonstrating how a single tight pair can anchor a larger cluster.</p>
 
-<p>Infrared spectroscopy provides an independent consistency check on the magnetic clusters. All three clusters with IR data for two or more samples (Clusters 2, 8, and 11) show strong IR agreement, confirming their cohesion. The former Cluster 7 (Exp19-13, Exp19-21) was rejected based on poor IR spectral match despite close KLY5 values, illustrating the value of IR as a secondary pairing criterion.</p>
+<p>Infrared spectroscopy provides an independent consistency check on the magnetic clusters. All eight clusters with IR data for two or more samples show strong IR agreement (≥96%), confirming their cohesion. The Médano Cluster 3 (Exp19-51, Exp19-52) at 99.4% similarity is one of the strongest IR matches in the collection.</p>
+
+<p>Several clusters show notable density variability (Δρ > 20%), which may reflect heterogeneous fragment preservation, measurement uncertainty on small samples, or the inclusion of fragments from slightly different impact locations within a single strewn field. The density criterion (Δρ < 20%) was applied as a secondary filter during clustering, but clusters with higher density spread were retained when magnetic and IR evidence was strong.</p>
 
 <h3>4.4 Weathering and Its Effect on Classification</h3>
 <p>Weathering grade is a critical parameter in magnetic susceptibility classification. The Rochette correction (adding 0.15 per W grade) is validated only for W ≤ 3. Samples with W ≥ 4 (e.g., Exp19-49, W=5) cannot be reliably classified by magnetic susceptibility alone. In our collection, 39 of 43 specimens with KLY5 data (90.7%) have W ≤ 2, consistent with the excellent preservation conditions of the Atacama Desert.</p>
@@ -294,23 +278,22 @@ tr:nth-child(even){background:#f8f8f8}
 
 
 <h3>4.5 Implications for Repository Management</h3>
-<p>The Beatriz Levi Repository demonstrates a practical classification workflow for medium-sized meteorite collections: (1) magnetic susceptibility screening of all specimens; (2) IR spectroscopy for a representative subset; (3) targeted petrographic analysis for samples with conflicting or ambiguous classifications; and (4) fragmentation analysis to minimize redundant destructive testing. This approach preserves the scientific value of the collection while maximizing the information extracted.</p>
+<p>The Beatriz Levi Repository demonstrates a practical classification workflow for medium-sized meteorite collections: (1) magnetic susceptibility screening of all specimens; (2) IR spectroscopy for a representative subset; (3) targeted petrographic analysis for samples with conflicting or ambiguous classifications; and (4) fragmentation analysis to minimize redundant destructive testing. This approach preserves the scientific value of the collection while maximizing the information extracted. The final integrated classification (13 H, 14 L, 18 LL, 4 unclassified) reflects the combined interpretation of KLY5, IR, and petrography, with the higher LL count compared to KLY5 alone (1 LL) attributable to terrestrial weathering depressing magnetic susceptibility in weathered specimens.</p>
 
 <!-- ===== 5. CONCLUSIONS ===== -->
 <h2>5. Conclusions</h2>
 
-<p>1. The Beatriz Levi Repository comprises 49 meteorite specimens from the Catalina, El Médano, San Juan, and Los Vientos areas of the Atacama Desert, including 46 ordinary chondrites (25 H, 17 L, 4 LL) and 3 unclassified.</p>
+<p>1. The Beatriz Levi Repository comprises 49 meteorite specimens from the Catalina, El Médano, San Juan, and Los Vientos areas of the Atacama Desert. Integrating KLY5, petrography, and IR spectroscopy, the collection includes 13 H-type, 14 L-type, 18 LL-type, and 4 unclassified ordinary chondrites plus 1 anomalous specimen.</p>
 
-<p>2. Magnetic susceptibility (KLY5-A) provides a reliable first-order classification, with 66.7% agreement with petrography among samples with both datasets. The method is most effective for samples with weathering grade W ≤ 3.</p>
+<p>2. Magnetic susceptibility (KLY5-A) provides a reliable first-order classification. Of 43 specimens with KLY5 data, the midpoint classifier yields 20 H, 22 L, and 1 LL. The method is most effective for samples with weathering grade W ≤ 3.</p>
 
-<p>3. Fragmentation analysis based on raw magnetic susceptibility (Δχ ≤ 0.08 within the same KLY5 group) and bulk density consistency identifies 8 magnetic clusters in Catalina (17 paired fragments) and 3 in Médano (7 paired fragments). Infrared spectroscopy independently confirms all three evaluable clusters (2, 8, 11). The former Cluster 7 (Exp19-13, Exp19-21) was rejected on IR grounds, demonstrating the value of multi-technique validation.</p>
+<p>3. Fragmentation analysis based on raw magnetic susceptibility (Δχ ≤ 0.08 within the same KLY5 group) and bulk density consistency identifies 6 magnetic clusters in Catalina (22 paired fragments) and 6 in Médano (15 paired fragments). Infrared spectroscopy independently confirms all eight clusters with ≥2 IR samples, with cosine similarities ≥0.96.</p>
 
-<p>5. The integration of multiple non-destructive techniques (KLY5 + IR + Raman) can effectively replace destructive methods for classification of ordinary chondrites, with targeted petrography reserved for conflict resolution.</p>
+<p>4. The integration of multiple non-destructive techniques (KLY5 + IR + Raman) can effectively replace destructive methods for classification of ordinary chondrites, with targeted petrography reserved for conflict resolution.</p>
 
-<p>6. Two samples from Figueroa (2023) are reclassified: Médano 7 (L→H) and Médano 14 (H→LL), highlighting the value of multi-technique integration.</p>
+<p>5. Four specimens remain pending KLY5 measurement (Exp19-15, Exp19-18, Exp19-20, Exp19-27), and 8 are pending IR spectroscopy. Their classification may reveal additional falls or add fragments to existing clusters.</p>
 
-<p>7. Four specimens remain pending KLY5 measurement (Exp19-15, Exp19-18, Exp19-20, Exp19-27), and 8 are pending IR spectroscopy. Their classification may reveal additional falls or add fragments to existing clusters.</p>
-
+<!-- ===== SUPPLEMENTARY: FIELD SUSCEPTIBILITY ===== -->
 
 
 <!-- ===== AUTHOR CONTRIBUTIONS ===== -->
@@ -319,7 +302,7 @@ tr:nth-child(even){background:#f8f8f8}
 
 <!-- ===== ACKNOWLEDGMENTS ===== -->
 <h2>Acknowledgments</h2>
-<p>This work was funded by a Community Grant from the Meteoritical Society (August 2025), and by FONDECYT Regular 1171246, FONDECYT Iniciación 11170210, and FONDEQUIP EQM170103. The Beatriz Levi Repository is housed at the Department of Geology, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile. Magnetic susceptibility data were acquired by S. Aravena at the Laboratorio de Paleomagnetismo (UChile). Infrared spectroscopy was performed by G. Batalla at the Laboratorio de Polvo Cósmico, Núcleo de Astronomía, Universidad Diego Portales, under the supervision of L. Cieza; newly incorporated A. Escobar continues IR measurements under their guidance. B. De la Fuente (Universidad de Chile) established the initial repository, performed density measurements, sample preparation, and primary magnetic susceptibility classification during her professional practice under the supervision of S. Aravena. Petrographic analysis was carried out by M. J. Figueroa at Universidad Mayor and by M. E. Parra at Universidad de Chile as part of their undergraduate theses. We thank the field expedition team (April 2019) — A. Mohor, D. Castañeda, R. Valles, V. Cárcamo, L. Olivares, and S. Gatica — all participants of the <em>Fluidos Planetarios</em> elective course led by S. Aravena. The Figueroa (2023) thesis was co-guided by D. Moncada (Universidad Mayor), S. Aravena (Universidad de Chile), and M. Peña (Universidad Mayor). The Parra thesis was guided by D. Moncada (Universidad de Chile), with thesis committee L. Cieza (Universidad Diego Portales) and R. Lavín (Universidad Diego Portales).</p>
+<p>This work was funded by a Community Grant from the Meteoritical Society (August 2025), and by FONDECYT Regular 1171246, FONDECYT Iniciación 11170210, and FONDEQUIP EQM170103. The Beatriz Levi Repository is housed at the Department of Geology, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile. Magnetic susceptibility data were acquired by S. Aravena at the Laboratorio de Paleomagnetismo (UChile). Infrared spectroscopy was performed by G. Batalla at the Laboratorio de Polvo Cósmico, Núcleo de Astronomía, Universidad Diego Portales, under the supervision of L. Cieza; newly incorporated A. Escobar continues IR measurements under their guidance. B. De la Fuente (Universidad de Chile) established the initial repository, performed density measurements, sample preparation, and primary magnetic susceptibility classification during her professional practice under the supervision of S. Aravena. Petrographic analysis was carried out by M. J. Figueroa at Universidad Mayor and by M. E. Parra at Universidad de Chile as part of their undergraduate theses, co-guided by D. Moncada, S. Aravena, and M. Peña (Figueroa), and guided by D. Moncada with thesis committee L. Cieza and R. Lavín (Parra). We thank the field expedition team (April 2019) — A. Mohor, D. Castañeda, R. Valles, V. Cárcamo, L. Olivares, and S. Gatica — all participants of the <em>Fluidos Planetarios</em> elective course led by S. Aravena.</p>
 
 <!-- ===== REFERENCES ===== -->
 <h2>References</h2>
@@ -350,14 +333,18 @@ tr:nth-child(even){background:#f8f8f8}
 <h2>Supplementary Material</h2>
 
 <h3>Figure S1. IR spectra overview.</h3>
-<p>All 28 IR spectra, ordered by cosine similarity to the mean spectrum (most similar at bottom). Each trace is plotted at the same vertical scale; the y-axis represents relative absorbance. Cluster membership is indicated by color, with group labels on the left and sample codes on the right.</p>
+<p>All IR spectra, grouped by magnetic cluster (1 through 12). Traces are color-coded by cluster membership, with sample codes on the left and cluster labels on the right. Vertical lanes are separated per cluster; spectra within each cluster are displayed in decreasing sample code order. The y-axis represents relative absorbance scaled to a fixed amplitude per lane.</p>
 <div style="text-align:center"><canvas id="ir-overview-paper" class="ir-pair-canvas" style="max-width:800px;width:100%"></canvas></div>
 
 <p style="text-align:center;color:#aaa;font-size:11px;margin-top:30px;border-top:1px solid #eee;padding-top:12px">Beatriz Levi Repository &mdash; Community Grant Meteoritical Society 2025 &mdash; Departamento de Geología, FCFM, Universidad de Chile</p>
 
 </div><!-- /paper -->
 
+<script src="js/ir-data.js"></script>
 <script>
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){if(r===undefined)r=0;this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.quadraticCurveTo(x+w,y,x+w,y+r);this.lineTo(x+w,y+h-r);this.quadraticCurveTo(x+w,y+h,x+w-r,y+h);this.lineTo(x+r,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r);this.lineTo(x,y+r);this.quadraticCurveTo(x,y,x+r,y);this.closePath();return this;};
+}
 // ---- DATA ----
 const muestras = [
   {c:"Exp19-01",n:"Catalina 1", lc:5.285,pW:2,ir:"sí",t:"H",shk:"S5",loc:"Catalina",nota:"H5 S5; ringwoodite, maskelynite, PDFs, fizzed troilite"},
@@ -494,38 +481,80 @@ const COORDS_MAP = {
   "Exp19-59":"7266426 N, 406086 E"
 };
 
+// ---- FIELD DATA (portable susceptibilimeter, 10⁻³ SI) ----
 
 
 // ---- PAIR GROUPS ----
 const PAIR_GROUPS = [
-  {locality:"Catalina",color:"#1a2a3a",falls:[
-    {name:"Cluster 1",type:"L",count:2,range:"4.505–4.521",delta:"0.016",tc:"#e67e22",
-     samples:["Exp19-23","Exp19-22"]},
-    {name:"Cluster 2",type:"L",count:3,range:"4.581–4.652",delta:"0.071",tc:"#e67e22",
-     samples:["Exp19-03","Exp19-24","Exp19-10"]},
-    {name:"Cluster 3",type:"L",count:2,range:"4.655–4.694",delta:"0.039",tc:"#e67e22",
-     samples:["Exp19-26","Exp19-19"]},
-    {name:"Cluster 4",type:"L",count:2,range:"4.762–4.817",delta:"0.055",tc:"#e67e22",
-     samples:["Exp19-32","Exp19-17"]},
-    {name:"Cluster 5",type:"H",count:3,range:"4.834–4.882",delta:"0.048",tc:"#27ae60",
-     samples:["Exp19-33","Exp19-12","Exp19-09"]},
-    {name:"Cluster 6",type:"H",count:2,range:"4.959–4.991",delta:"0.032",tc:"#27ae60",
-     samples:["Exp19-29","Exp19-07"]},
-    {name:"Cluster 7: H5",type:"H",count:2,range:"5.252–5.285",delta:"0.033",tc:"#27ae60",
-     samples:["Exp19-25","Exp19-01"]},
-    {name:"Cluster 8: H(4-5)",type:"H",count:2,range:"5.274–5.348",delta:"0.074",tc:"#27ae60",
-     samples:["Exp19-30","Exp19-14"]}
-  ]},
   {locality:"Médano",color:"#1a2a3a",falls:[
-    {name:"Cluster 9",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
-     samples:["Exp19-54","Exp19-46"]},
-     {name:"Cluster 10",type:"H",count:2,range:"4.965–4.966",delta:"0.001",tc:"#27ae60",
-     samples:["Exp19-43","Exp19-56"]},
-    {name:"Cluster 11: H4",type:"H",count:3,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
-     samples:["Exp19-42","Exp19-40","Exp19-41"]}
+    {name:"Cluster 1",type:"L",count:2,range:"4.631–4.640",delta:"0.009",tc:"#e67e22",
+     samples:["Exp19-49","Exp19-44"]},
+    {name:"Cluster 2",type:"H",count:3,range:"4.924–4.966",delta:"0.042",tc:"#27ae60",
+     samples:["Exp19-53","Exp19-43","Exp19-56"]},
+    {name:"Cluster 3",type:"L",count:2,range:"4.443–4.464",delta:"0.021",tc:"#e67e22",
+     samples:["Exp19-52","Exp19-51"]},
+    {name:"Cluster 6",type:"H4",count:4,range:"5.091–5.168",delta:"0.077",tc:"#27ae60",
+     samples:["Exp19-42","Exp19-40","Exp19-41","Exp19-47"]},
+    {name:"Cluster 11",type:"L",count:2,range:"4.550–4.611",delta:"0.061",tc:"#e67e22",
+     samples:["Exp19-48","Exp19-45"]},
+    {name:"Cluster 12",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
+     samples:["Exp19-54","Exp19-46"]}
+  ]},
+  {locality:"Catalina",color:"#1a2a3a",falls:[
+    {name:"Cluster 4",type:"L",count:5,range:"4.686–4.762",delta:"0.076",tc:"#e67e22",
+     samples:["Exp19-08","Exp19-19","Exp19-34","Exp19-04","Exp19-32"]},
+    {name:"Cluster 5",type:"H",count:4,range:"4.834–4.882",delta:"0.048",tc:"#27ae60",
+     samples:["Exp19-33","Exp19-06","Exp19-12","Exp19-09"]},
+    {name:"Cluster 7",type:"H5",count:3,range:"5.252–5.285",delta:"0.033",tc:"#27ae60",
+     samples:["Exp19-25","Exp19-30","Exp19-01"]},
+    {name:"Cluster 8",type:"L",count:4,range:"4.589–4.655",delta:"0.066",tc:"#e67e22",
+     samples:["Exp19-24","Exp19-10","Exp19-05","Exp19-26"]},
+    {name:"Cluster 9",type:"H",count:3,range:"4.959–4.991",delta:"0.032",tc:"#27ae60",
+     samples:["Exp19-29","Exp19-11","Exp19-07"]},
+    {name:"Cluster 10",type:"L",count:3,range:"4.505–4.581",delta:"0.076",tc:"#e67e22",
+     samples:["Exp19-23","Exp19-22","Exp19-03"]}
   ]}
 ];
 function sampleLookup(code){return muestras.find(s=>s.c===code);}
+const kly5GroupTag = chi => chi >= 4.82 ? 'H' : chi >= 4.265 ? 'L' : 'LL';
+
+function clusterNarrative(f,loc){
+  const s=f.samples.map(c=>sampleLookup(c)).filter(Boolean);
+  const count=s.length;
+  const grps=s.map(x=>x.lc!=null?kly5GroupTag(x.lc):x.t);
+  const domGrp=grps.sort((a,b)=>grps.filter(v=>v===a).length-grps.filter(v=>v===b).length)[grps.length-1];
+  const petro=s.filter(x=>x.pW!=null);
+  const irOk=s.filter(x=>x.ir==='sí').length;
+  const irPend=s.filter(x=>x.ir==='disp'||x.ir==='no').length;
+  const chis=s.map(x=>x.lc).filter(v=>v!=null);
+  const d=s.map(x=>DENSITY_MAP[x.c]).filter(v=>v!=null);
+  const p=[];
+  let intro=`This ${domGrp}-type cluster comprises ${count} fragment${count>1?'s':''}`;
+  if(loc)intro+=` from ${loc}`;
+  p.push(intro);
+  if(chis.length>=2)p.push(`with log χ ranging from ${Math.min(...chis).toFixed(3)} to ${Math.max(...chis).toFixed(3)} (Δχ = ${f.delta}).`);
+  else if(chis.length)p.push(`with log χ = ${chis[0].toFixed(3)}.`);
+  else p.push('.');
+  if(petro.length){
+    const pts=petro.map(x=>{const d=PETRO_MAP[x.c];return d?d.note:null;}).filter(Boolean);
+    const uniq=[...new Set(pts)];
+    const shk=petro.filter(x=>x.shk).map(x=>x.shk);
+    let ps=`Petrographic analysis classifies ${petro.length} sample${petro.length>1?'s':''} as ${uniq.join('/')}`;
+    if(shk.length)ps+=` (shock stage${shk.length>1?'s':''} ${[...new Set(shk)].join(', ')})`;
+    ps+='.';
+    p.push(ps);
+  }
+  const ws=s.map(x=>x.pW!=null?x.pW:x.eW!=null?x.eW:null).filter(v=>v!=null);
+  if(ws.length)p.push(`Weathering grades range from W${Math.min(...ws)} to W${Math.max(...ws)}.`);
+  if(irOk)p.push(`Infrared spectroscopy confirms ${irOk} of ${irOk+irPend} analyzed samples.`);
+  if(d.length>=2){
+    const dd=(Math.max(...d)-Math.min(...d))/Math.min(...d)*100;
+    p.push(`Density ranges from ${Math.min(...d).toFixed(3)} to ${Math.max(...d).toFixed(3)} g/cm³ (Δρ = ${dd.toFixed(0)}%),`+(dd<20?' consistent with a common fall.':' suggesting some variability.'));
+  }else if(d.length===1)p.push(`Density is ${d[0].toFixed(3)} g/cm³.`);
+  const mv=s.map(x=>MASS_MAP[x.c]).filter(v=>v!=null);
+  if(mv.length)p.push(`Total recovered mass: ${mv.reduce((a,b)=>a+b,0).toFixed(1)} g.`);
+  return p.join(' ');
+}
 function renderPaperPairGroups(){
   const el=document.getElementById('pair-groups-paper');
   if(!el)return;
@@ -533,13 +562,60 @@ function renderPaperPairGroups(){
   PAIR_GROUPS.forEach(g=>{
     html+=`<div class="pair-locality"><h3 style="color:${g.color};font-size:15px;font-weight:700;margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid #ddd">${g.locality}</h3><div class="pair-grid">`;
     g.falls.forEach(f=>{
-      html+=`<div class="pair-card"><div class="pair-card-header" style="background:${f.tc}"><span>${f.name}</span><span>${f.count} fragments · Δχ ${f.delta}</span></div><div class="pair-card-body"><div class="pair-info"><span>Type ${f.type}</span>${f.range?`<span>χ ${f.range}</span>`:''}</div>`;
+      const densVals = f.samples.map(c => DENSITY_MAP[c]).filter(d => d != null);
+      const massVals = f.samples.map(c => MASS_MAP[c]).filter(m => m != null);
+      const chiVals = f.samples.map(c => { const s=sampleLookup(c); return s&&s.lc!=null?s.lc:null; }).filter(v=>v!=null);
+      const totalMass = massVals.length ? massVals.reduce((a,b)=>a+b,0).toFixed(1) : '—';
+      const avgDens = densVals.length ? (densVals.reduce((a,b)=>a+b,0)/densVals.length).toFixed(3) : '—';
+      const avgChi = chiVals.length ? (chiVals.reduce((a,b)=>a+b,0)/chiVals.length).toFixed(3) : '—';
+      const dMin = densVals.length ? Math.min(...densVals).toFixed(3) : '—';
+      const dMax = densVals.length ? Math.max(...densVals).toFixed(3) : '—';
+      const dDelta = densVals.length > 1 ? ((Math.max(...densVals) - Math.min(...densVals)) / Math.min(...densVals) * 100).toFixed(0) : '';
+      const irCount = f.samples.filter(c => { const s=sampleLookup(c); return s&&s.ir==='sí'; }).length;
+      const irStr = irCount > 0 ? ` · IR ${irCount}/${f.count}` : '';
+      const petroCount = f.samples.filter(c => { const s=sampleLookup(c); return s&&s.pW!=null; }).length;
+      const petroStr = petroCount > 0 ? ` · petro ${petroCount}` : '';
+      html+=`<div class="pair-card">
+        <div class="pair-card-header" style="background:${f.tc}">
+          <span>${f.name}</span>
+          <span>${f.count} fragments · Δχ ${f.delta}${densVals.length?` · ρ ${dMin}–${dMax}`:''}${dDelta?` (${dDelta}%)`:''}${irStr}${petroStr}</span>
+        </div>
+        <div class="pair-card-body">`;
       f.samples.forEach(c=>{
         const s=sampleLookup(c);if(!s)return;
         const chi=s.lc!=null?s.lc.toFixed(3):'—';
-        const w=s.pW!=null?'W'+s.pW:'—';
-        html+=`<div class="pair-sample"><span><span class="ps-code">${s.c}</span> <span class="ps-name">${s.n}</span></span><span><span class="ps-chi">χ ${chi}</span> · <span class="ps-w">${w}</span></span></div>`;
+        const w=s.pW!=null?'W'+s.pW:s.eW!=null?'W'+s.eW:'—';
+        const mass=MASS_MAP[s.c]!=null?MASS_MAP[s.c].toFixed(1):'—';
+        const dens=DENSITY_MAP[s.c]!=null?DENSITY_MAP[s.c].toFixed(3):'—';
+        const pieces=FRAGMENTS_MAP[s.c]!=null?FRAGMENTS_MAP[s.c]:'—';
+        const grp=s.lc!=null?kly5GroupTag(s.lc):s.t;
+        const irIcon=s.ir==='sí'?'✓':s.ir==='disp'?'…':'—';
+        const grpCls=grp==='H'?'tag-h':grp==='L'?'tag-l':grp==='LL'?'tag-ll':'tag-q';
+        const discoverer=DISCOVERER_MAP[s.c]||'';
+        const shk=s.shk||'';
+        html+=`<div class="pair-sample">
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+            <span><span class="ps-code">${s.c}</span> <span style="font-size:11px;color:#666">${s.n}</span></span>
+            <span style="font-size:10px;color:#999;max-width:45%;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${discoverer}</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:2px;font-size:11px">
+            <span class="ps-chi">χ ${chi}</span>
+            <span class="ps-w">${w}</span>
+            <span>${mass} g</span>
+            <span class="ps-dens">ρ ${dens}</span>
+            <span class="${grpCls}" style="font-weight:600">${grp}</span>
+            <span>${irIcon}IR</span>
+            <span style="color:#999">${pieces}pz</span>
+            ${shk?`<span style="color:#8e44ad;font-size:10px">${shk}</span>`:''}
+          </div>
+        </div>`;
       });
+      html+=`<div style="padding:6px 12px;background:#f8f8f8;border-top:1px solid #eee;font-size:10px;color:#888;display:flex;justify-content:space-between">
+        <span>Total mass: ${totalMass} g</span>
+        <span>Avg χ: ${avgChi}</span>
+        <span>Avg ρ: ${avgDens} g/cm³</span>
+      </div>`;
+      html+=`<div style="padding:8px 12px;font-size:11px;line-height:1.5;color:#555;border-top:1px solid #f0f0f0;background:#fcfcfc">${clusterNarrative(f,g.locality)}</div>`;
       html+=`</div></div>`;
     });
     html+='</div></div>';
@@ -710,10 +786,14 @@ function drawMassLogChiChart() {
     });
   }
 }
-drawMassLogChiChart();
+try { drawMassLogChiChart(); } catch(e) {
+  console.warn('Figure 1 error:', e);
+  const cv = document.getElementById('massLogChiCanvas');
+  if (cv) { const cx=cv.getContext('2d'); cx.fillStyle='#ccc'; cx.font='14px sans-serif'; cx.textAlign='center'; cx.fillText('Figure 1 error',cv.width/2,cv.height/2); }
+}
 
 // ---- FIGURE 2: Histogram ----
-(function(){
+try { (function(){
   const cv = document.getElementById('doughnutCanvas');
   if (!cv) return;
   const W=600,H=300;
@@ -803,9 +883,11 @@ drawMassLogChiChart();
   // Reference annotation
   ctx.fillStyle='#888'; ctx.font='8px Arial'; ctx.textAlign='left'; ctx.textBaseline='bottom';
   ctx.fillText('Shaded: mean\u00b11\u03c3 from Rochette et al. (2003)',x0+4,y1-2);
-})();
-
-
+})(); } catch(e) {
+  console.warn('Figure 2 error:', e);
+  const cv = document.getElementById('doughnutCanvas');
+  if (cv) { const cx=cv.getContext('2d'); cx.fillStyle='#ccc'; cx.font='14px sans-serif'; cx.textAlign='center'; cx.fillText('Figure 2 error',cv.width/2,cv.height/2); }
+}
 
 function drawPetroGradeChart() {
   const cv = document.getElementById('petroGradeCanvas');
@@ -880,7 +962,11 @@ function drawPetroGradeChart() {
     if(item.type==='color'){ctx.fillStyle=item.color;ctx.beginPath();ctx.arc(lx+lpad+lr,sy,lr,0,2*Math.PI);ctx.fill();ctx.fillStyle='#444';ctx.font='10px Arial';ctx.fillText(item.label,lx+lpad+12,sy);yy+=lgap;}
   });
 }
-drawPetroGradeChart();
+try { drawPetroGradeChart(); } catch(e) {
+  console.warn('Figure 3 error:', e);
+  const cv = document.getElementById('petroGradeCanvas');
+  if (cv) { const cx=cv.getContext('2d'); cx.fillStyle='#ccc'; cx.font='14px sans-serif'; cx.textAlign='center'; cx.fillText('Figure 3 error',cv.width/2,cv.height/2); }
+}
 
 const densityPoints2 = [];
 let densityHover2 = -1;
@@ -989,147 +1075,144 @@ function drawDensityChart() {
     });
   }
 }
-drawDensityChart();
+try { drawDensityChart(); } catch(e) {
+  console.warn('Figure 4 error:', e);
+  const cv = document.getElementById('densityChiCanvas');
+  if (cv) { const cx=cv.getContext('2d'); cx.fillStyle='#ccc'; cx.font='14px sans-serif'; cx.textAlign='center'; cx.fillText('Figure 4 error',cv.width/2,cv.height/2); }
+}
 
 // ---- PAIR GROUPS RENDER ----
-renderPaperPairGroups();
+try { renderPaperPairGroups(); } catch(e) {
+  console.warn('Visual Summary error:', e);
+}
 
-// ---- FIGURE 5: IR MATCH RANKING ----
+// ---- FIGURE 5: IR SPECTRA OVERVIEW ----
+const _PAL = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
+const _CLR = {};
+(function(){
+  let i=0;
+  PAIR_GROUPS.forEach(g=>g.falls.forEach(f=>{
+    if(f.samples.filter(c=>IR_DATA[c]).length>=2){_CLR[f.name]=_PAL[i%_PAL.length];i++;}
+  }));
+})();
 function drawIRClusterSpectra() {
   const cv = document.getElementById('ir-cluster-spectra');
   if (!cv || typeof IR_DATA === 'undefined') return;
-  const targetClusters = [
-    { name:'Cluster 2', codes:['Exp19-10','Exp19-24'], color:'#1f77b4' },
-    { name:'Cluster 8', codes:['Exp19-14','Exp19-30'], color:'#2ca02c' },
-    { name:'Cluster 11', codes:['Exp19-41','Exp19-42'], color:'#d62728' },
-  ];
-  const W=680, H=260, dpr=window.devicePixelRatio||1;
-  cv.width=W*dpr; cv.height=H*dpr;
+  const groupOrder=[],sampleGroup={};
+  PAIR_GROUPS.forEach(g=>g.falls.forEach(f=>{
+    const ir=f.samples.filter(c=>IR_DATA[c]);
+    if(ir.length>=2){if(!groupOrder.includes(f.name))groupOrder.push(f.name);ir.forEach(c=>sampleGroup[c]=f.name);}
+  }));
+  groupOrder.sort((a,b)=>{const na=parseInt(a.match(/\d+/)),nb=parseInt(b.match(/\d+/));return(na||0)-(nb||0);});
+  const items=[];
+  groupOrder.forEach(key=>{
+    const members=Object.keys(sampleGroup).filter(c=>sampleGroup[c]===key);
+    members.sort((a,b)=>{const na=parseInt(a.match(/\d+$/)),nb=parseInt(b.match(/\d+$/));return(nb||0)-(na||0);});
+    members.forEach(c=>items.push({code:c,group:key,color:_CLR[key]}));
+  });
+  const W=900,LANE_H=20,MARGIN={top:210,right:110,bottom:40,left:85};
+  const H=MARGIN.top+MARGIN.bottom+items.length*LANE_H+10;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=W*dpr;cv.height=H*dpr;
   const ctx=cv.getContext('2d');
   ctx.scale(dpr,dpr);
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  const ml=65, mr=20, mt=25, mb=35;
-  const x0=ml, x1=W-mr, y0=mt, y1=H-mb;
-  const wlMin=6, wlMax=16;
-  const toX=wl=>x0+(wl-wlMin)/(wlMax-wlMin)*(x1-x0);
-  let aMin=Infinity, aMax=-Infinity;
-  targetClusters.forEach(g=>g.codes.forEach(c=>IR_DATA[c].forEach(d=>{const wl=10000/d[0];if(wl>=wlMin&&wl<=wlMax){if(d[1]<aMin)aMin=d[1];if(d[1]>aMax)aMax=d[1];}})));
-  const aRng=(aMax-aMin)||1;
-  const toY=v=>y1-(v-aMin)/aRng*(y1-y0);
-  ctx.strokeStyle='#eee'; ctx.lineWidth=0.5; ctx.beginPath();
-  [6,8,10,12,14,16].forEach(wl=>{const x=toX(wl);ctx.moveTo(x,y0);ctx.lineTo(x,y1);});
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  const x0=MARGIN.left,y0=MARGIN.top,x1=W-MARGIN.right,y1=H-MARGIN.bottom;
+  const xMin=2,xMax=21,toX=wl=>x0+(wl-xMin)/(xMax-xMin)*(x1-x0);
+  let curY=y0;
+  const yPos={};
+  items.forEach(item=>{yPos[item.code]=curY+LANE_H/2;curY+=LANE_H;});
+  let yMin=Infinity,yMax=-Infinity;
+  Object.keys(IR_DATA).forEach(code=>IR_DATA[code].forEach(d=>{const wl=10000/d[0];if(wl>=xMin&&wl<=xMax){if(d[1]<yMin)yMin=d[1];if(d[1]>yMax)yMax=d[1];}}));
+  const yRange=(yMax-yMin)||1;
+  ctx.strokeStyle='#f0f0f0';ctx.lineWidth=0.5;ctx.beginPath();
+  for(let y=y0;y<=y1;y+=LANE_H*2){ctx.moveTo(x0,y);ctx.lineTo(x1,y);}
   ctx.stroke();
-  const styles = [[],[3,3],[],[3,3],[]];
-  targetClusters.forEach((g,gi)=>{
-    g.codes.forEach((c,si)=>{
-      const pts=IR_DATA[c];
-      ctx.strokeStyle=g.color; ctx.lineWidth=1.1;
-      ctx.setLineDash(styles[si]||[]);
-      ctx.beginPath(); let started=false;
-      pts.forEach(d=>{
-        const wl=10000/d[0]; if(wl<wlMin||wl>wlMax)return;
-        const x=toX(wl),y=toY(d[1]);
-        if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-      const last=pts.filter(d=>{const wl=10000/d[0];return wl>=wlMin&&wl<=wlMax;});
-      if(last.length){
-        const lp=last[last.length-1], lx=toX(10000/lp[0])+2, ly=toY(lp[1]);
-        ctx.fillStyle=g.color; ctx.font='9px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
-        ctx.fillText(c,lx,ly);
-      }
-    });
+  items.forEach(item=>{
+    const data=IR_DATA[item.code],baseY=yPos[item.code];
+    ctx.strokeStyle=item.color;ctx.lineWidth=1.1;ctx.beginPath();let started=false;
+    data.forEach(d=>{const wl=10000/d[0];if(wl<xMin||wl>xMax)return;const x=toX(wl),y=baseY-((d[1]-yMin)/yRange)*LANE_H*10;if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);});
+    ctx.stroke();
   });
-  ctx.setLineDash([]);
-  const legY=[y0+15,y0+(y1-y0)/2,y1-15];
-  targetClusters.forEach((g,i)=>{
-    ctx.fillStyle=g.color; ctx.font='bold 11px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
-    ctx.fillRect(x1+8,legY[i]-4,10,10); ctx.fillText(g.name,x1+22,legY[i]);
+  ctx.textBaseline='bottom';
+  curY=y0;let lastGroup=null;
+  items.forEach(item=>{
+    const baseY=curY+LANE_H/2;
+    ctx.fillStyle=item.color;ctx.font='10px sans-serif';ctx.textAlign='right';
+    ctx.fillText(item.code,x0-6,baseY);
+    if(item.group!==lastGroup){
+      ctx.fillStyle=item.color;ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+      ctx.fillText(item.group,x1+1,baseY-100);lastGroup=item.group;
+    }
+    curY+=LANE_H;
   });
-  ctx.strokeStyle='#ccc'; ctx.lineWidth=0.5;
-  ctx.strokeRect(x0,y0,x1-x0,y1-y0);
-  ctx.fillStyle='#888'; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
-  [6,8,10,12,14,16].forEach(wl=>ctx.fillText(wl.toString(),toX(wl),y1+4));
-  ctx.fillStyle='#bbb'; ctx.font='9px sans-serif'; ctx.fillText('Wavelength (µm)',W/2,y1+18);
+  ctx.fillStyle='#888';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  [2,4,6,8,10,12,14,16,18,20].forEach(t=>ctx.fillText(t.toString(),toX(t),y1+4));
+  ctx.fillStyle='#bbb';ctx.font='12px sans-serif';
+  ctx.fillText('Wavelength (µm)',W/2,y1+24);
 }
 
 // ---- FIGURE S1: IR OVERVIEW ----
 function drawIROverviewPaper() {
   const cv = document.getElementById('ir-overview-paper');
   if (!cv || typeof IR_DATA === 'undefined') return;
-  const codes = Object.keys(IR_DATA);
-  const palette = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
-  const grpColor = {}, sampleGroup = {};
-  let pi = 0;
-  PAIR_GROUPS.forEach(g => g.falls.forEach(f => {
-    const ir = f.samples.filter(c => IR_DATA[c]);
-    if (ir.length >= 2 && !grpColor[f.name]) { grpColor[f.name]=palette[pi%palette.length]; pi++; }
-    ir.forEach(c => sampleGroup[c]=f.name);
+  const groupOrder=[],sampleGroup={};
+  PAIR_GROUPS.forEach(g=>g.falls.forEach(f=>{
+    const ir=f.samples.filter(c=>IR_DATA[c]);
+    if(ir.length>=2){if(!groupOrder.includes(f.name))groupOrder.push(f.name);ir.forEach(c=>sampleGroup[c]=f.name);}
   }));
-  const cands = [['Exp19-04','Exp19-08'],['Exp19-50','Exp19-53'],['Exp19-06','Exp19-34']];
-  cands.forEach((p,i) => {
-    const key='Candidate '+(i+1); grpColor[key]=palette[pi%palette.length]; pi++;
-    p.forEach(c => { if (IR_DATA[c]) sampleGroup[c]=key; });
+  groupOrder.sort((a,b)=>{const na=parseInt(a.match(/\d+/)),nb=parseInt(b.match(/\d+/));return(na||0)-(nb||0);});
+  const items=[];
+  groupOrder.forEach(key=>{
+    const members=Object.keys(sampleGroup).filter(c=>sampleGroup[c]===key);
+    members.sort((a,b)=>{const na=parseInt(a.match(/\d+$/)),nb=parseInt(b.match(/\d+$/));return(nb||0)-(na||0);});
+    members.forEach(c=>items.push({code:c,group:key,color:_CLR[key]}));
   });
-  codes.forEach(c => { if (!sampleGroup[c]) sampleGroup[c]='Unpaired'; });
-  if (!grpColor['Unpaired']) grpColor['Unpaired']='#ddd';
-  // similarity ordering
-  const grid=Array.from({length:200},(_,i)=>400+i*18);
-  function interp(code) {
-    const pts=IR_DATA[code].slice().sort((a,b)=>a[0]-b[0]);
-    return grid.map(t => {
-      let lo=0,hi=pts.length-1;
-      while(lo<hi-1){const m=(lo+hi)>>1;if(pts[m][0]<t)lo=m;else hi=m;}
-      const [x0,y0]=pts[lo],[x1,y1]=pts[hi];
-      return x1===x0?y0:y0+(t-x0)*(y1-y0)/(x1-x0);
-    });
-  }
-  const interps={}; codes.forEach(c=>interps[c]=interp(c));
-  const avg=grid.map((_,i)=>codes.reduce((s,c)=>s+interps[c][i],0)/codes.length);
-  function cosine(a,b){let d=0,na=0,nb=0;for(let i=0;i<a.length;i++){d+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i];}return d/(Math.sqrt(na)*Math.sqrt(nb)||1);}
-  const sims=codes.map(c=>({code:c,sim:cosine(interps[c],avg)}));
-  sims.sort((a,b)=>b.sim-a.sim);
-  const items=sims.map(s=>({code:s.code,group:sampleGroup[s.code]||'Unpaired',color:grpColor[sampleGroup[s.code]]||'#ddd'}));
-  const LANE_H=9, MARG={top:90,right:75,bottom:30,left:85};
-  const W=780, H=MARG.top+MARG.bottom+items.length*LANE_H+10;
+  const W=900,LANE_H=20,MARGIN={top:210,right:110,bottom:40,left:85};
+  const H=MARGIN.top+MARGIN.bottom+items.length*LANE_H+10;
   const dpr=window.devicePixelRatio||1;
-  cv.width=W*dpr; cv.height=H*dpr;
+  cv.width=W*dpr;cv.height=H*dpr;
   const ctx=cv.getContext('2d');
   ctx.scale(dpr,dpr);
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  const x0=MARG.left,y0=MARG.top,x1=W-MARG.right,y1=H-MARG.bottom;
-  const xMin=2.5,xMax=22,toX=wl=>x0+(wl-xMin)/(xMax-xMin)*(x1-x0);
-  let curY=y0; const yPos={};
-  items.forEach(it=>{yPos[it.code]=curY+LANE_H/2;curY+=LANE_H;});
-  let aMin=Infinity,aMax=-Infinity;
-  codes.forEach(c=>IR_DATA[c].forEach(d=>{const wl=10000/d[0];if(wl>=xMin&&wl<=xMax){if(d[1]<aMin)aMin=d[1];if(d[1]>aMax)aMax=d[1];}}));
-  const aRng=(aMax-aMin)||1;
-  ctx.strokeStyle='#f0f0f0'; ctx.lineWidth=0.5; ctx.beginPath();
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  const x0=MARGIN.left,y0=MARGIN.top,x1=W-MARGIN.right,y1=H-MARGIN.bottom;
+  const xMin=2,xMax=21,toX=wl=>x0+(wl-xMin)/(xMax-xMin)*(x1-x0);
+  let curY=y0;const yPos={};
+  items.forEach(item=>{yPos[item.code]=curY+LANE_H/2;curY+=LANE_H;});
+  let yMin=Infinity,yMax=-Infinity;
+  Object.keys(IR_DATA).forEach(code=>IR_DATA[code].forEach(d=>{const wl=10000/d[0];if(wl>=xMin&&wl<=xMax){if(d[1]<yMin)yMin=d[1];if(d[1]>yMax)yMax=d[1];}}));
+  const yRange=(yMax-yMin)||1;
+  ctx.strokeStyle='#f0f0f0';ctx.lineWidth=0.5;ctx.beginPath();
   for(let y=y0;y<=y1;y+=LANE_H*2){ctx.moveTo(x0,y);ctx.lineTo(x1,y);}
   ctx.stroke();
-  items.forEach(it=>{
-    const data=IR_DATA[it.code],baseY=yPos[it.code];
-    ctx.strokeStyle=it.color; ctx.lineWidth=1.1; ctx.beginPath(); let started=false;
-    data.forEach(d=>{
-      const wl=10000/d[0]; if(wl<xMin||wl>xMax)return;
-      const x=toX(wl),y=baseY-((d[1]-aMin)/aRng)*LANE_H*10;
-      if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
-    });
+  items.forEach(item=>{
+    const data=IR_DATA[item.code],baseY=yPos[item.code];
+    ctx.strokeStyle=item.color;ctx.lineWidth=1.1;ctx.beginPath();let started=false;
+    data.forEach(d=>{const wl=10000/d[0];if(wl<xMin||wl>xMax)return;const x=toX(wl),y=baseY-((d[1]-yMin)/yRange)*LANE_H*10;if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);});
     ctx.stroke();
   });
-  ctx.textBaseline='bottom'; curY=y0;
-  items.forEach(it=>{
+  ctx.textBaseline='bottom';
+  curY=y0;let lastGroup=null;
+  items.forEach(item=>{
     const baseY=curY+LANE_H/2;
-    ctx.fillStyle=it.color; ctx.font='bold 10px sans-serif';
-    ctx.textAlign='right'; ctx.fillText(it.group.length>16?it.group.slice(0,15)+'\u2026':it.group,x0-6,baseY-30);
-    ctx.textAlign='left'; ctx.fillText(it.code,x1+1,baseY-30);
+    ctx.fillStyle=item.color;ctx.font='10px sans-serif';ctx.textAlign='right';
+    ctx.fillText(item.code,x0-6,baseY);
+    if(item.group!==lastGroup){
+      ctx.fillStyle=item.color;ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+      ctx.fillText(item.group,x1+1,baseY-100);lastGroup=item.group;
+    }
     curY+=LANE_H;
   });
-  ctx.fillStyle='#888'; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
-  [2,4,6,8,10,12,14,16,18,20,22].forEach(t=>ctx.fillText(t.toString(),toX(t),y1+4));
-  ctx.fillStyle='#bbb'; ctx.font='9px sans-serif'; ctx.fillText('Wavelength (µm)',W/2,y1+18);
+  ctx.fillStyle='#888';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+  [2,4,6,8,10,12,14,16,18,20].forEach(t=>ctx.fillText(t.toString(),toX(t),y1+4));
+  ctx.fillStyle='#bbb';ctx.font='12px sans-serif';
+  ctx.fillText('Wavelength (µm)',W/2,y1+24);
 }
-drawIROverviewPaper();
+try { drawIROverviewPaper(); } catch(e) {
+  console.warn('IR overview error:', e);
+  const cv = document.getElementById('ir-overview-paper');
+  if (cv) { const cx=cv.getContext('2d'); cx.fillStyle='#ccc'; cx.font='14px sans-serif'; cx.textAlign='center'; cx.fillText('IR data not loaded',cv.width/2,cv.height/2); }
+}
 try { drawIRClusterSpectra(); } catch(e) {
   console.warn('IR cluster spectra error:', e);
   const cv = document.getElementById('ir-cluster-spectra');
