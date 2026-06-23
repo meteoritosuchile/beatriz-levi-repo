@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+  <rect width="200" height="120" rx="8" fill="#f0f4f8"/>
+  <rect x="1" y="1" width="198" height="118" rx="7" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+  <text x="100" y="35" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#2c3e50">LABORATORIO DE</text>
+  <text x="100" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#2c3e50">PALEOMAGNETISMO</text>
+  <text x="100" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="7" fill="#555">Universidad de Chile</text>
+  <!-- Magnet compass needle -->
+  <g transform="translate(100,88)">
+    <rect x="-2" y="-20" width="4" height="40" rx="2" fill="#e74c3c"/>
+    <polygon points="-8,-6 0,-20 8,-6" fill="#e74c3c"/>
+    <polygon points="-8,6 0,20 8,6" fill="#2c3e50"/>
+    <circle r="3" fill="#fff" stroke="#2c3e50" stroke-width="1"/>
+  </g>
+</svg>
