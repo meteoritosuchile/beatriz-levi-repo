@@ -1,82 +1,45 @@
-﻿// IR consistency scores for existing clusters (from full-range cosine analysis)
+﻿if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){if(r===undefined)r=0;this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.quadraticCurveTo(x+w,y,x+w,y+r);this.lineTo(x+w,y+h-r);this.quadraticCurveTo(x+w,y+h,x+w-r,y+h);this.lineTo(x+r,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r);this.lineTo(x,y+r);this.quadraticCurveTo(x,y,x+r,y);this.closePath();return this;};
+}
+// IR consistency scores for existing clusters (from full-range cosine analysis)
 const _IR_CLUSTER_STATUS = {
-  'Cluster 2':        { ok: true,  d:0.039, note:'IR consistent' },
-  'Cluster 4':        { ok: null, d:null,  note:'1 sample with IR — pending' },
-  'Cluster 5':        { ok: null, d:null,  note:'1 sample with IR — pending' },
-  'Cluster 7: H5':    { ok: null, d:null,  note:'1 sample with IR — pending' },
-  'Cluster 8: H(4-5)':{ ok: true, d:0.034, note:'IR consistent' },
-  'Cluster 11: H4':   { ok: true, d:0.024, note:'IR consistent' },
+  'Cluster 1':        { ok: true,  d:0.005, note:'IR consistent (E44+E49 99.5%)' },
+  'Cluster 2':        { ok: true,  d:0.006, note:'IR consistent (E53+E56 99.4%)' },
+  'Cluster 3':        { ok: true,  d:0.006, note:'IR consistent (E51+E52 99.4%)' },
+  'Cluster 4':        { ok: true,  d:0.009, note:'IR consistent (avg 99.1%)' },
+  'Cluster 5':        { ok: true,  d:0.010, note:'IR consistent (E06+E12 99.0%)' },
+  'Cluster 6':        { ok: true,  d:0.022, note:'IR consistent (avg 97.8%)' },
+  'Cluster 7':        { ok: true,  d:0.035, note:'IR consistent (E01+E30 96.5%)' },
+  'Cluster 8':        { ok: true,  d:0.039, note:'IR consistent (E10+E24 96.1%)' },
+  'Cluster 9':        { ok: null, d:null,  note:'1 sample with IR — pending' },
+  'Cluster 10':       { ok: null, d:null,  note:'no IR data' },
+  'Cluster 11':       { ok: null, d:null,  note:'1 sample with IR — pending' },
+  'Cluster 12':       { ok: null, d:null,  note:'1 sample with IR — pending' },
 };
+const _IR_PALETTE = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
+let _IR_CLUSTER_COLORS = {};
+let _IR_VISIBLE_CLUSTERS = {};
+// Pre-compute cluster colors (runs at module load, after data.js + ir-data.js)
+(function() {
+  if (typeof PAIR_GROUPS === 'undefined' || typeof IR_DATA === 'undefined') return;
+  let idx = 0;
+  PAIR_GROUPS.forEach(g => g.falls.forEach(f => {
+    if (f.samples.filter(c => IR_DATA[c]).length >= 2) {
+      _IR_CLUSTER_COLORS[f.name] = _IR_PALETTE[idx % _IR_PALETTE.length];
+      idx++;
+    }
+  }));
+})();
 
 // ---------- Supabase ----------
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
-// ---------- Auth ----------
-let currentUser = null;
-
-_supabase.auth.onAuthStateChange((event, session) => {
-  currentUser = session?.user ?? null;
-  updateAuthUI();
-});
-
-function updateAuthUI() {
-  const display = document.getElementById('auth-display');
-  const btn = document.getElementById('auth-btn');
-  if (!display || !btn) return;
-  if (currentUser) {
-    display.textContent = currentUser.email;
-    btn.textContent = 'Logout';
-    btn.onclick = doLogout;
-  } else {
-    display.textContent = '';
-    btn.textContent = 'Login';
-    btn.onclick = toggleAuth;
-  }
-}
-
-function toggleAuth() {
-  const modal = document.getElementById('auth-modal');
-  if (modal) modal.style.display = 'flex';
-}
-
-function closeAuth() {
-  document.getElementById('auth-modal').style.display = 'none';
-  document.getElementById('auth-msg').textContent = '';
-}
-
-async function doLogin() {
-  const email = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const msg = document.getElementById('auth-msg');
-  if (!email || !password) { msg.textContent = 'Enter email and password'; return; }
-  const { error } = await _supabase.auth.signInWithPassword({ email, password });
-  if (error) { msg.textContent = error.message; return; }
-  closeAuth();
-  toast('Logged in as ' + email);
-}
-
-async function doSignup() {
-  const email = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const msg = document.getElementById('auth-msg');
-  if (!email || !password) { msg.textContent = 'Enter email and password'; return; }
-  if (password.length < 6) { msg.textContent = 'Password must be at least 6 characters'; return; }
-  const { error } = await _supabase.auth.signUp({ email, password });
-  if (error) { msg.textContent = error.message; return; }
-  msg.style.color = '#27ae60';
-  msg.textContent = 'Check your email to confirm signup!';
-}
-
-async function doLogout() {
-  await _supabase.auth.signOut();
-  toast('Logged out');
-}
-
 // ---------- State ----------
 let currentSample = null;
 let observationsCache = {};
 let filesCache = {};
+const _selectedIRSamples = new Set();
 
 // ---------- Navigation ----------
 function navigate(page, data) {
@@ -109,40 +72,41 @@ function renderHome() {
     <div style="position:relative;text-align:center;margin:0 -24px 32px;overflow:hidden">
       <img src="Depto_geo.jpg" alt="Beatriz Levi Repository" style="width:100%;height:auto;display:block;min-height:250px;object-fit:cover">
       <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:40px 20px 20px">
-        <h1 style="color:#fff;margin:0;font-size:26px;text-shadow:0 1px 4px rgba(0,0,0,.5)">Beatriz Levi Repository</h1>
-        <p style="color:#ddd;font-size:14px;margin:4px 0 0;text-align:center">Atacama Desert Meteorite Collection · Universidad de Chile</p>
+        <h1 style="color:#fff;margin:0;font-size:26px;text-shadow:0 1px 4px rgba(0,0,0,.5)">${__('home_title')}</h1>
+        <p style="color:#ddd;font-size:14px;margin:4px 0 0;text-align:center">${__('home_subtitle')}</p>
       </div>
     </div>
 
     <div style="max-width:700px;margin:0 auto 32px;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:14px 18px;font-size:13px;color:#6d4c00">
-      <strong>⚠ Work in progress.</strong> This repository is being systematically organized and documented. Some samples have incomplete data (pending IR analysis, petrography, or KLY5 measurement). All entries will be progressively completed over time.
+      <strong>${__('home_wip')}</strong>
     </div>
 
     <div style="max-width:700px;margin:0 auto 32px">
-      <h2 style="text-align:center;margin-bottom:12px">About the Repository</h2>
-      <p>The Beatriz Levi Repository houses 49 meteorite specimens from the Atacama Desert (Catalina, El Médano, San Juan, and Los Vientos areas), all recovered during the 2019 expedition. The collection was classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography.</p>
-      <p>This project was funded by a Community Grant from the Meteoritical Society (August 2025) and is housed at the Departamento de Geología, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile.</p>
+      <h2 style="text-align:center;margin-bottom:12px">${__('home_about')}</h2>
+      <p>${__('home_desc1')}</p>
+      <p>${__('home_desc2')}</p>
     </div>
 
     <div class="stats-row" style="max-width:600px;margin:0 auto 32px">
-<div class="stat-card"><div class="num">49</div><div class="label">Total Specimens</div></div>
-      <div class="stat-card"><div class="num">43</div><div class="label">KLY5 Measured</div></div>
-      <div class="stat-card"><div class="num">4</div><div class="label">Localities</div></div>
+<div class="stat-card"><div class="num">49</div><div class="label">${__('home_stats_specimens')}</div></div>
+      <div class="stat-card"><div class="num">43</div><div class="label">${__('home_stats_kly5')}</div></div>
+      <div class="stat-card"><div class="num">4</div><div class="label">${__('home_stats_localities')}</div></div>
     </div>
 
     <div style="text-align:center;margin-top:16px">
-      <button class="btn" onclick="navigate('samples')">Browse Samples</button>
-      <button class="btn" onclick="navigate('paper')" style="margin-left:10px">Read Pre-print</button>
-      <button class="btn" onclick="navigate('pairing')" style="margin-left:10px">View Pairing Groups</button>
+      <button class="btn" onclick="navigate('samples')">${__('home_btn_samples')}</button>
+      <button class="btn" onclick="navigate('paper')" style="margin-left:10px">${__('home_btn_paper')}</button>
+      <button class="btn" onclick="navigate('pairing')" style="margin-left:10px">${__('home_btn_pairing')}</button>
     </div>
 
     <div class="logos" style="margin-top:32px">
-      <img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px">
-      <img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px">
-      <img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px">
-      <img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px">
-      <img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px">
-      <img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px">
+      <a href="https://geologia.uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px"></a>
+      <a href="https://www.sociedadgeologica.cl/geositios-1/meteoritos-y-ciencias-planetarias" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px"></a>
+      <a href="https://meteoritical.org/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px"></a>
+      <a href="https://astronomia.udp.cl/es/collaboration/udp-cosmic-dust-laboratory/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-fluidos-en-sistemas-planetarios" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px"></a>
+      <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Paleomagnetismo.svg" alt="Laboratorio de Paleomagnetismo UChile" title="Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
     </div>
   `;
 }
@@ -150,45 +114,46 @@ function renderHome() {
 // ---------- Contact ----------
 function renderContact() {
   document.getElementById('contact-content').innerHTML = `
-    <h1 style="margin-bottom:16px">Contact & Loan System</h1>
+    <h1 style="margin-bottom:16px">${__('contact_title')}</h1>
 
     <div style="max-width:700px;margin:0 auto 32px;background:#f8f8f8;border-left:3px solid #1a2a3a;padding:20px 24px;border-radius:0 6px 6px 0">
-      <h2 style="margin:0 0 8px;font-size:16px">Sample Loan Request</h2>
-      <p style="font-size:13px;margin:0 0 10px">The Beatriz Levi Repository is a physical meteorite collection available to the scientific community.</p>
-      <p style="font-size:13px;font-weight:600;margin:0 0 6px">How to request a sample?</p>
-      <p style="font-size:13px;margin:0 0 4px">Samples are available for research upon formal request to the Depto. de Geología, FCFM, U. de Chile:</p>
+      <h2 style="margin:0 0 8px;font-size:16px">${__('contact_loan')}</h2>
+      <p style="font-size:13px;margin:0 0 10px">${__('contact_loan_desc')}</p>
+      <p style="font-size:13px;font-weight:600;margin:0 0 6px">${__('contact_loan_how')}</p>
+      <p style="font-size:13px;margin:0 0 4px">${__('contact_loan_detail')}</p>
       <ol style="font-size:13px;margin:6px 0 0 18px;padding:0;color:#444">
-        <li style="margin-bottom:4px">Browse the catalog and select the samples of interest</li>
-        <li style="margin-bottom:4px">Send a brief research proposal to the repository team</li>
-        <li style="margin-bottom:4px">Sign a temporary loan agreement with return commitment</li>
-        <li style="margin-bottom:4px">Shipping costs are borne by the requester</li>
+        <li style="margin-bottom:4px">${__('contact_step1')}</li>
+        <li style="margin-bottom:4px">${__('contact_step2')}</li>
+        <li style="margin-bottom:4px">${__('contact_step3')}</li>
+        <li style="margin-bottom:4px">${__('contact_step4')}</li>
       </ol>
-      <p style="font-size:13px;margin:8px 0 0">Contact: Departamento de Geología, FCFM, Universidad de Chile — <a href="Repository_The_Meteoritical_Society_Community_Grant_-_Application_Form_DM (2).pdf" target="_blank" style="color:#1a2a3a;font-weight:600">Project Document</a></p>
+      <p style="font-size:13px;margin:8px 0 0">Contact: Departamento de Geología, FCFM, Universidad de Chile — <a href="Repository_The_Meteoritical_Society_Community_Grant_-_Application_Form_DM (2).pdf" target="_blank" style="color:#1a2a3a;font-weight:600">${__('contact_project')}</a></p>
     </div>
 
     <div style="max-width:700px;margin:0 auto 32px;text-align:center">
-      <h2 style="margin-bottom:12px">Contact Information</h2>
+      <h2 style="margin-bottom:12px">${__('contact_info')}</h2>
       <p style="text-align:center;font-size:13px;color:#555">
         <strong>Departamento de Geología</strong><br>
         Facultad de Ciencias Físicas y Matemáticas<br>
         Universidad de Chile<br>
         Plaza Ercilla 803, Santiago, Chile<br><br>
-        <strong>Academic responsible:</strong> Daniel Moncada<br>
-        <strong>Repository curator:</strong> Samanta Aravena<br>
+        <strong>${__('contact_academic')}:</strong> Daniel Moncada<br>
+        <strong>${__('contact_curator')}:</strong> Samanta Aravena<br>
         <strong>Email:</strong> <a href="mailto:meteoritosuchile@gmail.com" style="color:#1a2a3a;font-weight:600">meteoritosuchile@gmail.com</a>
       </p>
       <p style="margin-top:12px">
-        <a href="mailto:meteoritosuchile@gmail.com" class="btn" style="font-size:14px">✉ Send us an email</a>
+        <a href="mailto:meteoritosuchile@gmail.com" class="btn" style="font-size:14px">${__('contact_email_btn')}</a>
       </p>
     </div>
 
     <div class="logos" style="margin-top:24px">
-      <img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px">
-      <img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px">
-      <img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px">
-      <img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px">
-      <img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px">
-      <img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px">
+      <a href="https://geologia.uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px"></a>
+      <a href="https://www.sociedadgeologica.cl/geositios-1/meteoritos-y-ciencias-planetarias" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px"></a>
+      <a href="https://meteoritical.org/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px"></a>
+      <a href="https://astronomia.udp.cl/es/collaboration/udp-cosmic-dust-laboratory/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-fluidos-en-sistemas-planetarios" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px"></a>
+      <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Paleomagnetismo.svg" alt="Laboratorio de Paleomagnetismo UChile" title="Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
     </div>
   `;
 }
@@ -200,22 +165,22 @@ function renderSamples(filter = '') {
     !f || s.c.toLowerCase().includes(f) || s.n.toLowerCase().includes(f) || s.loc.toLowerCase().includes(f)
   );
   document.getElementById('samples-content').innerHTML = `
-    <h1>Samples</h1>
-    <input class="search-bar" id="sample-search" placeholder="Search by code, name, locality..." value="${filter}"
+    <h1>${__('samples_title')}</h1>
+    <input class="search-bar" id="sample-search" placeholder="${__('samples_search')}" value="${filter}"
       oninput="renderSamples(this.value)">
     <div class="table-wrap">
     <table>
       <thead><tr>
-        <th>Code</th>
-        <th>Locality</th>
-        <th>Class</th>
-        <th>Type</th>
-        <th style="text-align:right">Shock</th>
-        <th style="text-align:right">Weathering</th>
-        <th style="text-align:right">Mass (g)</th>
-        <th style="text-align:right">Density (g/cm³)</th>
-        <th style="text-align:right">log χ</th>
-        <th style="text-align:right">IR</th>
+        <th>${__('th_code')}</th>
+        <th>${__('th_locality')}</th>
+        <th>${__('th_class')}</th>
+        <th>${__('th_type')}</th>
+        <th style="text-align:right">${__('th_shock')}</th>
+        <th style="text-align:right">${__('th_weathering')}</th>
+        <th style="text-align:right">${__('th_mass')}</th>
+        <th style="text-align:right">${__('th_density')}</th>
+        <th style="text-align:right">${__('th_logchi')}</th>
+        <th style="text-align:right">${__('th_ir')}</th>
       </tr></thead>
       <tbody>
         ${list.map(s => {
@@ -244,9 +209,15 @@ function renderSamples(filter = '') {
       </tbody>
     </table>
     </div>
-    <p style="font-size:12px;color:#888;text-align:center">${list.length} sample(s) found</p>
+    <p style="font-size:12px;color:#888;text-align:center">${list.length} ${__('samples_found')}</p>
+
+    <div id="interactive-ir-section" style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+      <h2 style="text-align:center;margin-bottom:16px;font-size:16px">Interactive IR Spectra</h2>
+      <div id="interactive-ir-container"></div>
+    </div>
   `;
   document.getElementById('sample-search')?.focus();
+  renderInteractiveIRSpectra();
 }
 
 // ---------- Sample Detail ----------
@@ -257,69 +228,71 @@ async function showSample(code) {
 
   const kt = s.lc != null ? (s.lc >= 5.08 ? 'H' : s.lc >= 4.68 ? 'L' : s.lc >= 4.37 ? 'LL' : '??') : '—';
   const wStr = s.pW != null ? 'W' + s.pW : '—';
-  const irStr = s.ir === 'sí' ? '<span class="badge badge-ok">Done</span>' : s.ir === 'disp' ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-none">No</span>';
+  const irStr = s.ir === 'sí' ? '<span class="badge badge-ok">' + __('sd_ir_done') + '</span>' : s.ir === 'disp' ? '<span class="badge badge-pending">' + __('sd_ir_pending') + '</span>' : '<span class="badge badge-none">' + __('sd_ir_no') + '</span>';
 
   // Get field data
   const fieldVals = FIELD_DATA[s.n] || FIELD_DATA[s.n.replace(/(\w+)(\d+)/,'$1 $2')] || [];
   const fieldMean = fieldVals.length ? (fieldVals.reduce((a,b)=>a+b,0)/fieldVals.length).toFixed(2) : '—';
 
+  const hasDetails = !!SAMPLE_DETAILS[s.c];
+  const hasIR = !!(IR_FILES[s.c] || IR_DATA[s.c]);
+
   document.getElementById('sample-content').innerHTML = `
-    <p><a href="#" onclick="navigate('samples');return false" style="font-size:13px">&larr; Back to samples</a></p>
-    <h1>${s.c} <span style="font-size:14px;font-weight:400;color:#888">${s.n}</span></h1>
+    <p><a href="#" onclick="navigate('samples');return false" style="font-size:13px">${__('back_to_samples')}</a></p>
+    <h1>${s.c}</h1>
 
-    <div class="tabs">
-      <div class="tab active" data-tab="info" onclick="switchSampleTab('info')">Info</div>
-      <div class="tab" data-tab="gallery" onclick="switchSampleTab('gallery');renderGallery('${s.c}')">Gallery</div>
-      <div class="tab" data-tab="files" onclick="switchSampleTab('files')">Spectra</div>
+    <div class="meta" style="display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:13px">
+      <dt>${__('sd_locality')}</dt><dd>${s.loc}</dd>
+      <dt>${__('sd_code')}</dt><dd>${s.c}</dd>
+      <dt>${__('sd_class')}</dt><dd>Ordinary Chondrite (OC)</dd>
+      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{h+=typeTag(s.t)}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
+      <dt>${__('sd_shock')}</dt><dd>${s.shk || SAMPLE_DETAILS[s.c]?.classification?.shock || '—'}</dd>
+      <dt>${__('sd_classifier')}</dt><dd>${SAMPLE_DETAILS[s.c]?.classification?.classifier || 'C. S. Aravena (2026)'}</dd>
+      <dt>${__('sd_logchi')}</dt><dd>${s.lc != null ? s.lc.toFixed(3) : '—'}</dd>
+      <dt>${__('sd_weathering')}</dt><dd>${wStr}</dd>
+      <dt>${__('sd_ir_status')}</dt><dd>${irStr} ${s.ir === 'sí' ? '<span style="color:#888;font-size:11px">' + __('sd_ir_pending_analysis') + '</span>' : ''}</dd>
+      <dt>${__('sd_field_chi')}</dt><dd>${fieldMean}</dd>
+      <dt>${__('sd_density')}</dt><dd>${DENSITY_MAP[s.c] ? DENSITY_MAP[s.c].toFixed(3) : '—'}</dd>
+      <dt>${__('sd_fragments')}</dt><dd>${FRAGMENTS_MAP[s.c] != null ? FRAGMENTS_MAP[s.c] === 'Briquette' ? 'Briquette (1 pellet)' : `${FRAGMENTS_MAP[s.c]} fragment${FRAGMENTS_MAP[s.c] > 1 ? 's' : ''}` : s.pieces ? `${s.pieces} fragment${s.pieces > 1 ? 's' : ''}` : '—'}</dd>
     </div>
 
-    <div id="sample-tab-info">
-      <div class="meta" style="display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:13px">
-        <dt>Locality</dt><dd>${s.loc}</dd>
-        <dt>Code</dt><dd>${s.c}</dd>
-        <dt>Class</dt><dd>Ordinary Chondrite (OC)</dd>
-        <dt>Type</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{h+=typeTag(s.t)}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
-        <dt>Shock</dt><dd>${s.shk || SAMPLE_DETAILS[s.c]?.classification?.shock || '—'}</dd>
-        <dt>Classifier</dt><dd>${SAMPLE_DETAILS[s.c]?.classification?.classifier || 'C. S. Aravena (2026)'}</dd>
-        <dt>log χ (KLY5)</dt><dd>${s.lc != null ? s.lc.toFixed(3) : '—'}</dd>
-        <dt>Weathering</dt><dd>${wStr}</dd>
-        <dt>IR Status</dt><dd>${irStr} ${s.ir === 'sí' ? '<span style="color:#888;font-size:11px">(pending analysis)</span>' : ''}</dd>
-        <dt>Field χ (10⁻³ SI)</dt><dd>${fieldMean}</dd>
-        <dt>Density (g/cm³)</dt><dd>${DENSITY_MAP[s.c] ? DENSITY_MAP[s.c].toFixed(3) : '—'}</dd>
-        <dt>Fragments</dt><dd>${FRAGMENTS_MAP[s.c] != null ? FRAGMENTS_MAP[s.c] === 'Briquette' ? 'Briquette (1 pellet)' : `${FRAGMENTS_MAP[s.c]} fragment${FRAGMENTS_MAP[s.c] > 1 ? 's' : ''}` : s.pieces ? `${s.pieces} fragment${s.pieces > 1 ? 's' : ''}` : '—'}</dd>
+    <div class="sample-details" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
+      <h3 style="font-size:15px;margin-bottom:12px">Petrography &amp; Classification</h3>
+      ${hasDetails ? renderSampleDetails(s.c) : `
+      <p style="color:#888;font-size:13px;text-align:center;padding:20px 0">Próximamente más información, estamos investigando.</p>
+      <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:8px">
+        <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${__('sd_coordinates')}</td><td style="padding:3px 8px">${COORDS_MAP[s.c] || '—'}</td></tr>
+        <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${__('sd_main_mass')}</td><td style="padding:3px 8px">Universidad de Chile</td></tr>
+        <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${__('sd_finder')}</td><td style="padding:3px 8px">${DISCOVERER_MAP[s.c] || '—'}</td></tr>
+      </table>`}
+    </div>
+
+    <div class="ir-spectrum-section" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
+      <h3 style="font-size:15px;margin-bottom:12px">IR Spectrum</h3>
+      ${hasIR ? `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        ${IR_FILES[s.c] ? `<a href="${encodeURI(IR_DIR + IR_FILES[s.c])}" download class="btn btn-sm" style="font-size:12px">${__('ir_download')}</a>` : ''}
       </div>
-
-      ${renderSampleDetails(s.c)}
-      ${!SAMPLE_DETAILS[s.c] ? `
-      <div class="sample-details" style="margin-top:20px;border-top:1px solid #ddd;padding-top:16px">
-        <h3 style="font-size:15px;margin-bottom:12px">Location</h3>
-        <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:8px">
-          <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">Coordinates</td><td style="padding:3px 8px">${COORDS_MAP[s.c] || '—'}</td></tr>
-          <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">Main Mass</td><td style="padding:3px 8px">Universidad de Chile</td></tr>
-          <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">Finder</td><td style="padding:3px 8px">${DISCOVERER_MAP[s.c] || '—'}</td></tr>
-        </table>
-      </div>` : ''}
+      <canvas id="ir-spectrum-canvas" style="width:100%;max-width:700px;height:280px;display:block;margin:0 auto"></canvas>
+` : '<p style="color:#888;font-size:13px;text-align:center;padding:40px 0">' + __('sd_no_spectrum') + '</p>'}
     </div>
 
-    <div id="sample-tab-gallery" style="display:none">
-      <div id="gallery-content"><div class="loading">Loading gallery...</div></div>
-    </div>
-
-    <div id="sample-tab-files" style="display:none">
-      ${IR_FILES[s.c] ? `
-      <div class="ir-spectrum-section">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <h3 style="font-size:15px;margin:0">IR Spectrum (FTIR)</h3>
-          <a href="${encodeURI(IR_DIR + IR_FILES[s.c])}" download class="btn btn-sm" style="font-size:12px">&#x2B07; Download</a>
-        </div>
-        <canvas id="ir-spectrum-canvas" style="width:100%;max-width:700px;height:280px;display:block;margin:0 auto"></canvas>
-        <p style="font-size:11px;color:#888;text-align:center;margin-top:6px">Wavenumber (cm⁻¹) vs Absorbance</p>
-      </div>` : '<p style="color:#888;font-size:13px;text-align:center;padding:40px 0">No IR spectrum available for this sample</p>'}
+    <div class="gallery-section" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
+      <h3 style="font-size:15px;margin-bottom:12px">Gallery</h3>
+      <div id="gallery-content"><div class="loading">${__('sd_loading_gallery')}</div></div>
     </div>
   `;
 
-  // Load IR spectrum from local file
-  if (IR_FILES[s.c]) loadIRSpectrum(s.c);
+  // Load IR spectrum
+  if (IR_DATA[s.c]) {
+    const canvas = document.getElementById('ir-spectrum-canvas');
+    if (canvas) drawIRSpectrum(canvas, IR_DATA[s.c], s.c);
+  } else if (IR_FILES[s.c]) {
+    loadIRSpectrum(s.c);
+  }
+
+  // Load gallery
+  renderGallery(s.c);
 }
 
 function switchSampleTab(tab) {
@@ -343,13 +316,14 @@ function renderSampleDetails(code) {
   const d = SAMPLE_DETAILS[code];
   if (!d) return '';
   let html = '<div class="sample-details" style="margin-top:20px;border-top:1px solid #ddd;padding-top:16px">';
-  html += '<h3 style="font-size:15px;margin-bottom:12px">Petrography &amp; Classification</h3>';
+  html += '<h3 style="font-size:15px;margin-bottom:12px">' + __('sd_petro_classification') + '</h3>';
 
   // Basic info
+  const _basicLabels = { name: 'basic_name', observedFall: 'basic_observedFall', yearFound: 'basic_yearFound', country: 'basic_country', mass: 'basic_mass', pieces: 'basic_pieces' };
   if (d.basic) {
     html += '<table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:14px">';
     Object.entries(d.basic).forEach(([k,v]) => {
-      const label = k.replace(/([A-Z])/g,' $1').replace(/^./, s => s.toUpperCase());
+      const label = _basicLabels[k] ? __(_basicLabels[k]) : k.replace(/([A-Z])/g,' $1').replace(/^./, s => s.toUpperCase());
       html += `<tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${label}</td><td style="padding:3px 8px">${v}</td></tr>`;
     });
     html += '</table>';
@@ -358,8 +332,8 @@ function renderSampleDetails(code) {
   // Classification
   if (d.classification) {
     html += `<div style="margin-bottom:14px;background:#f8f8f8;padding:10px 14px;border-radius:4px;font-size:12px">
-      <strong style="color:#1a2a3a">Classification:</strong> ${d.classification.class}<br>
-      <strong style="color:#1a2a3a">Classifier:</strong> ${d.classification.classifier}<br>
+      <strong style="color:#1a2a3a">${__('sd_classification')}:</strong> ${d.classification.class}<br>
+      <strong style="color:#1a2a3a">${__('sd_classifier')}:</strong> ${d.classification.classifier}<br>
       <p style="margin:6px 0 0;font-size:12px;text-align:justify">${d.classification.description}</p>
     </div>`;
   }
@@ -367,7 +341,7 @@ function renderSampleDetails(code) {
   // Weathering
   if (d.weathering) {
     html += `<div style="margin-bottom:14px;background:#f8f8f8;padding:10px 14px;border-radius:4px;font-size:12px">
-      <strong style="color:#1a2a3a">Weathering Grade:</strong> ${d.weathering.grade}<br>
+      <strong style="color:#1a2a3a">${__('sd_weathering_grade')}:</strong> ${d.weathering.grade}<br>
       <p style="margin:6px 0 0;font-size:12px;text-align:justify">${d.weathering.description}</p>
     </div>`;
   }
@@ -377,25 +351,25 @@ function renderSampleDetails(code) {
     html += '<div style="margin-bottom:14px">';
     if (d.petrology.mineralogy) {
       html += `<div style="background:#f8f8f8;padding:10px 14px;border-radius:4px;margin-bottom:8px;font-size:12px">
-        <strong style="color:#1a2a3a">Mineralogy:</strong>
+        <strong style="color:#1a2a3a">${__('sd_mineralogy')}:</strong>
         <p style="margin:6px 0 0;font-size:12px;text-align:justify">${d.petrology.mineralogy}</p>
       </div>`;
     }
     if (d.petrology.matrix) {
       html += `<div style="background:#f8f8f8;padding:10px 14px;border-radius:4px;margin-bottom:8px;font-size:12px">
-        <strong style="color:#1a2a3a">Matrix:</strong>
+        <strong style="color:#1a2a3a">${__('sd_matrix')}:</strong>
         <p style="margin:6px 0 0;font-size:12px;text-align:justify">${d.petrology.matrix}</p>
       </div>`;
     }
     if (d.petrology.chondrules) {
       html += `<div style="background:#f8f8f8;padding:10px 14px;border-radius:4px;margin-bottom:8px;font-size:12px">
-        <strong style="color:#1a2a3a">Chondrules:</strong>
+        <strong style="color:#1a2a3a">${__('sd_chondrules')}:</strong>
         <p style="margin:6px 0 0;font-size:12px;text-align:justify">${d.petrology.chondrules}</p>
       </div>`;
     }
     if (d.petrology.chemicalGroup) {
       html += `<div style="background:#f8f8f8;padding:10px 14px;border-radius:4px;margin-bottom:8px;font-size:12px">
-        <strong style="color:#1a2a3a">Chemical Group:</strong>
+        <strong style="color:#1a2a3a">${__('sd_chemical_group')}:</strong>
         <p style="margin:6px 0 0;font-size:12px;text-align:justify">${d.petrology.chemicalGroup}</p>
       </div>`;
     }
@@ -403,10 +377,11 @@ function renderSampleDetails(code) {
   }
 
   // Location
+  const _locLabels = { coordinates: 'sd_coordinates', mainMass: 'sd_main_mass', finder: 'sd_finder', state: 'basic_country' };
   if (d.location) {
     html += '<table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:8px">';
     Object.entries(d.location).forEach(([k,v]) => {
-      const label = k.replace(/([A-Z])/g,' $1').replace(/^./, s => s.toUpperCase());
+      const label = _locLabels[k] ? __(_locLabels[k]) : k.replace(/([A-Z])/g,' $1').replace(/^./, s => s.toUpperCase());
       html += `<tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${label}</td><td style="padding:3px 8px">${v}</td></tr>`;
     });
     html += '</table>';
@@ -441,14 +416,14 @@ async function handleFiles(files, sampleCode) {
         filename: file.name,
         file_type: isImage ? 'photo' : 'dpt',
         storage_path: filePath,
-        uploaded_by: currentUser?.email || 'web'
+        uploaded_by: 'web'
       });
       if (dbErr) { err++; errMsg += ` DB: ${dbErr.message}`; continue; }
       ok++;
     } catch(e) { err++; errMsg += ` ${e.message}`; }
   }
   preview.innerHTML = '';
-  const msg = `${ok} file(s) uploaded, ${err} error(s)`;
+  const msg = `${ok} ${__('upload_ok')}, ${err} ${__('upload_error')}`;
   toast(errMsg ? msg + ' — ' + errMsg : msg, errMsg ? 'error' : 'success');
   loadFiles(sampleCode);
 }
@@ -640,10 +615,10 @@ async function loadSpectrumData(url, containerId) {
 }
 
 async function deleteFile(id, path, sampleCode) {
-  if (!confirm('Delete this file?')) return;
+  if (!confirm(__('delete_confirm'))) return;
   await _supabase.storage.from('sample-files').remove([path]);
   await _supabase.from('files').delete().eq('id', id);
-  toast('File deleted');
+  toast(__('file_deleted'));
   loadFiles(sampleCode);
 }
 
@@ -660,9 +635,10 @@ async function renderGallery(sampleCode) {
     .eq('sample_code', sc)
     .eq('file_type', 'photo')
     .order('created_at', { ascending: false });
-  if (error) { el.innerHTML = '<p style="color:#c0392b">Error loading gallery</p>'; return; }
-  if (!data || !data.length) {
-    el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">No photos yet</p>';
+  if (error) { el.innerHTML = '<p style="color:#c0392b">' + __('error_loading') + ' gallery</p>'; return; }
+  data = (data || []).filter(f => f.filename !== 'EXP19-01_4X_TR_5.tif' && f.filename !== 'EXP19-01_4X_TR_4.tif' && f.filename !== 'EXP19-01_4X_NX_6.tif' && f.filename !== 'EXP19-01_4X_REF_2.tif');
+  if (!data.length) {
+    el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>';
     return;
   }
   _galleryPhotos = data;
@@ -912,7 +888,7 @@ function renderPaperCharts() {
     drawDoughnutChart();
     drawPetroGradeChart();
     drawDensityChart();
-    try { drawIRClusterSpectraPaper(); } catch(e) { console.warn('Fig 5 error:', e); }
+    try { drawAllIRSpectra('irClusterSpectraPaper', true); } catch(e) { console.warn('Fig 5 error:', e); }
   }, 50);
 }
 
@@ -983,10 +959,10 @@ function drawMassLogChiChart() {
   const massTicks = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 300];
   massTicks.forEach(m => { ctx.fillText(m, x0 - 6, toY(m)); });
   ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText('log \u03c7 (10\u207b\u2079 m\u00b3/kg)', (x0 + x1) / 2, y1 + 26);
+  ctx.fillText(__('chart_logchi_label'), (x0 + x1) / 2, y1 + 26);
   ctx.save(); ctx.translate(18, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText('Mass (g)', 0, 0); ctx.restore();
+  ctx.fillText(__('chart_mass_label'), 0, 0); ctx.restore();
 
   // Grid
   ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 0.5;
@@ -1024,11 +1000,11 @@ function drawMassLogChiChart() {
   // Legend
   const lr = 4, lgap = 17, lpad = 8;
   const legItems = [
-    { type: 'label', text: 'KLY5 group', h: 1 },
+    { type: 'label', text: __('chart_kly5_group'), h: 1 },
     { type: 'color', label: 'H (\u03c7 \u2265 4.82)', color: '#27ae60', h: 1 },
     { type: 'color', label: 'L (4.265 \u2264 \u03c7 < 4.82)', color: '#e67e22', h: 1 },
     { type: 'color', label: 'LL (\u03c7 < 4.265)', color: '#b8860b', h: 1 },
-    { type: 'label', text: '\u25cf petrography   \u25cb estimated', h: 1 },
+    { type: 'label', text: __('chart_petro_filled'), h: 1 },
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
   const lw = 150;
@@ -1072,7 +1048,8 @@ function drawMassLogChiChart() {
         tip.style.display = 'block';
         tip.style.left = (e.clientX - pos.left + 12) + 'px';
         tip.style.top = (e.clientY - pos.top - 10) + 'px';
-        tip.textContent = p.c + ' ' + p.n + ' | mass=' + p.m + ' g, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (no petro)');
+        tip.textContent = p.c + ' ' + p.n + ' | mass=' + p.m + ' g, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (' + __('chart_nopetro') + ')');
+
         cv.style.cursor = 'pointer';
       } else {
         tip.style.display = 'none';
@@ -1091,9 +1068,9 @@ function drawMassLogChiChart() {
 function renderPairing() {
   const el = document.getElementById('pairing-content');
   if (!el) return;
-  let html = '<h1 style="margin-bottom:8px">Pairing Groups</h1>';
-  html += '<p style="text-align:center;color:#666;font-size:13px;margin-bottom:24px">Groups of samples identified as fragments of the same meteorite fall based on magnetic susceptibility (Δχ ≤ 0.08 within same KLY5 class) and validated by bulk density consistency. Magnetic pairs with density variation exceeding 20% were rejected.</p>';
-  html += '<h2 style="text-align:center;margin:20px 0 8px;font-size:15px;color:#444">IR Spectra Overview</h2>';
+  let html = '<h1 style="margin-bottom:8px">' + __('pairing_title') + '</h1>';
+  html += '<p style="text-align:center;color:#666;font-size:13px;margin-bottom:24px">' + __('pairing_desc') + '</p>';
+  html += '<h2 style="text-align:center;margin:20px 0 8px;font-size:15px;color:#444">' + __('pairing_ir_overview') + '</h2>';
   html += '<div style="text-align:center"><canvas id="ir-overview-chart" class="ir-pair-canvas" style="max-width:800px"></canvas></div>';
 
   // IR match ranking table
@@ -1119,105 +1096,121 @@ function renderPairing() {
   PAIR_GROUPS.forEach(g => {
     g.falls.forEach(f => {
       const irCodes = f.samples.filter(c => IR_DATA[c]);
-      if (irCodes.length < 2) return;
-      let totalSim = 0, pairs = 0;
-      for (let i=0;i<irCodes.length;i++) {
-        const a = getInterp(irCodes[i]);
-        for (let j=i+1;j<irCodes.length;j++) {
-          totalSim += cosSim(a, getInterp(irCodes[j]));
-          pairs++;
+      let sim = null;
+      if (irCodes.length >= 2) {
+        let totalSim = 0, pairs = 0;
+        for (let i=0;i<irCodes.length;i++) {
+          const a = getInterp(irCodes[i]);
+          for (let j=i+1;j<irCodes.length;j++) {
+            totalSim += cosSim(a, getInterp(irCodes[j]));
+            pairs++;
+          }
         }
+        sim = totalSim/pairs;
       }
-      irClusterRank.push({ name: f.name, sim: totalSim/pairs, codes: irCodes, allSamples: f.samples });
+      irClusterRank.push({ name: f.name, sim: sim, codes: irCodes, allSamples: f.samples, type: f.type });
     });
   });
   irClusterRank.sort((a,b)=>b.sim-a.sim);
 
+  // Cluster visibility toggles — only Cluster 1 visible by default
+  _IR_VISIBLE_CLUSTERS = {};
+  const toggleKeys = Object.keys(_IR_CLUSTER_COLORS);
+  toggleKeys.forEach(k => { _IR_VISIBLE_CLUSTERS[k] = (k === 'Cluster 1'); });
+  if (toggleKeys.length) {
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 4px;font-size:12px">';
+    toggleKeys.forEach(k => {
+      const col = _IR_CLUSTER_COLORS[k];
+      const checked = _IR_VISIBLE_CLUSTERS[k] ? ' checked' : '';
+      html += `<label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;border:1px solid ${col}">
+        <input type="checkbox"${checked} onchange="toggleIRCluster('${k}')" style="accent-color:${col}">
+        <span style="color:${col};font-weight:600">${k}</span>
+      </label>`;
+    });
+    html += '</div>';
+  }
+
   if (irClusterRank.length) {
-    html += '<h2 style="text-align:center;margin:28px 0 12px;font-size:15px;color:#444">IR Match Ranking (best match first)</h2>';
+    html += '<h2 style="text-align:center;margin:28px 0 12px;font-size:15px;color:#444">' + __('pairing_ir_ranking') + '</h2>';
     html += '<div style="overflow-x:auto;margin-bottom:20px"><table style="width:100%;border-collapse:collapse;font-size:12px">';
     html += '<thead><tr style="background:#f7f7f7">';
-    ['#','Cluster','IR Match','Samples','KLY5','Density','Type'].forEach(h => {
+    [__('pr_rank'),__('pr_cluster'),__('pr_type'),__('pr_ir_match'),__('pr_samples'),__('pr_locality'),__('pr_delta'),__('pr_distance')].forEach(h => {
       html += `<th style="padding:6px 8px;text-align:left;border-bottom:2px solid #ddd;font-weight:600">${h}</th>`;
     });
     html += '</tr></thead><tbody>';
     irClusterRank.forEach((r,i) => {
       const sCodes = r.allSamples;
-      const groups = [...new Set(sCodes.map(c => SAMPLES.find(x=>x.c===c)?.t||'?'))].join('/');
-      const dens = sCodes.map(c => DENSITY_MAP[c]).filter(d=>d!=null);
-      const densStr = dens.length>=2
-        ? `${Math.min(...dens).toFixed(3)}–${Math.max(...dens).toFixed(3)}`
-        : dens.length===1 ? dens[0].toFixed(3) : '—';
-      const types = [...new Set(sCodes.map(c => {
-        const d = SAMPLE_DETAILS[c];
-        return d?.classification?.class || '';
-      }).filter(Boolean))].join('/') || '—';
-      html += `<tr${i%2===1?' style="background:#fafafa"':''}>`;
-      html += `<td style="padding:5px 8px;color:#888;font-weight:600">${i+1}</td>`;
+      const detailId = 'cd-' + i;
+      html += `<tr class="clickable"${i%2===1?' style="background:#fafafa"':''} onclick="toggleClusterDetail('${detailId}')">`;
+      const bgColor = _IR_CLUSTER_COLORS[r.name];
+      html += `<td style="padding:5px 8px;color:#fff;font-weight:600;border-radius:3px;background:${bgColor || 'transparent'}"><span class="toggle-arrow" style="display:inline-block;width:12px;color:${bgColor ? '#fff' : '#888'}">▶</span> ${i+1}</td>`;
       html += `<td style="padding:5px 8px;font-weight:600">${r.name}</td>`;
-      const pct = (r.sim*100).toFixed(1);
-      const color = r.sim >= 0.99 ? '#27ae60' : r.sim >= 0.97 ? '#e67e22' : '#e74c3c';
-      html += `<td style="padding:5px 8px;color:${color};font-weight:600">${pct}%</td>`;
-      html += `<td style="padding:5px 8px">${r.codes.join(', ')}</td>`;
-      html += `<td style="padding:5px 8px">${groups}</td>`;
-      html += `<td style="padding:5px 8px">${densStr}</td>`;
-      html += `<td style="padding:5px 8px">${types}</td>`;
+      const typeLabel = r.type;
+      const typeColor = ({H:'#27ae60',L:'#e67e22',LL:'#b8860b'})[r.type[0]] || '#999';
+      html += `<td style="padding:5px 8px"><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:${typeColor};color:#fff;font-size:11px;font-weight:600">${typeLabel}</span></td>`;
+      const irPct = r.sim !== null ? (r.sim*100).toFixed(1)+'%' : __('pr_ir_pending');
+      const irColor = r.sim !== null ? (r.sim >= 0.99 ? '#27ae60' : r.sim >= 0.97 ? '#e67e22' : '#e74c3c') : '#999';
+      html += `<td style="padding:5px 8px;color:${irColor};font-weight:600">${irPct}</td>`;
+      html += `<td style="padding:5px 8px">${r.allSamples.join(', ')}</td>`;
+      const locs = [...new Set(sCodes.map(c => SAMPLES.find(x=>x.c===c)?.loc || '').filter(Boolean))].join(', ');
+      html += `<td style="padding:5px 8px">${locs}</td>`;
+      const lcs = sCodes.map(c => SAMPLES.find(x=>x.c===c)?.lc).filter(lc=>lc!=null);
+      const deltaStr = lcs.length >= 2 ? (Math.max(...lcs) - Math.min(...lcs)).toFixed(3) : '—';
+      html += `<td style="padding:5px 8px">${deltaStr}</td>`;
+      const dists = [];
+      for (let di=0;di<sCodes.length;di++) for (let dj=di+1;dj<sCodes.length;dj++) {
+        const c1=COORDS_MAP[sCodes[di]], c2=COORDS_MAP[sCodes[dj]];
+        if (c1&&c2) {
+          const p1=c1.match(/[\d.]+/g), p2=c2.match(/[\d.]+/g);
+          if (p1&&p2&&p1.length>=2&&p2.length>=2) {
+            const d=Math.round(Math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2));
+            dists.push(d);
+          }
+        }
+      }
+      const distStr = dists.length ? (dists.length===1?dists[0]+'m':Math.min(...dists)+'–'+Math.max(...dists)+'m') : '—';
+      html += `<td style="padding:5px 8px">${distStr}</td>`;
       html += '</tr>';
-    });
-    html += '</tbody></table></div>';
-  }
-
-  html += '<div class="pair-section">';
-  PAIR_GROUPS.forEach(g => {
-    html += `<div class="pair-locality"><h3 style="color:${g.color}">${g.locality}</h3><div class="pair-grid">`;
-    g.falls.forEach(f => {
-      const densVals = f.samples.map(c => DENSITY_MAP[c]).filter(d => d != null);
-      let densInfo = '';
-      if (densVals.length >= 2) {
-        const dMin = Math.min(...densVals), dMax = Math.max(...densVals);
-        const dPct = ((dMax - dMin) / ((dMin + dMax) / 2) * 100).toFixed(1);
-        densInfo = ` · Δρ ${dPct}%`;
-      } else if (densVals.length === 1) {
-        densInfo = ` · ρ ${densVals[0].toFixed(3)}`;
+      // Detail row
+      html += `<tr id="${detailId}" style="display:none"><td colspan="8" style="padding:0;background:#fafafa">`;
+      html += `<div style="padding:14px 18px;font-size:12px;line-height:1.6">`;
+      const irStatus = _IR_CLUSTER_STATUS[r.name];
+      if (irStatus && irStatus.ok === true) {
+        html += `<div style="color:#27ae60;margin-bottom:10px;font-weight:600">✓ IR consistent (d=${irStatus.d.toFixed(3)})</div>`;
+      } else if (irStatus && irStatus.ok === false) {
+        html += `<div style="color:#e74c3c;margin-bottom:10px;font-weight:600">⚠ IR inconsistent (d=${irStatus.d.toFixed(3)})</div>`;
+      } else if (r.codes.length === 1) {
+        html += `<div style="color:#888;margin-bottom:10px">○ 1 sample with IR, ${r.allSamples.length - 1} pending</div>`;
+      } else if (r.codes.length === 0) {
+        html += `<div style="color:#bbb;margin-bottom:10px">— No IR data</div>`;
       }
-      html += `<div class="pair-card">
-        <div class="pair-card-header" style="background:${f.tc}">
-          <span>${f.name}</span>
-          <span>${f.count} fragments · Δχ ${f.delta}${densInfo}</span>
-        </div>
-        <div class="pair-card-body">
-          <div class="pair-info">
-            <span>Type ${f.type}</span>
-            ${f.range ? `<span>χ ${f.range}</span>` : ''}
-          </div>`;
-      const irSamples = f.samples.filter(c => IR_DATA[c]);
-      const irStat = _IR_CLUSTER_STATUS[f.name];
-      if (irStat && irStat.ok === true) {
-        html += `<div class="pair-ir-badge" style="color:#27ae60;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">✓ IR: ${irStat.note} (d=${irStat.d.toFixed(3)})</div>`;
-      } else if (irStat && irStat.ok === false) {
-        html += `<div class="pair-ir-badge" style="color:#e74c3c;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">⚠ IR: ${irStat.note} (d=${irStat.d.toFixed(3)})</div>`;
-      } else if (irSamples.length === 1) {
-        html += `<div class="pair-ir-badge" style="color:#888;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">○ IR: 1 sample with data, ${f.samples.length - 1} pending</div>`;
-      } else if (irSamples.length === 0) {
-        html += `<div class="pair-ir-badge" style="color:#bbb;font-size:11px;padding:4px 0 2px;border-bottom:1px solid #eee">— No IR data available</div>`;
-      }
-      f.samples.forEach(c => {
+      // Column headers
+      html += `<div style="display:grid;grid-template-columns:110px 70px 80px 60px 70px;gap:8px;padding:5px 0;font-weight:600;color:#888;border-bottom:2px solid #ddd;margin-bottom:4px">
+        <span>Sample</span><span>IR</span><span>χ (KLY5)</span><span>W</span><span>ρ (g/cm³)</span>
+      </div>`;
+      r.allSamples.forEach(c => {
         const s = sampleLookup(c);
         if (!s) return;
         const chi = s.lc != null ? s.lc.toFixed(3) : '—';
         const w = s.pW != null ? 'W'+s.pW : '—';
-        const dens = DENSITY_MAP[c] != null ? DENSITY_MAP[c].toFixed(3) : null;
-        const irTag = IR_DATA[c] ? ' <span class="ir-tag">IR</span>' : '';
-        html += `<div class="pair-sample">
-          <span><span class="ps-code">${s.c}</span> <span class="ps-name">${s.n}</span>${irTag}</span>
-          <span><span class="ps-chi">χ ${chi}</span> · <span class="ps-w">${w}</span>${dens ? ` · <span class="ps-dens">ρ ${dens}</span>` : ''}</span>
+        const dens = DENSITY_MAP[c] != null ? DENSITY_MAP[c].toFixed(3) : '—';
+        let irLabel, irColor;
+        if (IR_DATA[c]) { irLabel = '✓'; irColor = '#27ae60'; }
+        else if (s.ir === 'disp') { irLabel = 'pending'; irColor = '#e67e22'; }
+        else { irLabel = '—'; irColor = '#bbb'; }
+        html += `<div style="display:grid;grid-template-columns:110px 70px 80px 60px 70px;gap:8px;padding:4px 0;border-bottom:1px solid #f0f0f0">
+          <span style="font-weight:600">${s.c}</span>
+          <span style="color:${irColor}">${irLabel}</span>
+          <span>${chi}</span>
+          <span>${w}</span>
+          <span>${dens}</span>
         </div>`;
       });
-      html += `</div></div>`;
+      html += `</div></td></tr>`;
     });
-    html += '</div></div>';
-  });
-  html += '</div>';
+    html += '</tbody></table></div>';
+  }
+
   el.innerHTML = html;
   drawAllIRSpectra();
 }
@@ -1260,7 +1253,7 @@ function drawDoughnutChart() {
   ctx.fillText('log χ (10⁻⁹ m³/kg)', (x0 + x1) / 2, y1 + 26);
   ctx.save(); ctx.translate(16, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText('Number of specimens', 0, 0); ctx.restore();
+  ctx.fillText(__('chart_specimens'), 0, 0); ctx.restore();
   ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
   ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
 
@@ -1291,7 +1284,7 @@ function drawDoughnutChart() {
   // Legend
   const lr = 4, lgap = 17, lpad = 8;
   const legItems = [
-    { type: 'label', text: 'KLY5 group', h: 1 },
+    { type: 'label', text: __('chart_kly5_group'), h: 1 },
     ...groups.filter(g => bins.some(b => (b[g] || 0) > 0)).map(g => ({ type: 'color', label: g, color: groupColors[g], h: 1 })),
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
@@ -1313,7 +1306,7 @@ function drawDoughnutChart() {
 
   // Reference annotation
   ctx.fillStyle = '#888'; ctx.font = '8px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-  ctx.fillText('Shaded: mean±1σ from Rochette et al. (2003)', x0 + 4, y1 - 2);
+  ctx.fillText(__('chart_reference'), x0 + 4, y1 - 2);
 }
 
 function drawPetroGradeChart() {
@@ -1340,7 +1333,7 @@ function drawPetroGradeChart() {
   ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
   for (let c = 4.0; c <= 5.6; c += 0.2) ctx.fillText(c.toFixed(1), toX(W_MIN) - 6, toY(c));
   ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText('Weathering grade (petrographic, Wlotzka 1993)', (x0 + x1) / 2, y1 + 26);
+  ctx.fillText(__('chart_w_label'), (x0 + x1) / 2, y1 + 26);
   ctx.save(); ctx.translate(16, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
   ctx.fillText('log \u03c7 (10\u207b\u2079 m\u00b3/kg)', 0, 0); ctx.restore();
@@ -1357,7 +1350,7 @@ function drawPetroGradeChart() {
     ctx.lineTo(toX(W_MIN), toY(hi - 0.15 * W_MIN));
     ctx.closePath();
     ctx.fillStyle = col; ctx.fill();
-  };
+};
   const bCol = (col, a) => { const c = { H: '39,174,96', L: '230,126,34', LL: '184,134,11' }[col] || '153,153,153'; return 'rgba(' + c + ',' + a + ')'; };
   // H: χ ≥ 4.82 - 0.15W
   bandF(thrHL, CHI_MAX, bCol('H', 0.12));
@@ -1400,7 +1393,7 @@ function drawPetroGradeChart() {
 
   const lr = 4, lgap = 17, lpad = 8;
   const legItems = [
-    { type: 'label', text: 'KLY5 group', h: 1 },
+    { type: 'label', text: __('chart_kly5_group'), h: 1 },
     { type: 'color', label: 'H', color: '#27ae60', h: 1 },
     { type: 'color', label: 'L', color: '#e67e22', h: 1 },
     { type: 'color', label: 'LL', color: '#b8860b', h: 1 },
@@ -1480,10 +1473,10 @@ function drawDensityChart() {
   ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
   for (let d = 1.5; d <= 4.5; d += 0.5) { ctx.fillText(d.toFixed(1), x0 - 6, toY(d)); }
   ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText('log \u03c7 (10\u207b\u2079 m\u00b3/kg)', (x0 + x1) / 2, y1 + 26);
+  ctx.fillText(__('chart_logchi_label'), (x0 + x1) / 2, y1 + 26);
   ctx.save(); ctx.translate(16, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText('Density (g/cm\u00b3)', 0, 0); ctx.restore();
+  ctx.fillText(__('chart_density_label'), 0, 0); ctx.restore();
   ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 0.5;
   for (let c = 3.6; c <= 5.6; c += 0.2) { const px = toX(c); ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke(); }
   for (let d = 1.5; d <= 4.5; d += 0.5) { const py = toY(d); ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke(); }
@@ -1514,11 +1507,11 @@ function drawDensityChart() {
   const nL = SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null && kly5Group(s.lc) === 'L').length;
   const nLL = SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null && kly5Group(s.lc) === 'LL').length;
   const legItems = [
-    { type: 'label', text: 'KLY5 group', h: 1 },
+    { type: 'label', text: __('chart_kly5_group'), h: 1 },
     { type: 'color', label: 'H (n=' + nH + ')', color: '#27ae60', h: 1 },
     { type: 'color', label: 'L (n=' + nL + ')', color: '#e67e22', h: 1 },
     { type: 'color', label: 'LL (n=' + nLL + ')', color: '#b8860b', h: 1 },
-    { type: 'label', text: '\u25cf petro  \u25cb est.', h: 1 },
+    { type: 'label', text: __('chart_petro_filled_short'), h: 1 },
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
   const lw = 145;
@@ -1553,7 +1546,7 @@ function drawDensityChart() {
         const p = densityPoints[hit];
         const pos = cv.getBoundingClientRect();
         tip.style.display = 'block'; tip.style.left = (e.clientX - pos.left + 12) + 'px'; tip.style.top = (e.clientY - pos.top - 10) + 'px';
-        tip.textContent = p.c + ' \u03c1=' + p.dens.toFixed(3) + ' g/cm\u00b3, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (no petro)');
+        tip.textContent = p.c + ' \u03c1=' + p.dens.toFixed(3) + ' g/cm\u00b3, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (' + __('chart_nopetro') + ')');
         cv.style.cursor = 'pointer';
       } else { tip.style.display = 'none'; cv.style.cursor = 'crosshair'; }
     });
@@ -1583,7 +1576,7 @@ function drawIRSpectrum(canvas, data, code) {
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
   const MARGIN = { top: 15, right: 15, bottom: 30, left: 50 };
   const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
-  const xMin = 2.5, xMax = 25;
+  const xMin = 2, xMax = 21;
   let yMin = Infinity, yMax = -Infinity;
   for (const d of data) {
     const wl = 10000 / d[0];
@@ -1615,7 +1608,7 @@ function drawIRSpectrum(canvas, data, code) {
   ctx.stroke();
   ctx.textAlign = 'center';
   ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
-  const xTicks = [2,4,6,8,10,12,14,16,18,20,22,24];
+  const xTicks = [2,4,6,8,10,12,14,16,18,20];
   xTicks.forEach(t => { ctx.fillText(t.toString(), toX(t), y1 + 16); });
   ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif';
   ctx.fillText('Wavelength (µm)', W / 2, H - 2);
@@ -1638,15 +1631,15 @@ function drawPairIR(canvas, sampleCodes, clusterName, opts) {
   ctx.fillRect(0, 0, W, H);
   const MARGIN = { top: 10, right: 85, bottom: 28, left: 10 };
   const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
-  const xMin = 2.5, xMax = 22;
+  const xMin = 2, xMax = 21;
   const toX = wl => x0 + (wl - xMin) / (xMax - xMin) * (x1 - x0);
   const offset = (y1 - y0) / (rawData.length + 1);
   const used = (rawData.length - 1 + 0.8) * offset;
   const topPad = ((y1 - y0) - used) / 2;
   // Global y-range across all spectra for uniform scaling
   let yMin = Infinity, yMax = -Infinity;
-  for (const data of rawData)
-    for (const d of data) {
+  for (const item of items)
+    for (const d of IR_DATA[item.code]) {
       const wl = 10000 / d[0];
       if (wl >= xMin && wl <= xMax) { if (d[1] < yMin) yMin = d[1]; if (d[1] > yMax) yMax = d[1]; }
     }
@@ -1679,16 +1672,32 @@ function drawPairIR(canvas, sampleCodes, clusterName, opts) {
   ctx.fillText('Wavelength (µm)', W / 2, H - 2);
 }
 
-function drawAllIRSpectra() {
-  const canvas = document.getElementById('ir-overview-chart');
+function toggleClusterDetail(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const show = el.style.display === 'none' || el.style.display === '';
+  el.style.display = show ? 'table-row' : 'none';
+  // Toggle arrow icon in the first cell
+  const row = el.previousElementSibling;
+  if (row && row.tagName === 'TR') {
+    const arrow = row.querySelector('.toggle-arrow');
+    if (arrow) arrow.textContent = show ? '▼' : '▶';
+  }
+}
+
+function toggleIRCluster(key) {
+  _IR_VISIBLE_CLUSTERS[key] = !_IR_VISIBLE_CLUSTERS[key];
+  drawAllIRSpectra();
+}
+
+function drawAllIRSpectra(targetCanvasId, showAll) {
+  const canvas = document.getElementById(targetCanvasId || 'ir-overview-chart');
   if (!canvas) return;
   const codes = Object.keys(IR_DATA);
 
-  const PALETTE = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
   const groupOrder = [];
   const sampleGroup = {};
-  const groupColor = {};
-  let palIdx = 0;
+  const groupColor = _IR_CLUSTER_COLORS;
 
   PAIR_GROUPS.forEach(g => {
     g.falls.forEach(f => {
@@ -1696,62 +1705,37 @@ function drawAllIRSpectra() {
       if (inCluster.length >= 2) {
         const key = f.name;
         if (!groupOrder.includes(key)) groupOrder.push(key);
-        if (!groupColor[key]) { groupColor[key] = PALETTE[palIdx % PALETTE.length]; palIdx++; }
         inCluster.forEach(c => sampleGroup[c] = key);
       }
     });
   });
 
-  const candidates = [
-    ['Exp19-04','Exp19-08'],
-    ['Exp19-50','Exp19-53'],
-    ['Exp19-06','Exp19-34'],
-  ];
-  candidates.forEach((pair, i) => {
-    const key = 'Candidate ' + (i + 1);
-    groupOrder.push(key);
-    if (!groupColor[key]) { groupColor[key] = PALETTE[palIdx % PALETTE.length]; palIdx++; }
-    pair.forEach(c => sampleGroup[c] = key);
+  // Sort clusters naturally (Cluster 1, Cluster 2, ...)
+  groupOrder.sort((a, b) => {
+    const na = parseInt(a.match(/\d+/)), nb = parseInt(b.match(/\d+/));
+    return (na||0) - (nb||0);
   });
 
-  const unpaired = codes.filter(c => !sampleGroup[c]);
-  if (unpaired.length) {
-    groupOrder.push('Unpaired');
-    unpaired.forEach(c => sampleGroup[c] = 'Unpaired');
-    groupColor['Unpaired'] = '#ddd';
-  }
-
-  // Order spectra by similarity (most similar at bottom, most different at top)
-  const GRID_N = 200;
-  const comGrid = Array.from({ length: GRID_N }, (_, i) => 400 + i * (3600 / GRID_N));
-  function interpSpec(code) {
-    const pts = IR_DATA[code].slice().sort((a, b) => a[0] - b[0]);
-    return comGrid.map(t => {
-      let lo = 0, hi = pts.length - 1;
-      while (lo < hi - 1) { const m = (lo + hi) >> 1; if (pts[m][0] < t) lo = m; else hi = m; }
-      const [x0, y0] = pts[lo], [x1, y1] = pts[hi];
-      return x1 === x0 ? y0 : y0 + (t - x0) * (y1 - y0) / (x1 - x0);
+  // Build items grouped by cluster, samples in decreasing suffix order
+  const items = [];
+  groupOrder.forEach(key => {
+    if (!showAll && !_IR_VISIBLE_CLUSTERS[key]) return;
+    const members = Object.keys(sampleGroup).filter(c => sampleGroup[c] === key);
+    members.sort((a, b) => {
+      const na = parseInt(a.match(/\d+$/)), nb = parseInt(b.match(/\d+$/));
+      return (nb||0) - (na||0);
     });
-  }
-  function cosine(a, b) {
-    let dot = 0, na = 0, nb = 0;
-    for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
-    return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
-  }
-  const interp = Object.fromEntries(codes.map(c => [c, interpSpec(c)]));
-  const avgSpec = comGrid.map((_, i) => codes.reduce((s, c) => s + interp[c][i], 0) / codes.length);
-  const sims = codes.map(c => ({ code: c, sim: cosine(interp[c], avgSpec) }));
-  sims.sort((a, b) => b.sim - a.sim);
+    members.forEach(c => {
+      items.push({
+        code: c,
+        group: key,
+        color: groupColor[key],
+      });
+    });
+  });
 
-  const items = sims.map(s => ({
-    code: s.code,
-    group: sampleGroup[s.code] || 'Unpaired',
-    color: groupColor[sampleGroup[s.code]] || '#ddd',
-    sim: s.sim,
-  }));
-
-  const W = 800;
-  const LANE_H = 9, GROUP_GAP = 0, MARGIN = { top: 100, right: 80, bottom: 30, left: 85 };
+  const W = 900;
+  const LANE_H = 20, GROUP_GAP = 0, MARGIN = { top: 210, right: 110, bottom: 40, left: 85 };
   const H = MARGIN.top + MARGIN.bottom + items.length * LANE_H + 10;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = W * dpr; canvas.height = H * dpr;
@@ -1761,7 +1745,7 @@ function drawAllIRSpectra() {
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
 
   const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
-  const xMin = 2.5, xMax = 22;
+  const xMin = 2, xMax = 21;
   const toX = wl => x0 + (wl - xMin) / (xMax - xMin) * (x1 - x0);
 
   let curY = y0;
@@ -1801,79 +1785,106 @@ function drawAllIRSpectra() {
 
   ctx.textBaseline = 'bottom';
   curY = y0;
+  let lastGroup = null;
   items.forEach(item => {
     const baseY = curY + LANE_H / 2;
-    ctx.fillStyle = item.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'right';
-    const label = item.group.length > 16 ? item.group.slice(0, 15) + '\u2026' : item.group;
-    ctx.fillText(label, x0 - 6, baseY);
-    ctx.fillStyle = item.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText(item.code, x1 + 1, baseY - 30);
+    ctx.fillStyle = item.color; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(item.code, x0 - 6, baseY);
+    if (item.group !== lastGroup) {
+      const displayGroup = item.group === 'Unpaired' ? __('ir_overview_gap') : item.group;
+      const label = displayGroup.length > 18 ? displayGroup.slice(0, 17) + '\u2026' : displayGroup;
+      ctx.fillStyle = item.color; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(label, x1 + 1, baseY - 100);
+      lastGroup = item.group;
+    }
     curY += LANE_H;
   });
 
-  ctx.fillStyle = '#888'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  const xTicks = [2,4,6,8,10,12,14,16,18,20,22];
+  ctx.fillStyle = '#888'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  const xTicks = [2,4,6,8,10,12,14,16,18,20];
   xTicks.forEach(t => ctx.fillText(t.toString(), toX(t), y1 + 4));
-  ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif';
-  ctx.fillText('Wavelength (µm)', W / 2, y1 + 18);
+  ctx.fillStyle = '#bbb'; ctx.font = '12px sans-serif';
+  ctx.fillText('Wavelength (µm)', W / 2, y1 + 24);
 }
 
-// ---- FIGURE 5: IR SPECTRA OF CLUSTERS 2, 8, 11 (Paper tab) ----
-function drawIRClusterSpectraPaper() {
-  const cv = document.getElementById('irClusterSpectraPaper');
-  if (!cv || typeof IR_DATA === 'undefined') return;
-  const targetClusters = [
-    { name:'Cluster 2', codes:['Exp19-10','Exp19-24'], color:'#1f77b4' },
-    { name:'Cluster 8', codes:['Exp19-14','Exp19-30'], color:'#2ca02c' },
-    { name:'Cluster 11', codes:['Exp19-41','Exp19-42'], color:'#d62728' },
-  ];
-  const W=700, H=270, dpr=window.devicePixelRatio||1;
-  cv.width=W*dpr; cv.height=H*dpr;
-  const ctx=cv.getContext('2d');
-  ctx.scale(dpr,dpr);
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  const ml=65, mr=20, mt=25, mb=35;
-  const x0=ml, x1=W-mr, y0=mt, y1=H-mb;
-  const wlMin=6, wlMax=16;
-  const toX=wl=>x0+(wl-wlMin)/(wlMax-wlMin)*(x1-x0);
-  let aMin=Infinity, aMax=-Infinity;
-  targetClusters.forEach(g=>g.codes.forEach(c=>IR_DATA[c].forEach(d=>{const wl=10000/d[0];if(wl>=wlMin&&wl<=wlMax){if(d[1]<aMin)aMin=d[1];if(d[1]>aMax)aMax=d[1];}})));
-  const aRng=(aMax-aMin)||1;
-  const toY=v=>y1-(v-aMin)/aRng*(y1-y0);
-  ctx.strokeStyle='#eee'; ctx.lineWidth=0.5; ctx.beginPath();
-  [6,8,10,12,14,16].forEach(wl=>{const x=toX(wl);ctx.moveTo(x,y0);ctx.lineTo(x,y1);});
-  ctx.stroke();
-  const styles = [[],[3,3],[],[3,3],[]];
-  targetClusters.forEach((g,gi)=>{
-    g.codes.forEach((c,si)=>{
-      const pts=IR_DATA[c];
-      ctx.strokeStyle=g.color; ctx.lineWidth=1.1;
-      ctx.setLineDash(styles[si]||[]);
-      ctx.beginPath(); let started=false;
-      pts.forEach(d=>{
-        const wl=10000/d[0]; if(wl<wlMin||wl>wlMax)return;
-        const x=toX(wl),y=toY(d[1]);
-        if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-      const last=pts.filter(d=>{const wl=10000/d[0];return wl>=wlMin&&wl<=wlMax;});
-      if(last.length){
-        const lp=last[last.length-1], lx=toX(10000/lp[0])+2, ly=toY(lp[1]);
-        ctx.fillStyle=g.color; ctx.font='9px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
-        ctx.fillText(c,lx,ly);
-      }
+// ---------- Interactive IR Spectra (Samples page) ----------
+function renderInteractiveIRSpectra() {
+  const container = document.getElementById('interactive-ir-container');
+  if (!container) return;
+  const codes = Object.keys(IR_DATA);
+  if (!codes.length) { container.innerHTML = '<p style="color:#888;text-align:center;padding:20px 0">No IR data available</p>'; return; }
+  if (_selectedIRSamples.size === 0) _selectedIRSamples.add(codes[0]);
+  let html = '<div style="display:flex;flex-wrap:wrap;gap:4px 12px;max-height:140px;overflow-y:auto;margin-bottom:12px;padding:8px;background:#fafafa;border-radius:4px;font-size:12px">';
+  codes.forEach(c => {
+    const checked = _selectedIRSamples.has(c) ? 'checked' : '';
+    html += `<label style="white-space:nowrap;cursor:pointer"><input type="checkbox" ${checked} onchange="toggleInteractiveIR('${c}')"> ${c}</label>`;
+  });
+  html += '</div>';
+  html += '<canvas id="interactive-ir-canvas" style="width:100%;max-width:800px;height:350px;display:block;margin:0 auto"></canvas>';
+  container.innerHTML = html;
+  drawInteractiveIRSpectra();
+}
+function toggleInteractiveIR(code) {
+  if (_selectedIRSamples.has(code)) _selectedIRSamples.delete(code); else _selectedIRSamples.add(code);
+  drawInteractiveIRSpectra();
+}
+function drawInteractiveIRSpectra() {
+  const canvas = document.getElementById('interactive-ir-canvas');
+  if (!canvas) return;
+  const codes = [..._selectedIRSamples].filter(c => IR_DATA[c]);
+  if (!codes.length) return;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width || 800, H = 350;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  const MARGIN = { top: 20, right: 20, bottom: 30, left: 55 };
+  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
+  const xMin = 2, xMax = 21;
+  const toX = wl => x0 + (wl - xMin) / (xMax - xMin) * (x1 - x0);
+  let yMin = Infinity, yMax = -Infinity;
+  for (const code of codes)
+    for (const d of IR_DATA[code]) {
+      const wl = 10000 / d[0];
+      if (wl >= xMin && wl <= xMax) { if (d[1] < yMin) yMin = d[1]; if (d[1] > yMax) yMax = d[1]; }
+    }
+  const yPad = (yMax - yMin) * 0.05 || 0.01;
+  yMin -= yPad; yMax += yPad;
+  const toY = y => y1 - (y - yMin) / (yMax - yMin) * (y1 - y0);
+  ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 0.5;
+  for (let v = 0; v <= 1; v += 0.25) { const yy = y0 + v * (y1 - y0); ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x1, yy); ctx.stroke(); }
+  ctx.strokeStyle = '#ddd'; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(x1, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.setLineDash([]);
+  const PALETTE = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#2c3e50','#c0392b','#2980b9','#27ae60','#8e44ad','#16a085','#d35400','#7f8c8d','#f1c40f','#00bcd4','#ff5722','#795548','#607d8b','#e91e63','#3f51b5','#009688','#ff9800','#673ab7','#03a9f4','#8bc34a','#ffeb3b'];
+  codes.forEach((code, i) => {
+    const color = PALETTE[i % PALETTE.length];
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.beginPath(); let started = false;
+    for (const d of IR_DATA[code]) {
+      const wl = 10000 / d[0]; if (wl < xMin || wl > xMax) continue;
+      const x = toX(wl), y = toY(d[1]);
+      if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  });
+  ctx.fillStyle = '#888'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  [2,4,6,8,10,12,14,16,18,20].forEach(wl => ctx.fillText(wl.toString(), toX(wl), y1 + 4));
+  ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif';
+  ctx.fillText('Wavelength (µm)', x0 + (x1 - x0) / 2, y1 + 18);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#888'; ctx.font = '9px sans-serif';
+  const nYTicks = 4;
+  for (let i = 0; i <= nYTicks; i++) { const v = yMin + (yMax - yMin) * i / nYTicks; ctx.fillText(v.toFixed(2), x0 - 6, y0 + (y1 - y0) * (1 - i / nYTicks)); }
+  ctx.save(); ctx.translate(14, y0 + (y1 - y0) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillStyle = '#bbb'; ctx.font = '9px sans-serif'; ctx.fillText('Absorbance', 0, 0); ctx.restore();
+  const lx = x1 - 130, ly = y0 + 10;
+  const legW = 120, legH = codes.length * 16 + 10;
+  if (legH + ly < y1 - 10) {
+    ctx.fillStyle = 'rgba(255,255,255,0.88)'; ctx.fillRect(lx - 6, ly - 4, legW, legH);
+    ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5; ctx.strokeRect(lx - 6, ly - 4, legW, legH);
+    codes.forEach((code, i) => {
+      ctx.strokeStyle = PALETTE[i % PALETTE.length]; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(lx, ly + i * 16 + 4); ctx.lineTo(lx + 14, ly + i * 16 + 4); ctx.stroke();
+      ctx.fillStyle = '#333'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(code, lx + 18, ly + i * 16 + 4);
     });
-  });
-  ctx.setLineDash([]);
-  const legY=[y0+15,y0+(y1-y0)/2,y1-15];
-  targetClusters.forEach((g,i)=>{
-    ctx.fillStyle=g.color; ctx.font='bold 11px sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
-    ctx.fillRect(x1+8,legY[i]-4,10,10); ctx.fillText(g.name,x1+22,legY[i]);
-  });
-  ctx.strokeStyle='#ccc'; ctx.lineWidth=0.5;
-  ctx.strokeRect(x0,y0,x1-x0,y1-y0);
-  ctx.fillStyle='#888'; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
-  [6,8,10,12,14,16].forEach(wl=>ctx.fillText(wl.toString(),toX(wl),y1+4));
-  ctx.fillStyle='#bbb'; ctx.font='9px sans-serif'; ctx.fillText('Wavelength (µm)',W/2,y1+18);
+  }
 }
 

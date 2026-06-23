@@ -74,31 +74,33 @@ const FIELD_DATA = {
   "Mutante 1":[46.58,46.66]
 };
 const PAIR_GROUPS = [
-  {locality:"Catalina",color:"#1a2a3a",falls:[
-    {name:"Cluster 1",type:"L",count:2,range:"4.505–4.521",delta:"0.016",tc:"#e67e22",
-     samples:["Exp19-23","Exp19-22"]},
-    {name:"Cluster 2",type:"L",count:3,range:"4.581–4.652",delta:"0.071",tc:"#e67e22",
-     samples:["Exp19-03","Exp19-24","Exp19-10"]},
-    {name:"Cluster 3",type:"L",count:2,range:"4.655–4.694",delta:"0.039",tc:"#e67e22",
-     samples:["Exp19-26","Exp19-19"]},
-    {name:"Cluster 4",type:"L",count:2,range:"4.762–4.817",delta:"0.055",tc:"#e67e22",
-     samples:["Exp19-32","Exp19-17"]},
-    {name:"Cluster 5",type:"H",count:3,range:"4.834–4.882",delta:"0.048",tc:"#27ae60",
-     samples:["Exp19-33","Exp19-12","Exp19-09"]},
-    {name:"Cluster 6",type:"H",count:2,range:"4.959–4.991",delta:"0.032",tc:"#27ae60",
-     samples:["Exp19-29","Exp19-07"]},
-    {name:"Cluster 7: H5",type:"H",count:2,range:"5.252–5.285",delta:"0.033",tc:"#27ae60",
-     samples:["Exp19-25","Exp19-01"]},
-    {name:"Cluster 8: H(4-5)",type:"H",count:2,range:"5.274–5.348",delta:"0.074",tc:"#27ae60",
-     samples:["Exp19-30","Exp19-14"]}
-  ]},
   {locality:"Médano",color:"#1a2a3a",falls:[
-    {name:"Cluster 9",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
-     samples:["Exp19-54","Exp19-46"]},
-    {name:"Cluster 10",type:"H",count:2,range:"4.965–4.966",delta:"0.001",tc:"#27ae60",
-     samples:["Exp19-43","Exp19-56"]},
-    {name:"Cluster 11: H4",type:"H",count:3,range:"5.091–5.117",delta:"0.026",tc:"#27ae60",
-     samples:["Exp19-42","Exp19-40","Exp19-41"]}
+    {name:"Cluster 1",type:"L",count:2,range:"4.631–4.640",delta:"0.009",tc:"#e67e22",
+     samples:["Exp19-49","Exp19-44"]},
+    {name:"Cluster 2",type:"H",count:3,range:"4.924–4.966",delta:"0.042",tc:"#27ae60",
+     samples:["Exp19-53","Exp19-43","Exp19-56"]},
+    {name:"Cluster 3",type:"L",count:2,range:"4.443–4.464",delta:"0.021",tc:"#e67e22",
+     samples:["Exp19-52","Exp19-51"]},
+    {name:"Cluster 6",type:"H4",count:4,range:"5.091–5.168",delta:"0.077",tc:"#27ae60",
+     samples:["Exp19-42","Exp19-40","Exp19-41","Exp19-47"]},
+    {name:"Cluster 11",type:"L",count:2,range:"4.550–4.611",delta:"0.061",tc:"#e67e22",
+     samples:["Exp19-48","Exp19-45"]},
+    {name:"Cluster 12",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
+     samples:["Exp19-54","Exp19-46"]}
+  ]},
+  {locality:"Catalina",color:"#1a2a3a",falls:[
+    {name:"Cluster 4",type:"L",count:5,range:"4.686–4.762",delta:"0.076",tc:"#e67e22",
+     samples:["Exp19-08","Exp19-19","Exp19-34","Exp19-04","Exp19-32"]},
+    {name:"Cluster 5",type:"H",count:4,range:"4.834–4.882",delta:"0.048",tc:"#27ae60",
+     samples:["Exp19-33","Exp19-06","Exp19-12","Exp19-09"]},
+    {name:"Cluster 7",type:"H5",count:3,range:"5.252–5.285",delta:"0.033",tc:"#27ae60",
+     samples:["Exp19-25","Exp19-30","Exp19-01"]},
+    {name:"Cluster 8",type:"L",count:4,range:"4.589–4.655",delta:"0.066",tc:"#e67e22",
+     samples:["Exp19-24","Exp19-10","Exp19-05","Exp19-26"]},
+    {name:"Cluster 9",type:"H",count:3,range:"4.959–4.991",delta:"0.032",tc:"#27ae60",
+     samples:["Exp19-29","Exp19-11","Exp19-07"]},
+    {name:"Cluster 10",type:"L",count:3,range:"4.505–4.581",delta:"0.076",tc:"#e67e22",
+     samples:["Exp19-23","Exp19-22","Exp19-03"]}
   ]}
 ];
 
@@ -194,7 +196,7 @@ const COORDS_MAP = {
   "Exp19-27":"7224932 N, 409248 E","Exp19-29":"7224930 N, 409273 E","Exp19-30":"7224986 N, 409273 E",
   "Exp19-31":"7224980 N, 409291 E","Exp19-32":"7224988 N, 409313 E","Exp19-33":"7225017 N, 409434 E",
   "Exp19-34":"7225036 N, 409448 E","Exp19-40":"7268160 N, 363588 E","Exp19-41":"7268192 N, 363544 E",
-  "Exp19-42":"7268171 N, 363453 E","Exp19-43":"7268102 N, 363159 E","Exp19-44":"7665322 N, 363203 E",
+  "Exp19-42":"7268171 N, 363453 E","Exp19-43":"7268102 N, 363159 E","Exp19-44":"7265322 N, 363203 E",
   "Exp19-45":"7265225 N, 362948 E","Exp19-46":"7265280 N, 362968 E","Exp19-47":"7265291 N, 362944 E",
   "Exp19-48":"7265301 N, 362934 E","Exp19-49":"7265296 N, 362940 E","Exp19-50":"7265270 N, 362980 E",
   "Exp19-51":"7265291 N, 362959 E","Exp19-52":"7265285 N, 362966 E","Exp19-53":"7265323 N, 362933 E",
