@@ -107,6 +107,7 @@ function renderHome() {
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-fluidos-en-sistemas-planetarios" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px"></a>
       <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Paleomagnetismo.svg" alt="Laboratorio de Paleomagnetismo UChile" title="Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
     </div>
   `;
 }
@@ -154,6 +155,7 @@ function renderContact() {
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-fluidos-en-sistemas-planetarios" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px"></a>
       <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Paleomagnetismo.svg" alt="Laboratorio de Paleomagnetismo UChile" title="Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
     </div>
   `;
 }
