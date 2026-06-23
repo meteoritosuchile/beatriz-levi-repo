@@ -87,12 +87,6 @@ function renderHome() {
       <p>${__('home_desc2')}</p>
     </div>
 
-    <div class="stats-row" style="max-width:600px;margin:0 auto 32px">
-<div class="stat-card"><div class="num">49</div><div class="label">${__('home_stats_specimens')}</div></div>
-      <div class="stat-card"><div class="num">43</div><div class="label">${__('home_stats_kly5')}</div></div>
-      <div class="stat-card"><div class="num">4</div><div class="label">${__('home_stats_localities')}</div></div>
-    </div>
-
     <div style="text-align:center;margin-top:16px">
       <button class="btn" onclick="navigate('samples')">${__('home_btn_samples')}</button>
       <button class="btn" onclick="navigate('paper')" style="margin-left:10px">${__('home_btn_paper')}</button>
