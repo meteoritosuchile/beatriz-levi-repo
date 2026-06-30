@@ -53,6 +53,7 @@ function navigate(page, data) {
   if (page === 'samples') renderSamples();
   if (page === 'paper') renderPaperCharts();
   if (page === 'pairing') renderPairing();
+  if (page === 'research') renderResearch();
   if (page === 'contact') renderContact();
   if (page === 'sample') showSample(data);
   window.scrollTo(0, 0);
@@ -89,20 +90,139 @@ function renderHome() {
 
     <div style="text-align:center;margin-top:16px">
       <button class="btn" onclick="navigate('samples')">${__('home_btn_samples')}</button>
-      <button class="btn" onclick="navigate('paper')" style="margin-left:10px">${__('home_btn_paper')}</button>
-      <button class="btn" onclick="navigate('pairing')" style="margin-left:10px">${__('home_btn_pairing')}</button>
     </div>
 
     <div class="logos" style="margin-top:32px">
-      <a href="https://geologia.uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px"></a>
-      <a href="https://www.sociedadgeologica.cl/geositios-1/meteoritos-y-ciencias-planetarias" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px"></a>
       <a href="https://meteoritical.org/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px"></a>
+      <a href="https://geologia.uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px"></a>
       <a href="https://astronomia.udp.cl/es/collaboration/udp-cosmic-dust-laboratory/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px"></a>
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-fluidos-en-sistemas-planetarios" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px"></a>
+      <div style="flex-basis:100%;height:0"></div>
+      <a href="https://www.sociedadgeologica.cl/geositios-1/meteoritos-y-ciencias-planetarias" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:50px"></a>
       <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
-      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Paleomagnetismo.svg" alt="Laboratorio de Paleomagnetismo UChile" title="Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
-      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
     </div>
+  `;
+}
+
+// ---------- Research ----------
+function renderResearch() {
+  const w = (id, label) => `<div style="margin-bottom:16px;padding:16px;background:#fff;border:1px solid #e0e0e0;border-radius:6px">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="flex:1">
+        <div style="font-size:13px;color:#888;margin-bottom:2px">${label}</div>
+        <strong style="font-size:15px">${id.title}</strong>
+        <p style="font-size:13px;color:#555;margin:2px 0">${id.authors}</p>
+        <p style="font-size:12px;color:#888">${id.year} &middot; ${id.inst}</p>
+      </div>
+      <div style="flex-shrink:0">${id.btn}</div>
+    </div>
+  </div>`;
+  const sec = (title, items) => `<h2 style="font-size:17px;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid #ddd">${title}</h2>${items}`;
+
+  document.getElementById('research-content').innerHTML = `
+    <h1 style="margin-bottom:4px">${__('research_title')}</h1>
+    <p style="color:#666;font-size:14px;margin-bottom:24px">${__('research_desc')}</p>
+
+    ${sec(__('research_sec_articles'),
+      w({
+        title: 'Petrologic sub-type and melt inclusions study in chondrules of three carbonaceous chondrites',
+        authors: 'C. S. Aravena, D. Moncada, M. Valenzuela, K. Deckart, M. Zolensky, L. Moore, A. Morlok, G. Pinto & R. Martinez',
+        year: '2026',
+        inst: 'UChile, UCN, NASA JSC, Virginia Tech, U Münster, ULB, Museo del Meteorito',
+        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Petrologic%20sub-type%20and%20melt%20inclusions" class="btn">${__('research_request')}</a>`
+      }, __('research_type_article')) +
+      w({
+        title: 'Classification and Fragmentation Analysis of Ordinary Chondrites from the Atacama Desert',
+        authors: 'C. S. Aravena, D. Moncada, L. Cieza, G. Batalla, A. Escobar, F. Poblete, R. Fernandez, M. J. Figueroa Zambrano, M. E. Parra, M. Peña, R. Lavín, B. De la Fuente, V. Cárcamo, D. Castañeda, S. Gatica, A. Mohor, L. Olivares, R. Valles',
+        year: '2026',
+        inst: 'UChile, UMayor, UDP',
+        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Beatriz%20Levi%20Repository" class="btn">${__('research_request')}</a>`
+      }, __('research_type_article')))}
+
+    ${sec(__('research_sec_grad'), w({
+title: 'Subtipo petrológico e inclusiones vítreas en condritas carbonáceas',
+        authors: 'C. S. Aravena',
+        year: '2023',
+        inst: 'Universidad de Chile',
+        btn: `<a href="Subtipo-petrológico-e-inclusiones.pdf" target="_blank" class="btn">${__('research_download')}</a>`
+    }, __('research_type_msc')))}
+
+    ${sec(__('research_sec_undergrad'),
+      w({
+        title: 'Una reconstrucción aproximada de los procesos iniciales que dieron origen a los primeros cuerpos celestes',
+        authors: 'N. Amengual',
+        year: '2019',
+        inst: 'Universidad de Chile',
+        btn: `<a href="N_Amengual_2019 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Inclusiones vítreas en condritos carbonáceos del Desierto de Atacama, Región de Antofagasta, Chile',
+        authors: 'C. S. Aravena',
+        year: '2019',
+        inst: 'Universidad de Chile',
+        btn: `<a href="CS_Aravena_2019 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Estudio del espectro infrarrojo de meteoritos y aplicación en observaciones astronómicas',
+        authors: 'G. Batalla',
+        year: '2020',
+        inst: 'Universidad de Chile / UDP',
+        btn: `<a href="G_Batalla_2020 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Clasificación y descripción de meteoritos mediante análisis petrográfico',
+        authors: 'D. Luna',
+        year: '2022',
+        inst: 'Universidad de Chile',
+        btn: `<a href="D_Luna_2022 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Desarrollo de calibración en olivino mediante espectroscopía Raman: clasificación de condritos ordinarios',
+        authors: 'M. F. Tapia',
+        year: '2023',
+        inst: 'Universidad de Chile',
+        btn: `<a href="MF_Tapia_2023 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Búsqueda de volátiles en cuerpos parentales asteroidales mediante estudio de inclusiones vítreas, espectroscopía Raman y espectroscopía de absorbancia en condritos ordinarios',
+        authors: 'M. E. Parra',
+        year: '2023',
+        inst: 'Universidad de Chile',
+        btn: `<a href="ME_Parra_2023.pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Clasificación de meteoritos del Desierto de Atacama utilizando susceptibilidad magnética, petrografía y técnicas espectroscópicas',
+        authors: 'M. J. Figueroa Zambrano',
+        year: '2023',
+        inst: 'Universidad Mayor',
+        btn: `<a href="MFigueroaZ_TE_SAG (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis'))
+    )}
+
+    ${sec(__('research_sec_reports'), w({
+      title: 'Informe Práctica Profesional I — Montaje inicial del Repositorio Beatriz Levi',
+      authors: 'B. De la Fuente',
+      year: '2020',
+      inst: 'Universidad de Chile',
+      btn: `<a href="Informe_Practica_I_final (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+    }, __('research_type_report')))}
+
+    ${sec(__('research_sec_grants'),
+      w({
+        title: 'Meteorites: Human heritage — Meteoritical Society Community Grant report',
+        authors: 'C. S. Aravena',
+        year: '2024',
+        inst: 'Universidad de Chile',
+        btn: `<a href="https://meteoritical.org/news/community-grant-report-meteorites-human-heritage" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
+      }, __('research_type_grant')) +
+      w({
+        title: 'Classification & Curation of Atacama\'s Ordinary Chondrites at Chile\'s Oldest University',
+        authors: 'D. Moncada',
+        year: '2025',
+        inst: 'Universidad de Chile',
+        btn: `<a href="https://meteoritical.org/news/five-new-meteoritical-society-community-grants-awarded" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
+      }, __('research_type_grant')))}
   `;
 }
 
@@ -142,14 +262,14 @@ function renderContact() {
     </div>
 
     <div class="logos" style="margin-top:24px">
-      <a href="https://geologia.uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px"></a>
-      <a href="https://www.sociedadgeologica.cl/geositios-1/meteoritos-y-ciencias-planetarias" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px"></a>
       <a href="https://meteoritical.org/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px"></a>
+      <a href="https://geologia.uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Geologia.png" alt="Departamento de Geología UChile" title="Departamento de Geología, Universidad de Chile" style="height:90px"></a>
       <a href="https://astronomia.udp.cl/es/collaboration/udp-cosmic-dust-laboratory/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_UDP.png" alt="Cosmic Dust Lab UDP" title="Cosmic Dust Laboratory, Universidad Diego Portales" style="height:60px"></a>
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-fluidos-en-sistemas-planetarios" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Planetary_Fluids.png" alt="Planetary Fluids Group" title="Planetary Fluids Research Group, Universidad de Chile" style="height:70px"></a>
+      <div style="flex-basis:100%;height:0"></div>
+      <a href="https://www.sociedadgeologica.cl/geositios-1/meteoritos-y-ciencias-planetarias" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_MyCP.png" alt="Grupo Meteoritos y Ciencias Planetarias" title="Grupo Meteoritos y Ciencias Planetarias" style="height:70px"></a>
+      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:50px"></a>
       <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
-      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Paleomagnetismo.svg" alt="Laboratorio de Paleomagnetismo UChile" title="Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
-      <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:70px"></a>
     </div>
   `;
 }
@@ -701,7 +821,7 @@ function openFigOverlay(canvasId) {
   const label = canvasId === 'massLogChiCanvas' ? 'Figure 1' :
     canvasId === 'doughnutCanvas' ? 'Figure 2' :
     canvasId === 'petroGradeCanvas' ? 'Figure 3' :
-    canvasId === 'densityChiCanvas' ? 'Figure 4' :
+    canvasId === 'kly5StripPaper' ? 'Figure 4' :
     canvasId === 'irClusterSpectraPaper' ? 'Figure 5' : '';
   document.getElementById('fig-overlay-label').textContent = label;
   document.body.style.overflow = 'hidden';
@@ -883,15 +1003,14 @@ function renderPaperCharts() {
     drawMassLogChiChart();
     drawDoughnutChart();
     drawPetroGradeChart();
-    drawDensityChart();
+    try { drawKLY5StripChart('kly5StripPaper'); } catch(e) { console.warn('Fig 4 error:', e); }
     try { drawAllIRSpectra('irClusterSpectraPaper', true); } catch(e) { console.warn('Fig 5 error:', e); }
   }, 50);
 }
 
 const massPoints = [];
 let massHover = -1;
-const densityPoints = [];
-let densityHover = -1;
+
 const petroPoints = [];
 let petroHover = -1;
 const CHART_DPR = window.devicePixelRatio || 1;
@@ -1207,8 +1326,14 @@ function renderPairing() {
     html += '</tbody></table></div>';
   }
 
+  html += '<h2 style="text-align:center;margin:32px 0 8px;font-size:15px;color:#444">KLY5 Magnetic Susceptibility by Cluster</h2>';
+  html += '<p style="text-align:center;color:#888;font-size:12px;margin:0 0 12px">Horizontal bands: H (≥4.82) · L (≥4.265) · LL (&lt;4.265). Hover for details.</p>';
+  html += '<div style="text-align:center;position:relative"><canvas id="kly5StripChart" style="max-width:900px;width:100%;height:auto"></canvas>';
+  html += '<div id="kly5-tooltip" style="display:none;position:fixed;background:#1a2a3a;color:#fff;padding:6px 10px;border-radius:4px;font-size:12px;pointer-events:none;z-index:999"></div></div>';
+
   el.innerHTML = html;
   drawAllIRSpectra();
+  drawKLY5StripChart();
 }
 
 function drawDoughnutChart() {
@@ -1443,112 +1568,6 @@ function drawPetroGradeChart() {
     cv.addEventListener('mouseleave', function() {
       document.getElementById('chart-tooltip3').style.display = 'none';
       cv.style.cursor = 'default'; petroHover = -1; drawPetroGradeChart();
-    });
-  }
-}
-
-function drawDensityChart() {
-  densityPoints.length = 0;
-  const cv = document.getElementById('densityChiCanvas');
-  if (!cv) return;
-  const W = 760, H = 420;
-  const dpr = window.devicePixelRatio || 1;
-  cv.width = W * dpr; cv.height = H * dpr;
-  const ctx = cv.getContext('2d');
-  ctx.scale(dpr, dpr);
-  const MARGIN = { top: 25, right: 30, bottom: 42, left: 58 };
-  const CHI_MIN = 3.4, CHI_MAX = 5.6, DENS_MIN = 1.4, DENS_MAX = 4.6;
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
-  const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
-  const toX = c => x0 + (c - CHI_MIN) / (CHI_MAX - CHI_MIN) * (x1 - x0);
-  const toY = d => y1 - (d - DENS_MIN) / (DENS_MAX - DENS_MIN) * (y1 - y0);
-  ctx.fillStyle = '#444'; ctx.font = '11px Arial';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  for (let c = 3.6; c <= 5.6; c += 0.2) { ctx.fillText(c.toFixed(1), toX(c), y1 + 6); }
-  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-  for (let d = 1.5; d <= 4.5; d += 0.5) { ctx.fillText(d.toFixed(1), x0 - 6, toY(d)); }
-  ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText(__('chart_logchi_label'), (x0 + x1) / 2, y1 + 26);
-  ctx.save(); ctx.translate(16, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2);
-  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText(__('chart_density_label'), 0, 0); ctx.restore();
-  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 0.5;
-  for (let c = 3.6; c <= 5.6; c += 0.2) { const px = toX(c); ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y1); ctx.stroke(); }
-  for (let d = 1.5; d <= 4.5; d += 0.5) { const py = toY(d); ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke(); }
-  ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
-  ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
-  const colors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
-  const R = 5;
-  SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null).forEach(s => {
-    const dens = DENSITY_MAP[s.c];
-    const px = toX(s.lc), py = toY(dens);
-    const grp = kly5Group(s.lc);
-    const hasPetro = s.pW != null;
-    ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
-    ctx.fillStyle = hasPetro ? (colors[grp] || '#999') : '#fff';
-    ctx.globalAlpha = hasPetro ? 0.5 : 1; ctx.fill(); ctx.globalAlpha = 1;
-    ctx.strokeStyle = colors[grp] || '#999';
-    ctx.lineWidth = hasPetro ? 2 : 2.5; ctx.stroke();
-    densityPoints.push({ x: px, y: py, r: R, c: s.c, n: s.n, dens, lc: s.lc, grp, hasPetro });
-  });
-  if (densityHover >= 0 && densityHover < densityPoints.length) {
-    const hp = densityPoints[densityHover];
-    ctx.beginPath(); ctx.arc(hp.x, hp.y, R + 3, 0, 2 * Math.PI);
-    ctx.strokeStyle = '#e74c3c'; ctx.lineWidth = 3; ctx.stroke();
-  }
-  ctx.restore();
-  const lr = 4, lgap = 17, lpad = 8;
-  const nH = SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null && kly5Group(s.lc) === 'H').length;
-  const nL = SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null && kly5Group(s.lc) === 'L').length;
-  const nLL = SAMPLES.filter(s => s.lc != null && DENSITY_MAP[s.c] != null && kly5Group(s.lc) === 'LL').length;
-  const legItems = [
-    { type: 'label', text: __('chart_kly5_group'), h: 1 },
-    { type: 'color', label: 'H (n=' + nH + ')', color: '#27ae60', h: 1 },
-    { type: 'color', label: 'L (n=' + nL + ')', color: '#e67e22', h: 1 },
-    { type: 'color', label: 'LL (n=' + nLL + ')', color: '#b8860b', h: 1 },
-    { type: 'label', text: __('chart_petro_filled_short'), h: 1 },
-  ];
-  const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
-  const lw = 145;
-  const lx = x1 - lw - 8, ly = y0 + 8;
-  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.roundRect(lx, ly, lw, lh, 4); ctx.fill(); ctx.stroke();
-  let yy = ly + lpad;
-  ctx.font = '10px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-  legItems.forEach(item => {
-    const sy = yy + lgap / 2;
-    if (item.type === 'label') { ctx.fillStyle = '#999'; ctx.font = '9px Arial'; ctx.fillText(item.text, lx + lpad, sy); yy += lgap; return; }
-    if (item.type === 'color') {
-      ctx.fillStyle = item.color; ctx.beginPath(); ctx.arc(lx + lpad + lr, sy, lr, 0, 2 * Math.PI); ctx.fill();
-      ctx.fillStyle = '#444'; ctx.font = '10px Arial'; ctx.fillText(item.label, lx + lpad + 12, sy);
-      yy += lgap;
-    }
-  });
-  if (!cv._densityListeners) {
-    cv._densityListeners = true;
-    cv.addEventListener('mousemove', function(e) {
-      const rect = cv.getBoundingClientRect();
-      const sc = cv.width / dpr / rect.width;
-      const cx = (e.clientX - rect.left) * sc, cy = (e.clientY - rect.top) * sc;
-      let hit = -1;
-      for (let i = 0; i < densityPoints.length; i++) {
-        const p = densityPoints[i], dx = cx - p.x, dy = cy - p.y;
-        if (dx*dx + dy*dy <= (p.r+4)*(p.r+4)) { hit = i; break; }
-      }
-      if (hit !== densityHover) { densityHover = hit; drawDensityChart(); }
-      const tip = document.getElementById('chart-tooltip4');
-      if (hit >= 0) {
-        const p = densityPoints[hit];
-        const pos = cv.getBoundingClientRect();
-        tip.style.display = 'block'; tip.style.left = (e.clientX - pos.left + 12) + 'px'; tip.style.top = (e.clientY - pos.top - 10) + 'px';
-        tip.textContent = p.c + ' \u03c1=' + p.dens.toFixed(3) + ' g/cm\u00b3, \u03c7=' + p.lc.toFixed(3) + ' | ' + p.grp + (p.hasPetro ? '' : ' (' + __('chart_nopetro') + ')');
-        cv.style.cursor = 'pointer';
-      } else { tip.style.display = 'none'; cv.style.cursor = 'crosshair'; }
-    });
-    cv.addEventListener('mouseleave', function() {
-      document.getElementById('chart-tooltip4').style.display = 'none';
-      cv.style.cursor = 'default'; densityHover = -1; drawDensityChart();
     });
   }
 }
@@ -1801,6 +1820,159 @@ function drawAllIRSpectra(targetCanvasId, showAll) {
   xTicks.forEach(t => ctx.fillText(t.toString(), toX(t), y1 + 4));
   ctx.fillStyle = '#bbb'; ctx.font = '12px sans-serif';
   ctx.fillText('Wavelength (µm)', W / 2, y1 + 24);
+}
+
+// ---------- KLY5 Strip Chart by Cluster (Pairing page / Figure 4) ----------
+function drawKLY5StripChart(canvasId) {
+  const canvas = document.getElementById(canvasId || 'kly5StripChart');
+  if (!canvas) return;
+  const tooltipId = (canvasId === 'kly5StripPaper') ? 'chart-tooltip4' : 'kly5-tooltip';
+  const tooltip = document.getElementById(tooltipId);
+  if (!tooltip) return;
+  const W = 900, H = 520;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  const PAD = { top: 48, bottom: 48, left: 90, right: 30 };
+  const plotW = W - PAD.left - PAD.right;
+  const plotH = H - PAD.top - PAD.bottom;
+
+  // Build cluster data
+  const clusters = [];
+  PAIR_GROUPS.forEach(pg => {
+    pg.falls.forEach(f => {
+      const pts = f.samples.map(code => {
+        const s = sampleLookup(code);
+        const lc = s ? s.lc : null;
+        const d = DENSITY_MAP[code] ?? null;
+        return { code, name: s ? s.n : code, lc, density: d, loc: pg.locality };
+      }).filter(p => p.lc !== null && p.lc !== undefined);
+      if (pts.length) clusters.push({ name: f.name, type: f.type, locality: pg.locality, tc: f.tc, samples: pts });
+    });
+  });
+  if (!clusters.length) return;
+
+  let yMin = Infinity, yMax = -Infinity;
+  clusters.forEach(c => c.samples.forEach(p => { if (p.lc < yMin) yMin = p.lc; if (p.lc > yMax) yMax = p.lc; }));
+  const yPad = (yMax - yMin) * 0.1 || 0.15;
+  yMin = Math.max(3.5, yMin - yPad);
+  yMax = Math.min(5.6, yMax + yPad);
+  const xStep = plotW / (clusters.length + 1);
+  const xPos = i => PAD.left + xStep * (i + 1);
+  const yPos = v => PAD.top + plotH - (v - yMin) / (yMax - yMin) * plotH;
+
+  ctx.textBaseline = 'bottom';
+  ctx.font = '12px system-ui, sans-serif';
+
+  // Horizontal bands (H / L / LL)
+  const bands = [
+    { lo: 4.82, hi: yMax, label: 'H', color: '#27ae60' },
+    { lo: 4.265, hi: 4.82, label: 'L', color: '#e67e22' },
+    { lo: yMin, hi: 4.265, label: 'LL', color: '#b8860b' },
+  ];
+  bands.forEach(b => {
+    const y0 = yPos(Math.min(b.hi, yMax));
+    const y1 = yPos(Math.max(b.lo, yMin));
+    ctx.fillStyle = b.color + '18';
+    ctx.fillRect(PAD.left, y1, plotW, y0 - y1);
+    ctx.strokeStyle = b.color + '40';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.moveTo(PAD.left + 8, yPos(b.lo));
+    ctx.lineTo(PAD.left + plotW - 8, yPos(b.lo));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = b.color + '80';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(b.label, PAD.left + plotW - 16, yPos(b.lo));
+  });
+
+  // Y axis ticks
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  const yTicks = 6;
+  for (let i = 0; i <= yTicks; i++) {
+    const v = yMin + (yMax - yMin) * i / yTicks;
+    const y = yPos(v);
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(v.toFixed(3), PAD.left - 8, y);
+    ctx.strokeStyle = '#eee';
+    ctx.beginPath();
+    ctx.moveTo(PAD.left, y);
+    ctx.lineTo(PAD.left + plotW, y);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#444';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.font = '13px sans-serif';
+  ctx.fillText('log χ (KLY5)', PAD.left - 40, 10);
+
+  // X axis: cluster labels
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.font = 'bold 12px sans-serif';
+  clusters.forEach((c, i) => {
+    const x = xPos(i);
+    ctx.fillStyle = c.tc;
+    ctx.fillText(c.name, x, PAD.top + plotH + 6);
+    ctx.fillStyle = '#999';
+    ctx.font = '10px sans-serif';
+    ctx.fillText(c.locality.substring(0, 4) + '.', x, PAD.top + plotH + 22);
+    ctx.font = 'bold 12px sans-serif';
+  });
+
+  // Data points
+  const points = [];
+  clusters.forEach((c, i) => {
+    const x = xPos(i);
+    c.samples.forEach(p => {
+      const y = yPos(p.lc);
+      points.push({ x, y, r: 8, ...p, cluster: c.name, color: c.tc });
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = c.tc;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+  });
+
+  // Hover
+  canvas.onmousemove = function (e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (W / rect.width);
+    const my = (e.clientY - rect.top) * (H / rect.height);
+    let found = null;
+    for (const p of points) {
+      const dx = mx - p.x, dy = my - p.y;
+      if (dx * dx + dy * dy < p.r * p.r) { found = p; break; }
+    }
+    if (found) {
+      const d = found.density !== null ? found.density.toFixed(3) : '\u2014';
+      const lc = found.lc.toFixed(3);
+      const grp = kly5Group(found.lc);
+      tooltip.innerHTML = '<b>' + found.code + '</b> ' + found.name + '<br>log \u03c7 = ' + lc + ' (' + grp + ')<br>\u03c1 = ' + d + ' g/cm\u00b3<br>' + found.cluster + ' \u00b7 ' + found.locality;
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+      canvas.style.cursor = 'pointer';
+    } else {
+      tooltip.style.display = 'none';
+      canvas.style.cursor = 'default';
+    }
+  };
+  canvas.onmouseleave = function () { tooltip.style.display = 'none'; };
 }
 
 // ---------- Interactive IR Spectra (Samples page) ----------
