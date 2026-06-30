@@ -53,6 +53,7 @@ function navigate(page, data) {
   if (page === 'samples') renderSamples();
   if (page === 'paper') renderPaperCharts();
   if (page === 'pairing') renderPairing();
+  if (page === 'research') renderResearch();
   if (page === 'contact') renderContact();
   if (page === 'sample') showSample(data);
   window.scrollTo(0, 0);
@@ -89,8 +90,6 @@ function renderHome() {
 
     <div style="text-align:center;margin-top:16px">
       <button class="btn" onclick="navigate('samples')">${__('home_btn_samples')}</button>
-      <button class="btn" onclick="navigate('paper')" style="margin-left:10px">${__('home_btn_paper')}</button>
-      <button class="btn" onclick="navigate('pairing')" style="margin-left:10px">${__('home_btn_pairing')}</button>
     </div>
 
     <div class="logos" style="margin-top:32px">
@@ -103,6 +102,127 @@ function renderHome() {
       <a href="https://geologia.uchile.cl/investigacion/laboratorios-de-investigacion/laboratorio-de-paleomagnetismo" target="_blank" rel="noopener noreferrer"><img src="Logos/LAMP_logo-01.png" alt="LAMP - Laboratorio de Paleomagnetismo UChile" title="LAMP - Laboratorio de Paleomagnetismo, Universidad de Chile" style="height:50px"></a>
       <a href="https://uchile.cl/" target="_blank" rel="noopener noreferrer"><img src="Logos/U de Chile.jpg" alt="Universidad de Chile" title="Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile" style="height:70px"></a>
     </div>
+  `;
+}
+
+// ---------- Research ----------
+function renderResearch() {
+  const w = (id, label) => `<div style="margin-bottom:16px;padding:16px;background:#fff;border:1px solid #e0e0e0;border-radius:6px">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="flex:1">
+        <div style="font-size:13px;color:#888;margin-bottom:2px">${label}</div>
+        <strong style="font-size:15px">${id.title}</strong>
+        <p style="font-size:13px;color:#555;margin:2px 0">${id.authors}</p>
+        <p style="font-size:12px;color:#888">${id.year} &middot; ${id.inst}</p>
+      </div>
+      <div style="flex-shrink:0">${id.btn}</div>
+    </div>
+  </div>`;
+  const sec = (title, items) => `<h2 style="font-size:17px;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid #ddd">${title}</h2>${items}`;
+
+  document.getElementById('research-content').innerHTML = `
+    <h1 style="margin-bottom:4px">${__('research_title')}</h1>
+    <p style="color:#666;font-size:14px;margin-bottom:24px">${__('research_desc')}</p>
+
+    ${sec(__('research_sec_articles'),
+      w({
+        title: 'Petrologic sub-type and melt inclusions study in chondrules of three carbonaceous chondrites',
+        authors: 'C. S. Aravena, D. Moncada, M. Valenzuela, K. Deckart, M. Zolensky, L. Moore, A. Morlok, G. Pinto & R. Martinez',
+        year: '2026',
+        inst: 'UChile, UCN, NASA JSC, Virginia Tech, U Münster, ULB, Museo del Meteorito',
+        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Petrologic%20sub-type%20and%20melt%20inclusions" class="btn">${__('research_request')}</a>`
+      }, __('research_type_article')) +
+      w({
+        title: 'Classification and Fragmentation Analysis of Ordinary Chondrites from the Atacama Desert',
+        authors: 'C. S. Aravena, D. Moncada, L. Cieza, G. Batalla, A. Escobar, F. Poblete, R. Fernandez, M. J. Figueroa Zambrano, M. E. Parra, M. Peña, R. Lavín, B. De la Fuente, V. Cárcamo, D. Castañeda, S. Gatica, A. Mohor, L. Olivares, R. Valles',
+        year: '2026',
+        inst: 'UChile, UMayor, UDP',
+        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Beatriz%20Levi%20Repository" class="btn">${__('research_request')}</a>`
+      }, __('research_type_article')))}
+
+    ${sec(__('research_sec_grad'), w({
+title: 'Subtipo petrológico e inclusiones vítreas en condritas carbonáceas',
+        authors: 'C. S. Aravena',
+        year: '2023',
+        inst: 'Universidad de Chile',
+        btn: `<a href="Subtipo-petrológico-e-inclusiones.pdf" target="_blank" class="btn">${__('research_download')}</a>`
+    }, __('research_type_msc')))}
+
+    ${sec(__('research_sec_undergrad'),
+      w({
+        title: 'Una reconstrucción aproximada de los procesos iniciales que dieron origen a los primeros cuerpos celestes',
+        authors: 'N. Amengual',
+        year: '2019',
+        inst: 'Universidad de Chile',
+        btn: `<a href="N_Amengual_2019 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Inclusiones vítreas en condritos carbonáceos del Desierto de Atacama, Región de Antofagasta, Chile',
+        authors: 'C. S. Aravena',
+        year: '2019',
+        inst: 'Universidad de Chile',
+        btn: `<a href="CS_Aravena_2019 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Estudio del espectro infrarrojo de meteoritos y aplicación en observaciones astronómicas',
+        authors: 'G. Batalla',
+        year: '2020',
+        inst: 'Universidad de Chile / UDP',
+        btn: `<a href="G_Batalla_2020 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Clasificación y descripción de meteoritos mediante análisis petrográfico',
+        authors: 'D. Luna',
+        year: '2022',
+        inst: 'Universidad de Chile',
+        btn: `<a href="D_Luna_2022 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Desarrollo de calibración en olivino mediante espectroscopía Raman: clasificación de condritos ordinarios',
+        authors: 'M. F. Tapia',
+        year: '2023',
+        inst: 'Universidad de Chile',
+        btn: `<a href="MF_Tapia_2023 (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Búsqueda de volátiles en cuerpos parentales asteroidales mediante estudio de inclusiones vítreas, espectroscopía Raman y espectroscopía de absorbancia en condritos ordinarios',
+        authors: 'M. E. Parra',
+        year: '2023',
+        inst: 'Universidad de Chile',
+        btn: `<a href="ME_Parra_2023.pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis')) +
+      w({
+        title: 'Clasificación de meteoritos del Desierto de Atacama utilizando susceptibilidad magnética, petrografía y técnicas espectroscópicas',
+        authors: 'M. J. Figueroa Zambrano',
+        year: '2023',
+        inst: 'Universidad Mayor',
+        btn: `<a href="MFigueroaZ_TE_SAG (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      }, __('research_type_thesis'))
+    )}
+
+    ${sec(__('research_sec_reports'), w({
+      title: 'Informe Práctica Profesional I — Montaje inicial del Repositorio Beatriz Levi',
+      authors: 'B. De la Fuente',
+      year: '2020',
+      inst: 'Universidad de Chile',
+      btn: `<a href="Informe_Practica_I_final (1).pdf" target="_blank" class="btn">${__('research_download')}</a>`
+    }, __('research_type_report')))}
+
+    ${sec(__('research_sec_grants'),
+      w({
+        title: 'Meteorites: Human heritage — Meteoritical Society Community Grant report',
+        authors: 'C. S. Aravena',
+        year: '2024',
+        inst: 'Universidad de Chile',
+        btn: `<a href="https://meteoritical.org/news/community-grant-report-meteorites-human-heritage" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
+      }, __('research_type_grant')) +
+      w({
+        title: 'Classification & Curation of Atacama\'s Ordinary Chondrites at Chile\'s Oldest University',
+        authors: 'D. Moncada',
+        year: '2025',
+        inst: 'Universidad de Chile',
+        btn: `<a href="https://meteoritical.org/news/five-new-meteoritical-society-community-grants-awarded" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
+      }, __('research_type_grant')))}
   `;
 }
 

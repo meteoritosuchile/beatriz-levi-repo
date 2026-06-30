@@ -34,8 +34,6 @@ const LOCALE = {
     home_stats_kly5: 'KLY5 Measured',
     home_stats_localities: 'Localities',
     home_btn_samples: 'Browse Samples',
-    home_btn_paper: 'Read Pre-print',
-    home_btn_pairing: 'View Pairing Groups',
 
     // Samples table
     samples_title: 'Samples',
@@ -124,6 +122,21 @@ const LOCALE = {
     contact_academic: 'Academic responsible',
     contact_curator: 'Repository curator',
     contact_email_btn: '✉ Send us an email',
+    research_title: 'Research',
+    research_desc: 'Research works associated with the Beatriz Levi Repository.',
+    research_type_article: 'Journal article',
+    research_type_thesis: 'Undergraduate thesis',
+    research_type_msc: 'MSc thesis',
+    research_type_report: 'Professional practice report',
+    research_type_grant: 'Grant',
+    research_request: 'Request Pre-print',
+    research_download: 'Download PDF',
+    research_readmore: 'Read More',
+    research_sec_articles: 'Peer-Reviewed Articles',
+    research_sec_grad: 'Graduate Theses',
+    research_sec_undergrad: 'Undergraduate Theses',
+    research_sec_reports: 'Professional Reports',
+    research_sec_grants: 'Grants & Awards',
 
     // Charts
     chart_kly5_group: 'KLY5 group',
@@ -195,8 +208,6 @@ const LOCALE = {
     home_stats_kly5: 'Medidos con KLY5',
     home_stats_localities: 'Localidades',
     home_btn_samples: 'Explorar Muestras',
-    home_btn_paper: 'Leer Pre-print',
-    home_btn_pairing: 'Ver Grupos de Pareo',
 
     // Samples table
     samples_title: 'Muestras',
@@ -285,6 +296,21 @@ const LOCALE = {
     contact_academic: 'Responsable académico',
     contact_curator: 'Curadora del repositorio',
     contact_email_btn: '✉ Envíanos un correo',
+    research_title: 'Investigación',
+    research_desc: 'Trabajos de investigación asociados al Repositorio Beatriz Levi.',
+    research_type_article: 'Artículo',
+    research_type_thesis: 'Tesis de pregrado',
+    research_type_msc: 'Tesis de magíster',
+    research_type_report: 'Informe de práctica',
+    research_type_grant: 'Fondo concursable',
+    research_request: 'Solicitar Pre-print',
+    research_download: 'Descargar PDF',
+    research_readmore: 'Ver más',
+    research_sec_articles: 'Artículos',
+    research_sec_grad: 'Tesis de Posgrado',
+    research_sec_undergrad: 'Tesis de Pregrado',
+    research_sec_reports: 'Informes Profesionales',
+    research_sec_grants: 'Fondos Concursables',
 
     // Charts
     chart_kly5_group: 'Grupo KLY5',
