@@ -303,9 +303,21 @@ function renderSamples(filter = '') {
           const dens = DENSITY_MAP[s.c];
           const d = SAMPLE_DETAILS[s.c];
           const typeClass = d?.classification?.class;
-          const typeLetter = typeClass ? typeClass.match(/^(H|LL|L)/)?.[1] : (s.t !== '??' ? s.t : null);
-          const typeLabel = typeClass || typeLetter || '—';
-          const typeColor = typeLetter ? {H:'h',L:'l',LL:'ll'}[typeLetter] : 'q';
+          const clusterType = CLUSTER_TYPE_MAP[s.c];
+          let typeLabel, typeColor;
+          if (typeClass) {
+            const m = typeClass.match(/^(H|LL|L)/);
+            typeLabel = typeClass;
+            typeColor = m ? {H:'h',L:'l',LL:'ll'}[m[1]] : 'q';
+          } else if (clusterType) {
+            const m = clusterType.match(/^(H|LL|L)/);
+            typeLabel = (m ? m[1] : clusterType) + ' (cluster)';
+            typeColor = 'q';
+          } else {
+            const t = s.t !== '??' ? s.t : null;
+            typeLabel = t || '—';
+            typeColor = t ? {H:'h',L:'l',LL:'ll'}[t] : 'q';
+          }
           const wStr = s.pW != null ? 'W' + s.pW : '—';
           const irStr = s.ir === 'sí' ? '✓' : s.ir === 'disp' ? '…' : '—';
           return `<tr onclick="navigate('sample','${s.c}')" class="clickable">
@@ -360,7 +372,7 @@ async function showSample(code) {
       <dt>${__('sd_locality')}</dt><dd>${s.loc}</dd>
       <dt>${__('sd_code')}</dt><dd>${s.c}</dd>
       <dt>${__('sd_class')}</dt><dd>Ordinary Chondrite (OC)</dd>
-      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{h+=typeTag(s.t)}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
+      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.match(/^(H|LL|L)/);h+=`<span class="tag-q">${m?m[1]:ct} (cluster)</span>`}else{h+=typeTag(s.t)}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
       <dt>${__('sd_shock')}</dt><dd>${s.shk || SAMPLE_DETAILS[s.c]?.classification?.shock || '—'}</dd>
       <dt>${__('sd_classifier')}</dt><dd>${SAMPLE_DETAILS[s.c]?.classification?.classifier || 'C. S. Aravena (2026)'}</dd>
       <dt>${__('sd_logchi')}</dt><dd>${s.lc != null ? s.lc.toFixed(3) : '—'}</dd>

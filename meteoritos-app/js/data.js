@@ -103,6 +103,14 @@ const PAIR_GROUPS = [
   ]}
 ];
 
+// Sample → cluster type lookup (cluster-estimated classification when petrography unavailable)
+const CLUSTER_TYPE_MAP = {};
+(function() {
+  PAIR_GROUPS.forEach(g => g.falls.forEach(f => {
+    f.samples.forEach(c => { CLUSTER_TYPE_MAP[c] = f.type; });
+  }));
+})();
+
 function sampleLookup(code) {
   return SAMPLES.find(s => s.c === code);
 }
