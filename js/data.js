@@ -595,7 +595,7 @@ const SAMPLE_DETAILS = {
   }
 };
 
-const IR_DIR = location.href.substring(0, location.href.lastIndexOf('/') + 1) + 'Espectros IR/';
+const IR_DIR = location.href.substring(0, location.href.lastIndexOf('/') + 1);
 
 const IR_FILES = {
   "Exp19-01":"Exp19-01f2_60m_604_0.5.txt",
