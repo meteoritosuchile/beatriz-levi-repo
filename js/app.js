@@ -4,17 +4,16 @@
 // IR consistency scores for existing clusters (from full-range cosine analysis)
 const _IR_CLUSTER_STATUS = {
   'Cluster 1':        { ok: true,  d:0.005, note:'IR consistent (E44+E49 99.5%)' },
-  'Cluster 2':        { ok: true,  d:0.006, note:'IR consistent (E53+E56 99.4%)' },
+  'Cluster 2':        { ok: true,  d:0.012, note:'IR consistent (E53+E43+E56 98.8%)' },
   'Cluster 3':        { ok: true,  d:0.006, note:'IR consistent (E51+E52 99.4%)' },
   'Cluster 4':        { ok: true,  d:0.009, note:'IR consistent (avg 99.1%)' },
-  'Cluster 5':        { ok: true,  d:0.010, note:'IR consistent (E06+E12 99.0%)' },
+  'Cluster 5':        { ok: true,  d:0.007, note:'IR consistent (E06+E12+E09 99.3%)' },
   'Cluster 6':        { ok: true,  d:0.022, note:'IR consistent (avg 97.8%)' },
   'Cluster 7':        { ok: true,  d:0.035, note:'IR consistent (E01+E30 96.5%)' },
   'Cluster 8':        { ok: true,  d:0.039, note:'IR consistent (E10+E24 96.1%)' },
-  'Cluster 9':        { ok: null, d:null,  note:'1 sample with IR — pending' },
   'Cluster 10':       { ok: null, d:null,  note:'no IR data' },
-  'Cluster 11':       { ok: null, d:null,  note:'1 sample with IR — pending' },
-  'Cluster 12':       { ok: null, d:null,  note:'1 sample with IR — pending' },
+  'Cluster 11':       { ok: true,  d:0.001, note:'IR consistent (E48+E45 99.9%)' },
+  'Cluster 12':       { ok: true,  d:0.040, note:'IR consistent (E54+E46 96.0%)' },
 };
 const _IR_PALETTE = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
 let _IR_CLUSTER_COLORS = {};
