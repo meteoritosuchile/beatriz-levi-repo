@@ -310,8 +310,8 @@ function renderSamples(filter = '') {
             typeLabel = typeClass;
             typeColor = m ? {H:'h',L:'l',LL:'ll'}[m[1]] : 'q';
           } else if (clusterType) {
-            const m = clusterType.match(/^(H|LL|L)/);
-            typeLabel = (m ? m[1] : clusterType) + ' (cluster)';
+            const m = clusterType.type.match(/^(H|LL|L)/);
+            typeLabel = (m ? m[1] : clusterType.type) + ' (' + clusterType.name + ')';
             typeColor = 'q';
           } else {
             const t = s.t !== '??' ? s.t : null;
@@ -372,7 +372,7 @@ async function showSample(code) {
       <dt>${__('sd_locality')}</dt><dd>${s.loc}</dd>
       <dt>${__('sd_code')}</dt><dd>${s.c}</dd>
       <dt>${__('sd_class')}</dt><dd>Ordinary Chondrite (OC)</dd>
-      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.match(/^(H|LL|L)/);h+=`<span class="tag-q">${m?m[1]:ct} (cluster)</span>`}else{h+=typeTag(s.t)}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
+      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.type.match(/^(H|LL|L)/);h+=`<span class="tag-q">${m?m[1]:ct.type} (${ct.name})</span>`}else{h+=typeTag(s.t)}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
       <dt>${__('sd_shock')}</dt><dd>${s.shk || SAMPLE_DETAILS[s.c]?.classification?.shock || '—'}</dd>
       <dt>${__('sd_classifier')}</dt><dd>${SAMPLE_DETAILS[s.c]?.classification?.classifier || 'C. S. Aravena (2026)'}</dd>
       <dt>${__('sd_logchi')}</dt><dd>${s.lc != null ? s.lc.toFixed(3) : '—'}</dd>
@@ -1238,11 +1238,13 @@ function renderPairing() {
     });
   });
   irClusterRank.sort((a,b)=>b.sim-a.sim);
+  const irRanked = irClusterRank.filter(r => r.sim !== null);
 
-  // Cluster visibility toggles — only Cluster 1 visible by default
+  // Cluster visibility toggles — only first IR-ranked cluster visible by default
   _IR_VISIBLE_CLUSTERS = {};
   const toggleKeys = Object.keys(_IR_CLUSTER_COLORS);
-  toggleKeys.forEach(k => { _IR_VISIBLE_CLUSTERS[k] = (k === 'Cluster 1'); });
+  toggleKeys.forEach(k => { _IR_VISIBLE_CLUSTERS[k] = false; });
+  if (irRanked.length) _IR_VISIBLE_CLUSTERS[irRanked[0].name] = true;
   if (toggleKeys.length) {
     html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 4px;font-size:12px">';
     toggleKeys.forEach(k => {
@@ -1256,7 +1258,7 @@ function renderPairing() {
     html += '</div>';
   }
 
-  if (irClusterRank.length) {
+  if (irRanked.length) {
     html += '<h2 style="text-align:center;margin:28px 0 12px;font-size:15px;color:#444">' + __('pairing_ir_ranking') + '</h2>';
     html += '<div style="overflow-x:auto;margin-bottom:20px"><table style="width:100%;border-collapse:collapse;font-size:12px">';
     html += '<thead><tr style="background:#f7f7f7">';
@@ -1264,13 +1266,13 @@ function renderPairing() {
       html += `<th style="padding:6px 8px;text-align:left;border-bottom:2px solid #ddd;font-weight:600">${h}</th>`;
     });
     html += '</tr></thead><tbody>';
-    irClusterRank.forEach((r,i) => {
+    irRanked.forEach((r,i) => {
       const sCodes = r.allSamples;
       const detailId = 'cd-' + i;
       html += `<tr class="clickable"${i%2===1?' style="background:#fafafa"':''} onclick="toggleClusterDetail('${detailId}')">`;
       const bgColor = _IR_CLUSTER_COLORS[r.name];
       html += `<td style="padding:5px 8px;color:#fff;font-weight:600;border-radius:3px;background:${bgColor || 'transparent'}"><span class="toggle-arrow" style="display:inline-block;width:12px;color:${bgColor ? '#fff' : '#888'}">▶</span> ${i+1}</td>`;
-      html += `<td style="padding:5px 8px;font-weight:600">${r.name}</td>`;
+      html += `<td style="padding:5px 8px;font-weight:600">Cluster ${i+1}</td>`;
       const typeLabel = r.type;
       const typeColor = ({H:'#27ae60',L:'#e67e22',LL:'#b8860b'})[r.type[0]] || '#999';
       html += `<td style="padding:5px 8px"><span style="display:inline-block;padding:1px 7px;border-radius:3px;background:${typeColor};color:#fff;font-size:11px;font-weight:600">${typeLabel}</span></td>`;

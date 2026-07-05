@@ -103,11 +103,11 @@ const PAIR_GROUPS = [
   ]}
 ];
 
-// Sample → cluster type lookup (cluster-estimated classification when petrography unavailable)
+// Sample → cluster type & name lookup (cluster-estimated classification when petrography unavailable)
 const CLUSTER_TYPE_MAP = {};
 (function() {
   PAIR_GROUPS.forEach(g => g.falls.forEach(f => {
-    f.samples.forEach(c => { CLUSTER_TYPE_MAP[c] = f.type; });
+    f.samples.forEach(c => { CLUSTER_TYPE_MAP[c] = { type: f.type, name: f.name }; });
   }));
 })();
 
