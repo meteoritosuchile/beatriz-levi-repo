@@ -6,14 +6,14 @@ const _IR_CLUSTER_STATUS = {
   'Cluster 1':        { ok: true,  d:0.005, note:'IR consistent (E44+E49 99.5%)' },
   'Cluster 2':        { ok: true,  d:0.012, note:'IR consistent (E53+E43+E56 98.8%)' },
   'Cluster 3':        { ok: true,  d:0.006, note:'IR consistent (E51+E52 99.4%)' },
-  'Cluster 4':        { ok: true,  d:0.009, note:'IR consistent (avg 99.1%)' },
-  'Cluster 5':        { ok: true,  d:0.007, note:'IR consistent (E06+E12+E09 99.3%)' },
-  'Cluster 6':        { ok: true,  d:0.022, note:'IR consistent (avg 97.8%)' },
-  'Cluster 7':        { ok: true,  d:0.035, note:'IR consistent (E01+E30 96.5%)' },
-  'Cluster 8':        { ok: true,  d:0.039, note:'IR consistent (E10+E24 96.1%)' },
-  'Cluster 10':       { ok: null, d:null,  note:'no IR data' },
-  'Cluster 11':       { ok: true,  d:0.001, note:'IR consistent (E48+E45 99.9%)' },
-  'Cluster 12':       { ok: true,  d:0.040, note:'IR consistent (E54+E46 96.0%)' },
+  'Cluster 4':        { ok: true,  d:0.022, note:'IR consistent (avg 97.8%)' },
+  'Cluster 5':        { ok: true,  d:0.001, note:'IR consistent (E48+E45 99.9%)' },
+  'Cluster 6':        { ok: true,  d:0.040, note:'IR consistent (E54+E46 96.0%)' },
+  'Cluster 7':        { ok: true,  d:0.009, note:'IR consistent (avg 99.1%)' },
+  'Cluster 8':        { ok: true,  d:0.007, note:'IR consistent (E06+E12+E09 99.3%)' },
+   'Cluster 9':        { ok: null, d:null,  note:'E01 with IR, E25 no IR data' },
+  'Cluster 10':       { ok: true,  d:0.039, note:'IR consistent (E10+E24 96.1%)' },
+  'Cluster 11':       { ok: null, d:null,  note:'no IR data' },
 };
 const _IR_PALETTE = ['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf','#aec7e8','#ffbb78'];
 let _IR_CLUSTER_COLORS = {};
@@ -34,6 +34,15 @@ let _IR_VISIBLE_CLUSTERS = {};
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
+// Cache of sample codes that have photos in Supabase
+const PHOTO_SAMPLES = new Set();
+(async function() {
+  try {
+    const { data } = await _supabase.from('files').select('sample_code').eq('file_type', 'photo');
+    if (data) data.forEach(r => PHOTO_SAMPLES.add(r.sample_code));
+  } catch(e) { /* non-critical */ }
+})();
+
 // ---------- State ----------
 let currentSample = null;
 let observationsCache = {};
@@ -50,11 +59,17 @@ function navigate(page, data) {
   if (navLink) navLink.classList.add('active');
   if (page === 'home') renderHome();
   if (page === 'samples') renderSamples();
-  if (page === 'paper') renderPaperCharts();
   if (page === 'pairing') renderPairing();
   if (page === 'research') renderResearch();
   if (page === 'contact') renderContact();
-  if (page === 'sample') showSample(data);
+  if (page === 'sample') {
+    const parts = (data || '').split('#');
+    showSample(parts[0]);
+    if (parts[1]) setTimeout(() => {
+      const el = document.getElementById(parts[1]);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  }
   window.scrollTo(0, 0);
 }
 
@@ -83,12 +98,13 @@ function renderHome() {
 
     <div style="max-width:700px;margin:0 auto 32px">
       <h2 style="text-align:center;margin-bottom:12px">${__('home_about')}</h2>
-      <p>${__('home_desc1')}</p>
+      <p>${__('home_desc1').replace('{count}', SAMPLES.length)}</p>
       <p>${__('home_desc2')}</p>
     </div>
 
-    <div style="text-align:center;margin-top:16px">
+    <div style="text-align:center;margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn" onclick="navigate('samples')">${__('home_btn_samples')}</button>
+      <a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Classification%20and%20Fragmentation%20Analysis%20of%20Ordinary%20Chondrites%20from%20the%20Atacama%20Desert" class="btn" style="text-decoration:none">${__('home_btn_report')}</a>
     </div>
 
     <div class="logos" style="margin-top:32px">
@@ -125,26 +141,26 @@ function renderResearch() {
 
     ${sec(__('research_sec_articles'),
       w({
-        title: 'Petrologic sub-type and melt inclusions study in chondrules of three carbonaceous chondrites',
-        authors: 'C. S. Aravena, D. Moncada, M. Valenzuela, K. Deckart, M. Zolensky, L. Moore, A. Morlok, G. Pinto & R. Martinez',
-        year: '2026',
-        inst: 'UChile, UCN, NASA JSC, Virginia Tech, U Münster, ULB, Museo del Meteorito',
-        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Petrologic%20sub-type%20and%20melt%20inclusions" class="btn">${__('research_request')}</a>`
-      }, __('research_type_article')) +
-      w({
         title: 'Classification and Fragmentation Analysis of Ordinary Chondrites from the Atacama Desert',
         authors: 'C. S. Aravena, D. Moncada, L. Cieza, G. Batalla, A. Escobar, F. Poblete, R. Fernandez, M. J. Figueroa Zambrano, M. E. Parra, M. Peña, R. Lavín, B. De la Fuente, V. Cárcamo, D. Castañeda, S. Gatica, A. Mohor, L. Olivares, R. Valles',
         year: '2026',
         inst: 'UChile, UMayor, UDP',
         btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Beatriz%20Levi%20Repository" class="btn">${__('research_request')}</a>`
+      }, __('research_type_article')) +
+      w({
+        title: 'Petrologic sub-type and melt inclusions study in chondrules of three carbonaceous chondrites',
+        authors: 'C. S. Aravena, D. Moncada, M. Valenzuela, K. Deckart, M. Zolensky, L. Moore, A. Morlok, G. Pinto & R. Martinez',
+        year: '2026',
+        inst: 'UChile, UCN, NASA JSC, Virginia Tech, U Münster, ULB, Museo del Meteorito',
+        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Petrologic%20sub-type%20and%20melt%20inclusions" class="btn">${__('research_request')}</a>`
       }, __('research_type_article')))}
 
     ${sec(__('research_sec_grad'), w({
-title: 'Subtipo petrológico e inclusiones vítreas en condritas carbonáceas',
-        authors: 'C. S. Aravena',
-        year: '2023',
-        inst: 'Universidad de Chile',
-        btn: `<a href="Subtipo-petrológico-e-inclusiones.pdf" target="_blank" class="btn">${__('research_download')}</a>`
+      title: 'Subtipo petrológico e inclusiones vítreas en condritas carbonáceas',
+      authors: 'C. S. Aravena',
+      year: '2023',
+      inst: 'Universidad de Chile',
+      btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20MSc%20Thesis%20-%20Subtipo%20petrol%C3%B3gico" class="btn">${__('research_request')}</a>`
     }, __('research_type_msc')))}
 
     ${sec(__('research_sec_undergrad'),
@@ -276,14 +292,33 @@ function renderContact() {
 // ---------- Samples ----------
 function renderSamples(filter = '') {
   const f = filter.toLowerCase();
+  const showInput = !document.getElementById('sample-search');
+  if (showInput) {
+    document.getElementById('samples-content').innerHTML = `
+      <h1>${__('samples_title')}</h1>
+      <input class="search-bar" id="sample-search" placeholder="${__('samples_search')}">
+      <div id="sample-table-wrap"></div>
+      <div id="interactive-ir-section" style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+        <h2 style="text-align:center;margin-bottom:16px;font-size:16px">Interactive IR Spectra</h2>
+        <div id="interactive-ir-container"></div>
+      </div>
+    `;
+    document.getElementById('sample-search').addEventListener('input', function() {
+      renderSamplesTable(this.value);
+    });
+  }
+  renderSamplesTable(filter);
+}
+
+function normalize(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function renderSamplesTable(filter) {
+  const f = normalize(filter);
   const list = SAMPLES.filter(s =>
-    !f || s.c.toLowerCase().includes(f) || s.n.toLowerCase().includes(f) || s.loc.toLowerCase().includes(f)
+    !f || normalize(s.c).includes(f) || normalize(s.n).includes(f) || normalize(s.loc).includes(f)
   );
-  document.getElementById('samples-content').innerHTML = `
-    <h1>${__('samples_title')}</h1>
-    <input class="search-bar" id="sample-search" placeholder="${__('samples_search')}" value="${filter}"
-      oninput="renderSamples(this.value)">
-    <div class="table-wrap">
+  const tableHtml = `<div class="table-wrap">
     <table>
       <thead><tr>
         <th>${__('th_code')}</th>
@@ -295,6 +330,7 @@ function renderSamples(filter = '') {
         <th style="text-align:right">${__('th_mass')}</th>
         <th style="text-align:right">${__('th_density')}</th>
         <th style="text-align:right">${__('th_logchi')}</th>
+        <th style="text-align:center" title="Gallery">🔬</th>
         <th style="text-align:right">${__('th_ir')}</th>
       </tr></thead>
       <tbody>
@@ -316,7 +352,7 @@ function renderSamples(filter = '') {
           } else {
             const t = s.t !== '??' ? s.t : null;
             typeLabel = t || '—';
-            typeColor = t ? {H:'h',L:'l',LL:'ll'}[t] : 'q';
+            typeColor = (t && s.pW !== null) ? {H:'h',L:'l',LL:'ll'}[t] : 'q';
           }
           const wStr = s.pW != null ? 'W' + s.pW : '—';
           const irStr = s.ir === 'sí' ? '✓' : s.ir === 'disp' ? '…' : '—';
@@ -330,20 +366,16 @@ function renderSamples(filter = '') {
             <td style="text-align:right">${mass != null ? mass.toFixed(1) : '—'}</td>
             <td style="text-align:right">${dens != null ? dens.toFixed(3) : '—'}</td>
             <td style="text-align:right">${s.lc != null ? s.lc.toFixed(3) : '—'}</td>
-            <td style="text-align:right">${irStr}</td>
+            <td style="text-align:center">${PHOTO_SAMPLES.has(s.c) || s.shk || d?.classification?.shock ? `<span style="cursor:pointer" onclick="event.stopPropagation();navigate('sample','${s.c}#sample-gallery')" title="Gallery">🔬</span>` : '—'}</td>
+            <td style="text-align:right;cursor:pointer" onclick="event.stopPropagation();navigate('sample','${s.c}#sample-ir')" title="View IR spectrum">${irStr}</td>
           </tr>`;
         }).join('')}
       </tbody>
     </table>
     </div>
-    <p style="font-size:12px;color:#888;text-align:center">${list.length} ${__('samples_found')}</p>
-
-    <div id="interactive-ir-section" style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
-      <h2 style="text-align:center;margin-bottom:16px;font-size:16px">Interactive IR Spectra</h2>
-      <div id="interactive-ir-container"></div>
-    </div>
-  `;
-  document.getElementById('sample-search')?.focus();
+    <p style="font-size:12px;color:#888;text-align:center">${list.length} ${__('samples_found')}</p>`;
+  const wrap = document.getElementById('sample-table-wrap');
+  if (wrap) wrap.innerHTML = tableHtml;
   renderInteractiveIRSpectra();
 }
 
@@ -372,7 +404,7 @@ async function showSample(code) {
       <dt>${__('sd_locality')}</dt><dd>${s.loc}</dd>
       <dt>${__('sd_code')}</dt><dd>${s.c}</dd>
       <dt>${__('sd_class')}</dt><dd>Ordinary Chondrite (OC)</dd>
-      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.type.match(/^(H|LL|L)/);h+=`<span class="tag-q">${m?m[1]:ct.type} (${ct.name})</span>`}else{h+=typeTag(s.t)}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
+      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.type.match(/^(H|LL|L)/);h+=`<span class="tag-q">${m?m[1]:ct.type} (${ct.name})</span>`}else{if(s.pW===null){h+=`<span class="tag-q">${s.t||'?'}</span>`}else{h+=typeTag(s.t)}}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
       <dt>${__('sd_shock')}</dt><dd>${s.shk || SAMPLE_DETAILS[s.c]?.classification?.shock || '—'}</dd>
       <dt>${__('sd_classifier')}</dt><dd>${SAMPLE_DETAILS[s.c]?.classification?.classifier || 'C. S. Aravena (2026)'}</dd>
       <dt>${__('sd_logchi')}</dt><dd>${s.lc != null ? s.lc.toFixed(3) : '—'}</dd>
@@ -394,7 +426,7 @@ async function showSample(code) {
       </table>`}
     </div>
 
-    <div class="ir-spectrum-section" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
+    <div id="sample-ir" class="ir-spectrum-section" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
       <h3 style="font-size:15px;margin-bottom:12px">IR Spectrum</h3>
       ${hasIR ? `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -404,7 +436,7 @@ async function showSample(code) {
 ` : '<p style="color:#888;font-size:13px;text-align:center;padding:40px 0">' + __('sd_no_spectrum') + '</p>'}
     </div>
 
-    <div class="gallery-section" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
+    <div id="sample-gallery" class="gallery-section" style="margin-top:24px;border-top:1px solid #ddd;padding-top:16px">
       <h3 style="font-size:15px;margin-bottom:12px">Gallery</h3>
       <div id="gallery-content"><div class="loading">${__('sd_loading_gallery')}</div></div>
     </div>

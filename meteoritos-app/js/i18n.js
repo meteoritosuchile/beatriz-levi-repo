@@ -28,12 +28,13 @@ const LOCALE = {
     home_subtitle: 'Atacama Desert Meteorite Collection · Universidad de Chile',
     home_wip: '⚠ Work in progress. This repository is being systematically organized and documented. Some samples have incomplete data (pending IR analysis, petrography, or KLY5 measurement). All entries will be progressively completed over time.',
     home_about: 'About the Repository',
-    home_desc1: 'The Beatriz Levi Repository houses 49 meteorite specimens from the Atacama Desert (Catalina, El Médano, San Juan, and Los Vientos areas), all recovered during the 2019 expedition. The collection was classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography.',
+    home_desc1: 'The Beatriz Levi Repository houses {count} meteorite specimens from the Atacama Desert (including Catalina, El Médano, San Juan, Los Vientos, and Antofagasta areas). The collection was classified using magnetic susceptibility (KLY5-A Kappabridge), infrared spectroscopy (FT-IR), Raman spectroscopy, and petrography.',
     home_desc2: 'This project was funded by a Community Grant from the Meteoritical Society (August 2025) and is housed at the Departamento de Geología, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile.',
     home_stats_specimens: 'Total Specimens',
     home_stats_kly5: 'KLY5 Measured',
     home_stats_localities: 'Localities',
     home_btn_samples: 'Browse Samples',
+    home_btn_report: 'Request Pre-print',
 
     // Samples table
     samples_title: 'Samples',
@@ -202,12 +203,13 @@ const LOCALE = {
     home_subtitle: 'Colección de Meteoritos del Desierto de Atacama · Universidad de Chile',
     home_wip: '⚠ Trabajo en progreso. Este repositorio se está organizando y documentando sistemáticamente. Algunas muestras tienen datos incompletos (pendientes de análisis IR, petrografía o medición KLY5). Todas las entradas se completarán progresivamente.',
     home_about: 'Sobre el Repositorio',
-    home_desc1: 'El Repositorio Beatriz Levi alberga 49 especímenes de meteoritos del Desierto de Atacama (sectores de Catalina, El Médano, San Juan y Los Vientos), recuperados durante la expedición de 2019. La colección fue clasificada mediante susceptibilidad magnética (KLY5-A Kappabridge), espectroscopía infrarroja (FT-IR), espectroscopía Raman y petrografía.',
+    home_desc1: 'El Repositorio Beatriz Levi alberga {count} especímenes de meteoritos del Desierto de Atacama (incluyendo sectores de Catalina, El Médano, San Juan, Los Vientos y Antofagasta). La colección fue clasificada mediante susceptibilidad magnética (KLY5-A Kappabridge), espectroscopía infrarroja (FT-IR), espectroscopía Raman y petrografía.',
     home_desc2: 'Este proyecto fue financiado por una Community Grant de la Meteoritical Society (agosto 2025) y está alojado en el Departamento de Geología, Facultad de Ciencias Físicas y Matemáticas, Universidad de Chile.',
     home_stats_specimens: 'Total de Muestras',
     home_stats_kly5: 'Medidos con KLY5',
     home_stats_localities: 'Localidades',
     home_btn_samples: 'Explorar Muestras',
+    home_btn_report: 'Solicitar Reporte',
 
     // Samples table
     samples_title: 'Muestras',
