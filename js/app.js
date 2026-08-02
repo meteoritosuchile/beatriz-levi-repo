@@ -313,11 +313,25 @@ function renderSamples(filter = '') {
 function normalize(str) {
   return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
+function naturalCompare(a, b) {
+  const ta = String(a).toLowerCase().split(/(\d+)/);
+  const tb = String(b).toLowerCase().split(/(\d+)/);
+  for (let i = 0; i < Math.max(ta.length, tb.length); i++) {
+    const x = ta[i], y = tb[i];
+    if (x === undefined) return -1;
+    if (y === undefined) return 1;
+    if (x === y) continue;
+    const xn = parseInt(x, 10), yn = parseInt(y, 10);
+    if (!isNaN(xn) && !isNaN(yn)) return xn - yn;
+    return x < y ? -1 : 1;
+  }
+  return 0;
+}
 function renderSamplesTable(filter) {
   const f = normalize(filter);
   const list = SAMPLES.filter(s =>
     !f || normalize(s.c).includes(f) || normalize(s.n).includes(f) || normalize(s.loc).includes(f)
-  );
+  ).sort((p, q) => naturalCompare(p.c, q.c));
   const tableHtml = `<div class="table-wrap">
     <table>
       <thead><tr>
