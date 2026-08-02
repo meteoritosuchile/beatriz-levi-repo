@@ -342,24 +342,24 @@ function renderSamplesTable(filter) {
           const clusterType = CLUSTER_TYPE_MAP[s.c];
           let typeLabel, typeColor;
           if (typeClass) {
-            const m = typeClass.match(/^(H|LL|L)/);
+            const m = typeClass.match(/^(H|LL|L|CO)/);
             typeLabel = typeClass;
-            typeColor = m ? {H:'h',L:'l',LL:'ll'}[m[1]] : 'q';
+            typeColor = m ? {H:'h',L:'l',LL:'ll',CO:'c'}[m[1]] : 'q';
           } else if (clusterType) {
-            const m = clusterType.type.match(/^(H|LL|L)/);
+            const m = clusterType.type.match(/^(H|LL|L|CO)/);
             typeLabel = (m ? m[1] : clusterType.type) + ' (' + clusterType.name + ')';
-            typeColor = 'q';
+            typeColor = m ? {H:'h',L:'l',LL:'ll',CO:'c'}[m[1]] : 'q';
           } else {
             const t = s.t !== '??' ? s.t : null;
             typeLabel = t || '—';
-            typeColor = (t && s.pW !== null) ? {H:'h',L:'l',LL:'ll'}[t] : 'q';
+            typeColor = (t && s.pW !== null) ? {H:'h',L:'l',LL:'ll',C:'c'}[t] : 'q';
           }
           const wStr = s.pW != null ? 'W' + s.pW : '—';
           const irStr = s.ir === 'sí' ? '✓' : s.ir === 'disp' ? '…' : '—';
           return `<tr onclick="navigate('sample','${s.c}')" class="clickable">
             <td><strong>${s.c}</strong></td>
             <td>${s.loc}</td>
-            <td>OC</td>
+            <td>${isCC(s) ? 'CC' : 'OC'}</td>
             <td><span class="tag-${typeColor}">${typeLabel}</span></td>
             <td style="text-align:right">${s.shk || d?.classification?.shock || '—'}</td>
             <td style="text-align:right">${wStr}</td>
@@ -403,8 +403,8 @@ async function showSample(code) {
     <div class="meta" style="display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:13px">
       <dt>${__('sd_locality')}</dt><dd>${s.loc}</dd>
       <dt>${__('sd_code')}</dt><dd>${s.c}</dd>
-      <dt>${__('sd_class')}</dt><dd>Ordinary Chondrite (OC)</dd>
-      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.type.match(/^(H|LL|L)/);h+=`<span class="tag-q">${m?m[1]:ct.type} (${ct.name})</span>`}else{if(s.pW===null){h+=`<span class="tag-q">${s.t||'?'}</span>`}else{h+=typeTag(s.t)}}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
+      <dt>${__('sd_class')}</dt><dd>${isCC(s) ? 'Carbonaceous Chondrite (CC)' : 'Ordinary Chondrite (OC)'}</dd>
+      <dt>${__('sd_type')}</dt><dd>${(()=>{const d=SAMPLE_DETAILS[s.c]; let h=''; if(d?.classification?.class){const c=d.classification.class;const m=c.match(/^(H|LL|L|CO)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll',CO:'c'}[m[1]]:'q')}">${c}</span>`}else{const ct=CLUSTER_TYPE_MAP[s.c];if(ct){const m=ct.type.match(/^(H|LL|L|CO)/);h+=`<span class="tag-${(m?{H:'h',L:'l',LL:'ll',CO:'c'}[m[1]]:'q')}">${m?m[1]:ct.type} (${ct.name})</span>`}else{if(s.pW===null){h+=`<span class="tag-q">${s.t||'?'}</span>`}else{h+=typeTag(s.t)}}}const inc=isInconsistent(s);if(inc)h+=` <span title="${inc}" style="cursor:help;font-size:14px">⚠️</span>`;return h})()}</dd>
       <dt>${__('sd_shock')}</dt><dd>${s.shk || SAMPLE_DETAILS[s.c]?.classification?.shock || '—'}</dd>
       <dt>${__('sd_classifier')}</dt><dd>${SAMPLE_DETAILS[s.c]?.classification?.classifier || 'C. S. Aravena (2026)'}</dd>
       <dt>${__('sd_logchi')}</dt><dd>${s.lc != null ? s.lc.toFixed(3) : '—'}</dd>
@@ -1065,8 +1065,13 @@ const kly5Group = chi => {
   return 'LL';
 };
 
+// Carbonaceous chondrite detection (CO-type) and chart group lookup
+const isCC = s => s.t === 'C' || (SAMPLE_DETAILS[s.c]?.classification?.class || '').startsWith('CO');
+const grpOf = s => isCC(s) ? 'C' : kly5Group(s.lc);
+
 function isInconsistent(s) {
   if (!s.lc || s.t === '??') return false;
+  if (isCC(s)) return false;
   const kg = kly5Group(s.lc);
   if (s.nota && (s.nota.includes('KLY5→') || s.nota.includes('⚡'))) return 'KLY5: ' + kg + (kg === s.t ? '' : ', petrography: ' + s.t) + ' — review';
   if ((kg === 'H' && s.t === 'LL') || (kg === 'LL' && s.t === 'H')) return 'KLY5: ' + kg + ', petrography: ' + s.t + ' — review';
@@ -1082,7 +1087,7 @@ function drawMassLogChiChart() {
   const ctx = cv.getContext('2d');
   ctx.scale(CHART_DPR, CHART_DPR);
   const MARGIN = { top: 30, right: 20, bottom: 42, left: 62 };
-  const CHI_MIN = 3.4, CHI_MAX = 5.6, MASS_LOG_MIN = -0.35, MASS_LOG_MAX = 2.55;
+  const CHI_MIN = 3.4, CHI_MAX = 5.6, MASS_LOG_MIN = -0.35, MASS_LOG_MAX = 3.55;
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
   const x0 = MARGIN.left, y0 = MARGIN.top, x1 = W - MARGIN.right, y1 = H - MARGIN.bottom;
@@ -1114,7 +1119,7 @@ function drawMassLogChiChart() {
   ctx.textAlign = 'center'; ctx.textBaseline = 'top';
   for (let c = 3.6; c <= 5.6; c += 0.2) { ctx.fillText(c.toFixed(1), toX(c), y1 + 6); }
   ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-  const massTicks = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 300];
+  const massTicks = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 3000];
   massTicks.forEach(m => { ctx.fillText(m, x0 - 6, toY(m)); });
   ctx.fillStyle = '#333'; ctx.font = '13px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
   ctx.fillText(__('chart_logchi_label'), (x0 + x1) / 2, y1 + 26);
@@ -1136,7 +1141,7 @@ function drawMassLogChiChart() {
   SAMPLES.filter(s => s.lc != null && MASS_MAP[s.c] != null).forEach(s => {
     const m = MASS_MAP[s.c];
     const px = toX(s.lc), py = toY(m);
-    const grp = kly5Group(s.lc);
+    const grp = grpOf(s);
     const hasPetro = s.pW != null;
     ctx.beginPath(); ctx.arc(px, py, R, 0, 2 * Math.PI);
     ctx.fillStyle = hasPetro ? (colors[grp] || '#999') : '#fff';
@@ -1162,6 +1167,7 @@ function drawMassLogChiChart() {
     { type: 'color', label: 'H (\u03c7 \u2265 4.82)', color: '#27ae60', h: 1 },
     { type: 'color', label: 'L (4.265 \u2264 \u03c7 < 4.82)', color: '#e67e22', h: 1 },
     { type: 'color', label: 'LL (\u03c7 < 4.265)', color: '#b8860b', h: 1 },
+    { type: 'color', label: 'CO3 (carbonaceous)', color: '#8e44ad', h: 1 },
     { type: 'label', text: __('chart_petro_filled'), h: 1 },
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
@@ -1398,11 +1404,11 @@ function drawDoughnutChart() {
   const toX = c => x0 + (c - CHI_MIN) / (CHI_MAX - CHI_MIN) * (x1 - x0);
 
   // Bin counts
-  const bins = Array.from({ length: nbins }, () => ({ H: 0, L: 0, LL: 0, '??': 0 }));
-  const groups = ['H', 'L', 'LL', '??'];
-  const groupColors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
+  const bins = Array.from({ length: nbins }, () => ({ H: 0, L: 0, LL: 0, C: 0, '??': 0 }));
+  const groups = ['H', 'L', 'LL', 'C', '??'];
+  const groupColors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', C: '#8e44ad', '??': '#999' };
   SAMPLES.filter(s => s.lc != null).forEach(s => {
-    const grp = kly5Group(s.lc);
+    const grp = grpOf(s);
     const idx = Math.min(nbins - 1, Math.max(0, Math.floor((s.lc - CHI_MIN) / BIN)));
     if (bins[idx][grp] !== undefined) bins[idx][grp]++;
   });
@@ -1532,10 +1538,10 @@ function drawPetroGradeChart() {
   });
   ctx.setLineDash([]);
 
-  const groupColors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', '??': '#999' };
+  const groupColors = { H: '#27ae60', L: '#e67e22', LL: '#b8860b', C: '#8e44ad', '??': '#999' };
   const R = 5;
   SAMPLES.filter(s => s.lc != null && s.pW != null).forEach(s => {
-    const grp = kly5Group(s.lc);
+    const grp = grpOf(s);
     const col = groupColors[grp] || '#999';
     const jitter = (s.c.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 100 - 50) / 100 * 0.18;
     const px = toX(s.pW + jitter), py = toY(s.lc);
@@ -1563,6 +1569,7 @@ function drawPetroGradeChart() {
     { type: 'color', label: 'H', color: '#27ae60', h: 1 },
     { type: 'color', label: 'L', color: '#e67e22', h: 1 },
     { type: 'color', label: 'LL', color: '#b8860b', h: 1 },
+    { type: 'color', label: 'CO3', color: '#8e44ad', h: 1 },
   ];
   const lh = legItems.reduce((s, i) => s + i.h * lgap, 0) + lpad * 2;
   const lw = 100;
@@ -2006,7 +2013,8 @@ function drawKLY5StripChart(canvasId) {
     if (found) {
       const d = found.density !== null ? found.density.toFixed(3) : '\u2014';
       const lc = found.lc.toFixed(3);
-      const grp = kly5Group(found.lc);
+      const fs = sampleLookup(found.code);
+      const grp = fs ? grpOf(fs) : kly5Group(found.lc);
       tooltip.innerHTML = '<b>' + found.code + '</b> ' + found.name + '<br>log \u03c7 = ' + lc + ' (' + grp + ')<br>\u03c1 = ' + d + ' g/cm\u00b3<br>' + found.cluster + ' \u00b7 ' + found.locality;
       tooltip.style.display = 'block';
       tooltip.style.left = (e.clientX + 14) + 'px';
