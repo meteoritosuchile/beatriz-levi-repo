@@ -63,6 +63,7 @@ const SAMPLES = [
   {c:"RM 567",n:"RM 567",lc:4.49,pW:3,ir:"no",t:"C",loc:"Médano",shk:"S1",nota:"CO3; pair of El Médano 216; Aravena (2019)"},
   {c:"RM 568",n:"RM 568",lc:4.44,pW:1,ir:"no",t:"C",loc:"Médano",shk:"S1-2",nota:"CO3; pair of El Médano 216; Aravena (2019)"},
   {c:"RM 569",n:"RM 569",lc:4.45,pW:2,ir:"no",t:"C",loc:"Médano",shk:"S1-2",nota:"CO3; pair of El Médano 216; Aravena (2019)"},
+  {c:"SAG-2",n:"SAG-2",lc:null,pW:null,ir:"sí",t:"Iron",loc:"?",nota:"Iron meteorite; locality to be confirmed"},
   ];
 const FIELD_DATA = {
   "Catalina 1":[79.13,79.62],"Catalina 2":[14.04,14.05],"Catalina 3":[5.809,5.807],
@@ -96,12 +97,12 @@ const PAIR_GROUPS = [
      samples:["Exp19-53","Exp19-43","Exp19-56"]},
     {name:"Cluster 3",type:"L",count:2,range:"4.443–4.464",delta:"0.021",tc:"#e67e22",
      samples:["Exp19-52","Exp19-51"]},
-    {name:"Cluster 4",type:"H4",count:4,range:"5.091–5.168",delta:"0.077",tc:"#27ae60",
-     samples:["Exp19-42","Exp19-40","Exp19-41","Exp19-47"]},
+    {name:"Cluster 4",type:"H4",count:3,range:"5.091–5.168",delta:"0.077",tc:"#27ae60",
+     samples:["Exp19-42","Exp19-41","Exp19-47"]},
     {name:"Cluster 5",type:"L",count:2,range:"4.550–4.611",delta:"0.061",tc:"#e67e22",
      samples:["Exp19-48","Exp19-45"]},
-    {name:"Cluster 6",type:"L",count:2,range:"4.294–4.336",delta:"0.042",tc:"#e67e22",
-     samples:["Exp19-54","Exp19-46"]},
+    {name:"Cluster 6",type:"L",count:3,range:"4.294–5.112",delta:"0.818",tc:"#e67e22",
+     samples:["Exp19-54","Exp19-46","Exp19-40"]},
     {name:"Cluster 12",type:"CO",count:4,range:"4.44–4.49",delta:"0.05",tc:"#8e44ad",
      samples:["RM 568","RM 569","El Médano 216","RM 567"]}
   ]},
@@ -267,26 +268,6 @@ const FRAGMENTS_MAP = {
   "RM 569":1
 };
 
-const COORDS_MAP = {
-  "Exp19-01":"7225074 N, 410890 E","Exp19-03":"7225111 N, 410588 E","Exp19-04":"7225098 N, 410477 E",
-  "Exp19-05":"7225090 N, 410389 E","Exp19-06":"7225089 N, 410389 E","Exp19-07":"7225089 N, 410389 E",
-  "Exp19-08":"7225089 N, 410389 E","Exp19-09":"7225089 N, 410389 E","Exp19-10":"7224901 N, 409418 E",
-  "Exp19-11":"7224994 N, 409437 E","Exp19-12":"7224994 N, 409448 E","Exp19-13":"7225001 N, 409426 E",
-  "Exp19-14":"7224869 N, 409425 E","Exp19-15":"7224868 N, 409407 E","Exp19-17":"7224851 N, 409279 E",
-  "Exp19-18":"7224872 N, 409184 E","Exp19-19":"7224894 N, 409216 E","Exp19-20":"7224947 N, 409212 E",
-  "Exp19-21":"7224908 N, 409231 E","Exp19-22":"7224942 N, 409212 E","Exp19-23":"7224938 N, 409213 E",
-  "Exp19-24":"7224942 N, 409216 E","Exp19-25":"7224949 N, 409217 E","Exp19-26":"7224924 N, 409228 E",
-  "Exp19-27":"7224932 N, 409248 E","Exp19-29":"7224930 N, 409273 E","Exp19-30":"7224986 N, 409273 E",
-  "Exp19-31":"7224980 N, 409291 E","Exp19-32":"7224988 N, 409313 E","Exp19-33":"7225017 N, 409434 E",
-  "Exp19-34":"7225036 N, 409448 E","Exp19-40":"7268160 N, 363588 E","Exp19-41":"7268192 N, 363544 E",
-  "Exp19-42":"7268171 N, 363453 E","Exp19-43":"7268102 N, 363159 E","Exp19-44":"7265322 N, 363203 E",
-  "Exp19-45":"7265225 N, 362948 E","Exp19-46":"7265280 N, 362968 E","Exp19-47":"7265291 N, 362944 E",
-  "Exp19-48":"7265301 N, 362934 E","Exp19-49":"7265296 N, 362940 E","Exp19-50":"7265270 N, 362980 E",
-  "Exp19-51":"7265291 N, 362959 E","Exp19-52":"7265285 N, 362966 E","Exp19-53":"7265323 N, 362933 E",
-  "Exp19-54":"7265812 N, 363197 E","Exp19-56":"7265191 N, 364518 E","Exp19-58":"7187733 N, 404955 E",
-  "Exp19-59":"7266426 N, 406086 E"
-};
-
 function typeTag(t) {
   const cls = {'H':'tag-h','L':'tag-l','LL':'tag-ll','C':'tag-c'};
   return `<span class="${cls[t]||'tag-q'}">${t||'?'}</span>`;
@@ -318,7 +299,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "H — magnetic susceptibility (log χ) = 5.091"
     },
     location: {
-      coordinates: "7268171 N, 363453 E",
       mainMass: "Universidad de Chile",
       finder: "Lorena Olivares",
       state: "Antofagasta"
@@ -349,7 +329,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "H — magnetic susceptibility (log χ) = 5.117"
     },
     location: {
-      coordinates: "7268192 N, 363544 E",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile"
     }
@@ -380,7 +359,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "14 wt% Fe, H-group ordinary chondrite. KLY5 log χ = 4.631 unreliable due to high weathering (W≥3)."
     },
     location: {
-      coordinates: "7265296 N, 362940 E",
       mainMass: "Universidad de Chile",
       finder: "Lorena Olivares",
       state: "Antofagasta"
@@ -411,7 +389,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "Médano 18 contains 14 wt% Fe, composed of kamacite (80%, avg. 0.14 mm), troilite (15%, avg. 0.07 mm), and oxides (25%, avg. 0.09 mm)."
     },
     location: {
-      coordinates: "7265323 N, 362933 E",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -444,7 +421,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "H — KLY5 log χ = 5.285 (H field); Parra (2023) field log χ = 4.73 (H/L boundary)"
     },
     location: {
-      coordinates: "7225074 N, 410890 E",
       mainMass: "Universidad de Chile",
       finder: "Alfonso Mohor",
       state: "Antofagasta"
@@ -477,7 +453,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "H — KLY5 log χ = 4.971 (H field); abundant opaques and metals confirm H group; Parra (2023) field log χ = 4.29 (LL field)"
     },
     location: {
-      coordinates: "7224994 N, 409437 E",
       mainMass: "Universidad de Chile",
       finder: "Alfonso Mohor",
       state: "Antofagasta"
@@ -510,7 +485,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "15 wt% Fe, H-group ordinary chondrite."
     },
     location: {
-      coordinates: "7224869 N, 409425 E",
       mainMass: "Universidad de Chile",
       finder: "Víctor Cárcamo",
       state: "Antofagasta"
@@ -543,7 +517,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "L — metal content intermediate between LL and H; reclassified from H; Parra (2023) field log χ = 4.01 (LL field)"
     },
     location: {
-      coordinates: "7224868 N, 409407 E",
       mainMass: "Universidad de Chile",
       finder: "Grace Batalla",
       state: "Antofagasta"
@@ -576,7 +549,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "12 wt% Fe, composed of kamacite (80%, avg. 0.21 mm), troilite (15%, avg. 0.51 mm), and oxides (5%, avg. 0.2 mm). Oxide size increases toward edges, indicating replacement progresses from edges toward the center."
     },
     location: {
-      coordinates: "7224908 N, 409231 E",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -609,7 +581,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "L — kamacite ~7%, troilite ~3%, total opaques ~10%; Parra (2023) field log χ = 3.72 (LL field)"
     },
     location: {
-      coordinates: "7224932 N, 409248 E",
       mainMass: "Universidad de Chile",
       finder: "Lorena Olivares",
       state: "Antofagasta"
@@ -642,7 +613,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "19 wt% Fe total, composed of kamacite (85%, avg. 0.16 mm), troilite (10%, avg. 0.088 mm), and oxides (5%, avg. ~1.14 mm). Minerals generally occur massively; in this sample, troilite and kamacite occasionally appear granular."
     },
     location: {
-      coordinates: "7224986 N, 409273 E",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -675,7 +645,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "LL — KLY5 pending; Parra (2023) field log χ = 3.94 (LL field)"
     },
     location: {
-      coordinates: "7224872 N, 409184 E",
       mainMass: "Universidad de Chile",
       finder: "Sebastián Gatica",
       state: "Antofagasta"
@@ -702,7 +671,6 @@ const SAMPLE_DETAILS = {
       description: "Most metals replaced by oxides (~4% out of ~7% total opaques). Pervasive silicate alteration. Weathering stage W4 per Wlotzka (1993)."
     },
     location: {
-      coordinates: "7224947 N, 409212 E",
       mainMass: "Universidad de Chile",
       finder: "Víctor Cárcamo",
       state: "Antofagasta"
@@ -734,7 +702,6 @@ const SAMPLE_DETAILS = {
       texture: "Chondritic texture with porphyroblastic matrix and granoblastic sectors. High degree of fracturing at both individual crystal and whole-sample scale. Crosscut by veins of varying thickness (generally short-range; ~80 μm average opening). Shock evidence (Luna 2022): two sets of planar fractures in olivine, undulatory extinction, melt pockets (veins up to ~100 μm), shock veins ~40 μm wide with oxides, silicate crystals and minor metal, polymineral melt veins (Bennett & McSween 1996), and metal droplets throughout the matrix."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -766,7 +733,6 @@ const SAMPLE_DETAILS = {
       texture: "Chondritic, porphyroblastic texture dominated by well-rounded chondrules. Low weathering overprint; impact veining limited to the edges."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -798,7 +764,6 @@ const SAMPLE_DETAILS = {
       texture: "Brecciated, highly recrystallized with fine granoblastic texture. Abundant impact veining (~15% of section)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -830,7 +795,6 @@ const SAMPLE_DETAILS = {
       texture: "High density of oxide-filled veins and glass sectors. Plagioclase well-developed with mostly connected crystals up to 0.1 mm."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -862,7 +826,6 @@ const SAMPLE_DETAILS = {
       texture: "Chondritic texture. Moderate to intense fracturing. Crosscut by veins of varying thickness, some of the thickest traverse the entire sample."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -894,7 +857,6 @@ const SAMPLE_DETAILS = {
       texture: "Primarily coarse granoblastic texture; chondritic texture not very representative. Highly fractured with many oxide-filled veins."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -926,7 +888,6 @@ const SAMPLE_DETAILS = {
       texture: "Chondritic texture with porphyroblastic matrix. DM053 A1 and A2 are paired fragments of the same meteorite."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -958,7 +919,6 @@ const SAMPLE_DETAILS = {
       texture: "Chondritic, with porphyroblastic matrix from the well-delimited chondrules. Chondrule fragments larger and more abundant than in DM053 A1. Predominance of ferromagnesian minerals in matrix and chondrules. Hollow veinlets branching off filled ones suggest a second shock event."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -990,7 +950,6 @@ const SAMPLE_DETAILS = {
       texture: "Highly recrystallized granoblastic texture. High weathering overprint."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "Universidad de Chile",
       finder: "Universidad de Chile",
       state: "Antofagasta"
@@ -1021,7 +980,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "CO3 (carbonaceous, CO type, petrologic type 3)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "SERNAGEOMIN",
       finder: "Museo del Meteorito, San Pedro de Atacama",
       state: "Antofagasta"
@@ -1052,7 +1010,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "CO3 (carbonaceous, CO type, petrologic type 3)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "SERNAGEOMIN",
       finder: "Museo del Meteorito, San Pedro de Atacama",
       state: "Antofagasta"
@@ -1083,7 +1040,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "CO3.1 (carbonaceous, CO type, petrologic subtype 3.1)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "SERNAGEOMIN",
       finder: "Museo del Meteorito, San Pedro de Atacama",
       state: "Antofagasta"
@@ -1115,7 +1071,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "CO3 (carbonaceous, CO type, petrologic type 3)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "SERNAGEOMIN",
       finder: "Museo del Meteorito, San Pedro de Atacama",
       state: "Antofagasta"
@@ -1147,7 +1102,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "CO3 (carbonaceous, CO type, petrologic type 3)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "SERNAGEOMIN",
       finder: "Museo del Meteorito, San Pedro de Atacama",
       state: "Antofagasta"
@@ -1179,7 +1133,6 @@ const SAMPLE_DETAILS = {
       chemicalGroup: "CO3 (carbonaceous, CO type, petrologic type 3)."
     },
     location: {
-      coordinates: "N/A",
       mainMass: "SERNAGEOMIN",
       finder: "Museo del Meteorito, San Pedro de Atacama",
       state: "Antofagasta"
@@ -1206,6 +1159,7 @@ const IR_FILES = {
   "Exp19-31":"Exp19-31_60m_874_0.5.txt",
   "Exp19-32":"Exp19-32f2_60m_702_0.5.txt",
   "Exp19-34":"Exp19-34f2_60m_772_0.5.txt",
+  "Exp19-40":"Exp19-40_60m_581_0.5.txt",
   "Exp19-41":"Exp19-41f3_60m_802_0.5.txt",
   "Exp19-42":"Exp19-42f3_60m_773_0.5.txt",
   "Exp19-43":"Exp19-43_60m_818_0.5.txt",
@@ -1221,7 +1175,8 @@ const IR_FILES = {
   "Exp19-53":"Exp19-53f3_60m_962_0.5.txt",
   "Exp19-54":"Exp19-54_60m_936_0.5.txt",
   "Exp19-56":"Exp19-56f4_60m_836_0.5.txt",
-  "Exp19-59":"Exp19-59_60m_837_0.5.txt"
+  "Exp19-59":"Exp19-59_60m_837_0.5.txt",
+  "SAG-2":"SAG-2_60m_698_0.5.txt"
 };
 
 const IR_DIR = location.href.substring(0, location.href.lastIndexOf('/') + 1);
