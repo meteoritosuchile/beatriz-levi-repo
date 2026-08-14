@@ -45,15 +45,67 @@ const PHOTO_SAMPLES = new Set();
   try {
     if (!_supabase) return;
     const { data } = await _supabase.from('files').select('sample_code').eq('file_type', 'photo');
-    if (data) data.forEach(r => PHOTO_SAMPLES.add(r.sample_code));
+    if (data) data.forEach(r => PHOTO_SAMPLES.add(r.sample_code.toUpperCase()));
   } catch(e) { /* non-critical */ }
 })();
+
+// ---------- Visit counter ----------
+async function logVisit() {
+  if (!_supabase) return;
+  let country = '', region = '', city = '';
+  try {
+    const geo = await fetch('https://ipwho.is/');
+    const j = await geo.json();
+    if (j && j.success !== false) {
+      country = j.country || '';
+      region = j.region || '';
+      city = j.city || '';
+    }
+  } catch(e) { /* geo is optional */ }
+  const row = {
+    user_agent: navigator.userAgent.slice(0, 300),
+    screen: (window.screen.width || '') + 'x' + (window.screen.height || ''),
+    lang: navigator.language || '',
+    referrer: (document.referrer || '').slice(0, 500),
+    country, region, city
+  };
+  try { await _supabase.from('visits').insert([row]); } catch(e) { /* non-critical */ }
+}
+
+async function refreshVisitStats() {
+  if (!_supabase) return;
+  try {
+    const { data } = await _supabase.rpc('get_visit_stats');
+    if (!data) return;
+    const total = data.total || 0;
+    const today = data.today || 0;
+    const countries = data.countries && data.countries.length ? data.countries.length : 0;
+    // Footer
+    const fv = document.getElementById('footer-visits');
+    if (fv) fv.textContent = __('visits_count').replace('{n}', total.toLocaleString());
+    // Home block
+    const hv = document.getElementById('home-visits');
+    if (hv) {
+      let html = __('visits_home').replace('{total}', total.toLocaleString());
+      if (today) html += ' &middot; ' + __('visits_today').replace('{n}', today.toLocaleString());
+      if (countries) html += ' &middot; ' + __('visits_countries').replace('{n}', countries);
+      hv.innerHTML = html;
+    }
+  } catch(e) { /* non-critical */ }
+}
 
 // ---------- State ----------
 let currentSample = null;
 let observationsCache = {};
 let filesCache = {};
 const _selectedIRSamples = new Set();
+
+// ---------- Output hardening ----------
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 
 // ---------- Navigation ----------
 function navigate(page, data) {
@@ -112,6 +164,8 @@ function renderHome() {
       <button class="btn" onclick="navigate('samples')">${__('home_btn_samples')}</button>
       <a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Classification%20and%20Fragmentation%20Analysis%20of%20Ordinary%20Chondrites%20from%20the%20Atacama%20Desert" class="btn" style="text-decoration:none">${__('home_btn_report')}</a>
     </div>
+
+    <div id="home-visits" style="text-align:center;font-size:13px;color:#999;margin-top:28px"></div>
 
     <div class="logos" style="margin-top:32px">
       <a href="https://meteoritical.org/" target="_blank" rel="noopener noreferrer"><img src="Logos/Logo_Metsoc.png" alt="Meteoritical Society" title="Meteoritical Society" style="height:48px"></a>
@@ -396,7 +450,7 @@ function renderSamplesTable(filter) {
             <td style="text-align:right">${mass != null ? mass.toFixed(1) : '—'}</td>
             <td style="text-align:right">${dens != null ? dens.toFixed(3) : '—'}</td>
             <td style="text-align:right">${s.lc != null ? s.lc.toFixed(3) : '—'}</td>
-            <td style="text-align:center">${PHOTO_SAMPLES.has(s.c) || s.shk || d?.classification?.shock ? `<span style="cursor:pointer" onclick="event.stopPropagation();navigate('sample','${s.c}#sample-gallery')" title="Gallery">🔬</span>` : '—'}</td>
+            <td style="text-align:center">${PHOTO_SAMPLES.has(s.c.toUpperCase()) ? `<span style="cursor:pointer" onclick="event.stopPropagation();navigate('sample','${s.c}#sample-gallery')" title="Gallery">🔬</span>` : '—'}</td>
             <td style="text-align:right;cursor:pointer" onclick="event.stopPropagation();navigate('sample','${s.c}#sample-ir')" title="View IR spectrum">${irStr}</td>
           </tr>`;
         }).join('')}
@@ -663,7 +717,7 @@ async function loadFiles(sampleCode) {
     const isDpt = ext === 'dpt';
     const isTxt = ['txt','csv'].includes(ext);
     const specId = 'spec_' + f.id;
-    const meta = `${new Date(f.created_at).toLocaleDateString()} ${f.uploaded_by ? 'by ' + f.uploaded_by : ''}`;
+    const meta = `${new Date(f.created_at).toLocaleDateString()} ${f.uploaded_by ? 'by ' + esc(f.uploaded_by) : ''}`;
 
     // File row
     let icon;
@@ -675,7 +729,7 @@ async function loadFiles(sampleCode) {
     html += `<div class="file-item">
       <span class="file-icon">${icon}</span>
       <div class="file-info">
-        <div class="fname">${f.filename}</div>
+        <div class="fname">${esc(f.filename)}</div>
         <div class="fmeta">${meta}</div>
       </div>`;
 
@@ -685,19 +739,19 @@ async function loadFiles(sampleCode) {
       if (isTif) {
         html += `<div class="tif-thumb" id="tif_${f.id}"><canvas class="file-thumb" style="height:48px;width:auto"></canvas></div>`;
       } else {
-        html += `<img src="${url}" class="file-thumb" onclick="window.open('${url}','_blank')" title="Click to enlarge">`;
+        html += `<img src="${esc(url)}" class="file-thumb" onclick="window.open('${esc(url)}','_blank')" title="Click to enlarge">`;
       }
     } else if (isDpt) {
       html += `<span class="type-badge type-ir">IR</span>`;
     } else if (isTxt) {
       html += `<span class="type-badge type-unknown">?</span>`;
     }
-    html += `<a href="${url}" download="${f.filename}" class="btn btn-sm" title="Download ${f.filename}" style="margin-right:4px">⬇</a>`;
+    html += `<a href="${esc(url)}" download="${esc(f.filename)}" class="btn btn-sm" title="Download ${esc(f.filename)}" style="margin-right:4px">⬇</a>`;
     if (!isImg && !isDpt && !isTxt) {
-      html += `<a href="${url}" target="_blank" class="btn btn-sm">View</a>`;
+      html += `<a href="${esc(url)}" target="_blank" class="btn btn-sm">View</a>`;
     }
 
-    html += `<button class="btn btn-sm btn-danger" onclick="deleteFile('${f.id}','${f.storage_path}','${sampleCode}')">×</button>
+    html += `<button class="btn btn-sm btn-danger" onclick="deleteFile('${f.id}','${esc(f.storage_path)}','${esc(sampleCode)}')">×</button>
     </div>`;
 
     // Spectrum container for text/csv/dpt
@@ -706,9 +760,9 @@ async function loadFiles(sampleCode) {
       html += `<div class="spectrum-container" id="${specId}">
         <div class="spec-controls">
           <span class="type-badge type-ir">IR</span>
-          <input class="spec-title" placeholder="Title" value="${defaultTitle}">
-          <input class="spec-xlabel" placeholder="X axis" value="${defaultLabels.ir.x}">
-          <input class="spec-ylabel" placeholder="Y axis" value="${defaultLabels.ir.y}">
+          <input class="spec-title" placeholder="Title" value="${esc(defaultTitle)}">
+          <input class="spec-xlabel" placeholder="X axis" value="${esc(defaultLabels.ir.x)}">
+          <input class="spec-ylabel" placeholder="Y axis" value="${esc(defaultLabels.ir.y)}">
         </div>
         <div class="spectrum-wrap"><canvas></canvas><div class="spec-loading">Loading spectrum...</div></div>
       </div>`;
@@ -720,9 +774,9 @@ async function loadFiles(sampleCode) {
             <option value="raman">Raman</option>
             <option value="ir">IR</option>
           </select>
-          <input class="spec-title" placeholder="Title" value="${defaultTitle}">
-          <input class="spec-xlabel" placeholder="X axis" value="${defaultLabels.raman.x}">
-          <input class="spec-ylabel" placeholder="Y axis" value="${defaultLabels.raman.y}">
+          <input class="spec-title" placeholder="Title" value="${esc(defaultTitle)}">
+          <input class="spec-xlabel" placeholder="X axis" value="${esc(defaultLabels.raman.x)}">
+          <input class="spec-ylabel" placeholder="Y axis" value="${esc(defaultLabels.raman.y)}">
         </div>
         <div class="spectrum-wrap"><canvas></canvas><div class="spec-loading">Loading spectrum...</div></div>
       </div>`;
@@ -867,11 +921,11 @@ async function renderGallery(sampleCode) {
     const isTif = ext === 'tif' || ext === 'tiff';
     html += `<div class="gallery-item" data-idx="${i}" onclick="openLightbox(${i})">`;
     if (isTif) {
-      html += `<canvas class="gallery-tif" data-url="${url}" style="max-width:100%;max-height:100%"></canvas>`;
+      html += `<canvas class="gallery-tif" data-url="${esc(url)}" style="max-width:100%;max-height:100%"></canvas>`;
     } else {
-      html += `<img src="${url}" alt="${f.filename}" loading="lazy">`;
+      html += `<img src="${esc(url)}" alt="${esc(f.filename)}" loading="lazy">`;
     }
-    html += `<div class="gallery-fname">${f.filename}</div></div>`;
+    html += `<div class="gallery-fname">${esc(f.filename)}</div></div>`;
   }
   html += '</div>';
   el.innerHTML = html;
