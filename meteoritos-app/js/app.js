@@ -8,7 +8,7 @@ const _IR_CLUSTER_STATUS = {
   'Cluster 3':        { ok: true,  d:0.006, note:'IR consistent (E51+E52 99.4%)' },
   'Cluster 4':        { ok: true,  d:0.022, note:'IR consistent (avg 97.8%)' },
   'Cluster 5':        { ok: true,  d:0.001, note:'IR consistent (E48+E45 99.9%)' },
-  'Cluster 6':        { ok: true,  d:0.040, note:'IR consistent (E54+E46 96.0%)' },
+  'Cluster 6':        { ok: true,  d:0.026, note:'IR consistent (avg 97.4%)' },
   'Cluster 7':        { ok: true,  d:0.009, note:'IR consistent (avg 99.1%)' },
   'Cluster 8':        { ok: true,  d:0.007, note:'IR consistent (E06+E12+E09 99.3%)' },
    'Cluster 9':        { ok: null, d:null,  note:'E01 with IR, E25 no IR data' },
@@ -31,13 +31,19 @@ let _IR_VISIBLE_CLUSTERS = {};
 })();
 
 // ---------- Supabase ----------
-const { createClient } = supabase;
-const _supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+let _supabase = null;
+try {
+  if (typeof supabase !== 'undefined' && SUPABASE_CONFIG && SUPABASE_CONFIG.url) {
+    const { createClient } = supabase;
+    _supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+  }
+} catch(e) { /* non-critical: page works fully without Supabase */ }
 
 // Cache of sample codes that have photos in Supabase
 const PHOTO_SAMPLES = new Set();
 (async function() {
   try {
+    if (!_supabase) return;
     const { data } = await _supabase.from('files').select('sample_code').eq('file_type', 'photo');
     if (data) data.forEach(r => PHOTO_SAMPLES.add(r.sample_code));
   } catch(e) { /* non-critical */ }
@@ -85,7 +91,7 @@ function toast(msg, type = 'success') {
 function renderHome() {
   document.getElementById('home-content').innerHTML = `
     <div style="position:relative;text-align:center;margin:0 -24px 32px;overflow:hidden">
-      <img src="Depto_geo.jpg" alt="Beatriz Levi Repository" style="width:100%;height:auto;display:block;min-height:250px;object-fit:cover">
+      <img src="Depto_geo.jpg" alt="Meteoritos Universidad de Chile" style="width:100%;height:auto;display:block;min-height:250px;object-fit:cover">
       <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:40px 20px 20px">
         <h1 style="color:#fff;margin:0;font-size:26px;text-shadow:0 1px 4px rgba(0,0,0,.5)">${__('home_title')}</h1>
         <p style="color:#ddd;font-size:14px;margin:4px 0 0;text-align:center">${__('home_subtitle')}</p>
@@ -129,8 +135,9 @@ function renderResearch() {
         <strong style="font-size:15px">${id.title}</strong>
         <p style="font-size:13px;color:#555;margin:2px 0">${id.authors}</p>
         <p style="font-size:12px;color:#888">${id.year} &middot; ${id.inst}</p>
+        ${id.note ? `<p style="font-size:12px;color:#666;margin-top:6px">${id.note}</p>` : ''}
       </div>
-      <div style="flex-shrink:0">${id.btn}</div>
+      <div style="flex-shrink:0">${id.btn || ''}</div>
     </div>
   </div>`;
   const sec = (title, items) => `<h2 style="font-size:17px;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid #ddd">${title}</h2>${items}`;
@@ -145,7 +152,7 @@ function renderResearch() {
         authors: 'C. S. Aravena, D. Moncada, L. Cieza, G. Batalla, A. Escobar, F. Poblete, R. Fernandez, M. J. Figueroa Zambrano, M. E. Parra, M. Peña, R. Lavín, B. De la Fuente, V. Cárcamo, D. Castañeda, S. Gatica, A. Mohor, L. Olivares, R. Valles',
         year: '2026',
         inst: 'UChile, UMayor, UDP',
-        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20Beatriz%20Levi%20Repository" class="btn">${__('research_request')}</a>`
+        btn: `<a href="mailto:meteoritosuchile@gmail.com?subject=Request%20Pre-print%20-%20University%20of%20Chile%20Meteorites" class="btn">${__('research_request')}</a>`
       }, __('research_type_article')) +
       w({
         title: 'Petrologic sub-type and melt inclusions study in chondrules of three carbonaceous chondrites',
@@ -216,7 +223,7 @@ function renderResearch() {
     )}
 
     ${sec(__('research_sec_reports'), w({
-      title: 'Informe Práctica Profesional I — Montaje inicial del Repositorio Beatriz Levi',
+      title: 'Informe Práctica Profesional I — Montaje inicial de Meteoritos Universidad de Chile',
       authors: 'B. De la Fuente',
       year: '2020',
       inst: 'Universidad de Chile',
@@ -229,6 +236,7 @@ function renderResearch() {
         authors: 'C. S. Aravena',
         year: '2024',
         inst: 'Universidad de Chile',
+        note: 'Community Grant from the Meteoritical Society funding a traveling exhibition presented at multiple institutions across Chile, including a two-week display at the Department of Geology for the department community (before the repository was formally established the following year).',
         btn: `<a href="https://meteoritical.org/news/community-grant-report-meteorites-human-heritage" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
       }, __('research_type_grant')) +
       w({
@@ -236,7 +244,15 @@ function renderResearch() {
         authors: 'D. Moncada',
         year: '2025',
         inst: 'Universidad de Chile',
+        note: 'Community Grant from the Meteoritical Society (August 2025) funding the curation and integrated classification (KLY5, petrography, IR) of the collection recovered in 2019.',
         btn: `<a href="https://meteoritical.org/news/five-new-meteoritical-society-community-grants-awarded" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
+      }, __('research_type_grant')) +
+      w({
+        title: 'Infrared–Magnetic–Petrographic Classification of Atacama Ordinary Chondrites',
+        authors: 'C. S. Aravena',
+        year: '2026',
+        inst: 'Universidad de Chile',
+        note: 'New research grant awarded August 2026 — will deepen the analysis of the proposed classifications of samples organized into clusters grouped by IR and susceptibility data, which will now be complemented with petrography of additional samples and XRD data.'
       }, __('research_type_grant')))}
   `;
 }
@@ -434,7 +450,6 @@ async function showSample(code) {
       ${hasDetails ? renderSampleDetails(s.c) : `
       <p style="color:#888;font-size:13px;text-align:center;padding:20px 0">Próximamente más información, estamos investigando.</p>
       <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:8px">
-        <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${__('sd_coordinates')}</td><td style="padding:3px 8px">${COORDS_MAP[s.c] || '—'}</td></tr>
         <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${__('sd_main_mass')}</td><td style="padding:3px 8px">Universidad de Chile</td></tr>
         <tr><td style="padding:3px 8px;color:#888;width:130px;vertical-align:top">${__('sd_finder')}</td><td style="padding:3px 8px">${DISCOVERER_MAP[s.c] || '—'}</td></tr>
       </table>`}
@@ -550,7 +565,7 @@ function renderSampleDetails(code) {
   }
 
   // Location
-  const _locLabels = { coordinates: 'sd_coordinates', mainMass: 'sd_main_mass', finder: 'sd_finder', state: 'basic_country' };
+  const _locLabels = { mainMass: 'sd_main_mass', finder: 'sd_finder', state: 'basic_country' };
   if (d.location) {
     html += '<table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:8px">';
     Object.entries(d.location).forEach(([k,v]) => {
@@ -574,7 +589,12 @@ async function handleFileUpload(e) {
 
 async function handleFiles(files, sampleCode) {
   const preview = document.getElementById('file-preview');
-  preview.innerHTML = '<div class="loading">Uploading...</div>';
+  if (!_supabase) {
+    toast('Upload service unavailable', 'error');
+    if (preview) preview.innerHTML = '';
+    return;
+  }
+  if (preview) preview.innerHTML = '<div class="loading">Uploading...</div>';
   let ok = 0, err = 0, errMsg = '';
   for (const file of files) {
     const ext = file.name.split('.').pop().toLowerCase();
@@ -605,13 +625,25 @@ const _spectrumCache = {};
 
 async function loadFiles(sampleCode) {
   const el = document.getElementById('sample-files-list');
+  if (!el) return;
   const sc = sampleCode.toUpperCase();
-  let { data, error } = await _supabase
-    .from('files')
-    .select('*')
-    .eq('sample_code', sc)
-    .neq('file_type', 'photo')
-    .order('created_at', { ascending: false });
+  if (!_supabase) {
+    el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>';
+    return;
+  }
+  let data, error;
+  try {
+    const res = await _supabase
+      .from('files')
+      .select('*')
+      .eq('sample_code', sc)
+      .neq('file_type', 'photo')
+      .order('created_at', { ascending: false });
+    data = res.data; error = res.error;
+  } catch(e) {
+    el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>';
+    return;
+  }
   if (error) { el.innerHTML = '<p style="color:#c0392b">Error loading files</p>'; return; }
   if (!data || !data.length) {
     el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">No files uploaded yet</p>';
@@ -789,6 +821,7 @@ async function loadSpectrumData(url, containerId) {
 
 async function deleteFile(id, path, sampleCode) {
   if (!confirm(__('delete_confirm'))) return;
+  if (!_supabase) return;
   await _supabase.storage.from('sample-files').remove([path]);
   await _supabase.from('files').delete().eq('id', id);
   toast(__('file_deleted'));
@@ -802,13 +835,24 @@ let _galleryIdx = -1;
 async function renderGallery(sampleCode) {
   const el = document.getElementById('gallery-content');
   const sc = sampleCode.toUpperCase();
-  let { data, error } = await _supabase
-    .from('files')
-    .select('*')
-    .eq('sample_code', sc)
-    .eq('file_type', 'photo')
-    .order('created_at', { ascending: false });
-  if (error) { el.innerHTML = '<p style="color:#c0392b">' + __('error_loading') + ' gallery</p>'; return; }
+  if (!_supabase) {
+    el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>';
+    return;
+  }
+  let data, error;
+  try {
+    const res = await _supabase
+      .from('files')
+      .select('*')
+      .eq('sample_code', sc)
+      .eq('file_type', 'photo')
+      .order('created_at', { ascending: false });
+    data = res.data; error = res.error;
+  } catch(e) {
+    el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>';
+    return;
+  }
+  if (error) { el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>'; return; }
   data = (data || []).filter(f => f.filename !== 'EXP19-01_4X_TR_5.tif' && f.filename !== 'EXP19-01_4X_TR_4.tif' && f.filename !== 'EXP19-01_4X_NX_6.tif' && f.filename !== 'EXP19-01_4X_REF_2.tif');
   if (!data.length) {
     el.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">' + __('sd_no_photos') + '</p>';
@@ -1314,7 +1358,7 @@ function renderPairing() {
     html += '<h2 style="text-align:center;margin:28px 0 12px;font-size:15px;color:#444">' + __('pairing_ir_ranking') + '</h2>';
     html += '<div style="overflow-x:auto;margin-bottom:20px"><table style="width:100%;border-collapse:collapse;font-size:12px">';
     html += '<thead><tr style="background:#f7f7f7">';
-    [__('pr_rank'),__('pr_cluster'),__('pr_type'),__('pr_ir_match'),__('pr_samples'),__('pr_locality'),__('pr_delta'),__('pr_distance')].forEach(h => {
+    [__('pr_rank'),__('pr_cluster'),__('pr_type'),__('pr_ir_match'),__('pr_samples'),__('pr_locality'),__('pr_delta')].forEach(h => {
       html += `<th style="padding:6px 8px;text-align:left;border-bottom:2px solid #ddd;font-weight:600">${h}</th>`;
     });
     html += '</tr></thead><tbody>';
@@ -1337,19 +1381,6 @@ function renderPairing() {
       const lcs = sCodes.map(c => SAMPLES.find(x=>x.c===c)?.lc).filter(lc=>lc!=null);
       const deltaStr = lcs.length >= 2 ? (Math.max(...lcs) - Math.min(...lcs)).toFixed(3) : '—';
       html += `<td style="padding:5px 8px">${deltaStr}</td>`;
-      const dists = [];
-      for (let di=0;di<sCodes.length;di++) for (let dj=di+1;dj<sCodes.length;dj++) {
-        const c1=COORDS_MAP[sCodes[di]], c2=COORDS_MAP[sCodes[dj]];
-        if (c1&&c2) {
-          const p1=c1.match(/[\d.]+/g), p2=c2.match(/[\d.]+/g);
-          if (p1&&p2&&p1.length>=2&&p2.length>=2) {
-            const d=Math.round(Math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2));
-            dists.push(d);
-          }
-        }
-      }
-      const distStr = dists.length ? (dists.length===1?dists[0]+'m':Math.min(...dists)+'–'+Math.max(...dists)+'m') : '—';
-      html += `<td style="padding:5px 8px">${distStr}</td>`;
       html += '</tr>';
       // Detail row
       html += `<tr id="${detailId}" style="display:none"><td colspan="8" style="padding:0;background:#fafafa">`;
