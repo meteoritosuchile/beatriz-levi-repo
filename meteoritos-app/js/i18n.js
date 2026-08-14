@@ -35,6 +35,10 @@ const LOCALE = {
     home_stats_localities: 'Localities',
     home_btn_samples: 'Browse Samples',
     home_btn_report: 'Request Pre-print',
+    visits_count: '{n} visits',
+    visits_home: '{total} visits',
+    visits_today: '{n} today',
+    visits_countries: 'from {n} countries',
 
     // Samples table
     samples_title: 'Samples',
@@ -208,6 +212,10 @@ const LOCALE = {
     home_stats_localities: 'Localidades',
     home_btn_samples: 'Explorar Muestras',
     home_btn_report: 'Solicitar Reporte',
+    visits_count: '{n} visitas',
+    visits_home: '{total} visitas',
+    visits_today: '{n} hoy',
+    visits_countries: 'de {n} países',
 
     // Samples table
     samples_title: 'Muestras',
@@ -369,6 +377,7 @@ function setLocale(lang) {
       else if (pageId === 'contact') renderContact();
       else if (pageId === 'paper') { renderPaperCharts(); }
     }
+    if (typeof refreshVisitStats === 'function') refreshVisitStats();
   }
 }
 
