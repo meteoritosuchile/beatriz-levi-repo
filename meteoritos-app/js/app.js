@@ -236,7 +236,7 @@ function renderResearch() {
         authors: 'C. S. Aravena',
         year: '2024',
         inst: 'Universidad de Chile',
-        note: 'Community Grant from the Meteoritical Society funding a traveling exhibition presented at multiple institutions across Chile, including a two-week display at the Department of Geology for the department community (before the repository was formally established the following year).',
+        note: 'Community Grant from the Meteoritical Society funding a traveling exhibition presented at multiple institutions across Chile, including a two-week display at the Department of Geology for the department community.',
         btn: `<a href="https://meteoritical.org/news/community-grant-report-meteorites-human-heritage" target="_blank" rel="noopener noreferrer" class="btn">${__('research_readmore')}</a>`
       }, __('research_type_grant')) +
       w({
