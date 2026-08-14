@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' https://rldyvtztioxkypibbpju.supabase.co https://*.supabase.co data:; style-src 'self' 'unsafe-inline'; connect-src 'self' https://rldyvtztioxkypibbpju.supabase.co https://ipwho.is; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Meteoritos Universidad de Chile — National Meteorite Repository, Department of Geology</title>
 <link rel="stylesheet" href="css/style.css">
 <script src="js/supabase.js"></script>
@@ -61,9 +62,9 @@
 </div>
 
 <script src="js/app.js"></script>
-<script>navigate('home');</script>
+<script>navigate('home'); logVisit(); refreshVisitStats();</script>
 <footer style="text-align:center;padding:20px 10px;font-size:13px;color:#999;border-top:1px solid #eee;margin-top:30px">
-  &copy; 2026 C. S. Aravena González. All rights reserved.
+  &copy; 2026 C. S. Aravena González. All rights reserved. &middot; <span id="footer-visits"></span>
 </footer>
 </body>
 </html>
